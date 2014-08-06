@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="full_screen_map_track_widget_text_value">24dip</dimen>
+  <dimen name="full_screen_map_track_widget_text_unit">14dip</dimen>
+  <dimen name="full_screen_map_track_widget_text_name">18dip</dimen>
+  <dimen name="full_screen_map_track_widget_text_margin_top">-7dip</dimen>
+</resources>

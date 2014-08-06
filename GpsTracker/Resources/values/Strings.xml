@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Gps Tracker</string>
+  <string name="speed">speed</string>
+  <string name="points">points</string>
+  <string name="distance">distance</string>
+  <string name="km">km</string>
+  <string name="km_h">km/h</string>
+</resources>

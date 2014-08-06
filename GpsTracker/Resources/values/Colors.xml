@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="full_screen_map_track_widgets_container_background">#AA000000</color>
+  <color name="full_screen_map_track_widget_text_value">#FFFFFF</color>
+  <color name="full_screen_map_track_widget_text_unit">#BBBBBB</color>
+  <color name="full_screen_map_track_widget_text_name">#FFBC00</color>
+  <color name="track_color">#3E97D1</color>
+</resources>
+
