@@ -1,9 +1,9 @@
 using Android.Gms.Maps.Model;
 using Android.Locations;
 
-namespace MapsTest_1
+namespace GpsTracker
 {
-    public static class Extensions
+    internal static class Extensions
     {
         public static LatLng ToLatLng(this Location location)
         {

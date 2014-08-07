@@ -6,7 +6,7 @@ using Android.Widget;
 namespace GpsTracker
 {
     [Activity(Label = "@string/app_name", MainLauncher = true)]
-    public class MainActivity : Activity
+    internal class MainActivity : Activity
     {
         private Button _startButton;
 

@@ -6,16 +6,16 @@ using Android.Gms.Common;
 using Android.Gms.Location;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
+using Android.Graphics;
 using Android.Locations;
 using Android.OS;
 using Android.Widget;
-using MapsTest_1;
 using ILocationListener = Android.Gms.Location.ILocationListener;
 
 namespace GpsTracker
 {
     [Activity(Label = "@string/app_name", MainLauncher = false)]
-    public class FullScreenMapActivity : Activity, IGooglePlayServicesClientConnectionCallbacks,
+    internal class FullScreenMapActivity : Activity, IGooglePlayServicesClientConnectionCallbacks,
         IGooglePlayServicesClientOnConnectionFailedListener, GoogleMap.IOnCameraChangeListener, ILocationListener
     {
         private LocationClient _locationClient;
@@ -24,7 +24,7 @@ namespace GpsTracker
         private Marker _currentPositionMarker;
         private Marker _startPositionMarker;
         private readonly List<Polyline> _polylines = new List<Polyline>();
-        private static TrackDataStorage _trackDataStorage;
+        private static TrackData _trackData;
 
         //Constants
         private const int MinimalDisplacement = 3;
@@ -39,19 +39,23 @@ namespace GpsTracker
 
             SetContentView(Resource.Layout.FullScreenMap);
 
-            if (_trackDataStorage == null)
+            if (_trackData == null)
             {
-                _trackDataStorage = new TrackDataStorage();
+                _trackData = new TrackData();
+
+                //var trackPoints = TrackOperations.GeneratedFakeTrack(1000);
+
+                //trackPoints.ForEach(p => TrackOperations.AddTrackPoint(_trackData, p));
             }
 
-            _map = ((MapFragment)FragmentManager.FindFragmentById(Resource.Id.Map)).Map;
+            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+
+            _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
             //_map.MyLocationEnabled = true;
 
             _map.UiSettings.MyLocationButtonEnabled = true;
             _map.UiSettings.CompassEnabled = true;
-
-            //GeneratedFakeTrack(10000);
         }
 
         protected override void OnStart()
@@ -61,8 +65,8 @@ namespace GpsTracker
             _locationClient = new LocationClient(this, this, this);
             _locationClient.Connect();
 
-            UpdateTrackPointsWidget(_trackDataStorage.TrackPoints.Count);
-            UpdateDistanceWidget(_trackDataStorage.TotalDistance.MetersToKilometers());
+            UpdateTrackPointsWidget(_trackData.TrackPoints.Count);
+            UpdateDistanceWidget(_trackData.TotalDistance.MetersToKilometers());
         }
 
         protected override void OnSaveInstanceState(Bundle outState)
@@ -131,22 +135,22 @@ namespace GpsTracker
 
             var trackPoint = location.ToLatLng();
 
-            if (_trackDataStorage.TrackPoints.Any())
+            if (_trackData.TrackPoints.Any())
             {
-                var displacement = _trackDataStorage.TrackPoints.Last().DistanceTo(trackPoint);
+                var displacement = _trackData.TrackPoints.Last().DistanceTo(trackPoint);
 
                 if (displacement >= MinimalDisplacement)
                 {
-                    _trackDataStorage.AddTrackPoint(trackPoint);
+                    TrackOperations.AddTrackPoint(_trackData, trackPoint);
                 }
             }
             else
             {
-                _trackDataStorage.AddTrackPoint(trackPoint);
+                TrackOperations.AddTrackPoint(_trackData, trackPoint);
             }
 
-            UpdateTrackPointsWidget(_trackDataStorage.TrackPoints.Count);
-            UpdateDistanceWidget(_trackDataStorage.TotalDistance.MetersToKilometers());
+            UpdateTrackPointsWidget(_trackData.TrackPoints.Count);
+            UpdateDistanceWidget(_trackData.TotalDistance.MetersToKilometers());
             ShowTrack();
         }
 
@@ -168,82 +172,40 @@ namespace GpsTracker
         {
             var st = DateTime.Now;
 
-            const int overlay = 1;
-
-            if (_trackDataStorage.TrackPoints.Any())
+            if (_trackData.TrackPoints.Any())
             {
                 if (_startPositionMarker == null)
                 {
-                    _startPositionMarker = CreateStartPositionMarker(_map, _trackDataStorage.TrackPoints.First());
+                    _startPositionMarker = CreateStartPositionMarker(_map, _trackData.TrackPoints.First());
                 }
                 else
                 {
-                    _startPositionMarker.Position = _trackDataStorage.TrackPoints.First();
+                    _startPositionMarker.Position = _trackData.TrackPoints.First();
                 }
             }
 
-            if (_trackDataStorage.TrackPoints.Count > 1)
+            if (_trackData.TrackPoints.Count > 1)
             {
-                var expectedWholePolylinesNumber =
-                    Math.Ceiling(((decimal)_trackDataStorage.TrackPoints.Count / MaxPointsInPolylineQuantity));
+                var segments = TrackOperations.SplitTrackOnSegments(_trackData.TrackPoints, MaxPointsInPolylineQuantity);
 
                 if (!_polylines.Any())
                 {
-                    var segments = new List<List<LatLng>>();
-                    var n = 0;
+                    var polylines = segments.Select(s => CreatePolyline(_map, s, new PolylineOptions()));
 
-                    while (segments.Count < expectedWholePolylinesNumber)
-                    {
-                        if (_trackDataStorage.TrackPoints.Count >= MaxPointsInPolylineQuantity * (n + 1))
-                        {
-                            var index = n != 0 ? n * MaxPointsInPolylineQuantity - overlay : n * MaxPointsInPolylineQuantity;
-                            var count = n != 0 ? MaxPointsInPolylineQuantity + overlay : MaxPointsInPolylineQuantity;
-
-                            segments.Add(_trackDataStorage.TrackPoints.GetRange(index, count));
-                            n++;
-                        }
-                        else
-                        {
-                            var index = n != 0 ? n * MaxPointsInPolylineQuantity - overlay : n * MaxPointsInPolylineQuantity;
-                            var count = n != 0
-                                ? _trackDataStorage.TrackPoints.Count - n * MaxPointsInPolylineQuantity + overlay
-                                : _trackDataStorage.TrackPoints.Count - n * MaxPointsInPolylineQuantity;
-
-                            segments.Add(_trackDataStorage.TrackPoints.GetRange(index, count));
-                        }
-                    }
-
-                    foreach (var segment in segments)
-                    {
-                        var polyline = CreatePolyline(_map, segment, new PolylineOptions());
-
-                        _polylines.Add(polyline);
-                    }
+                    _polylines.AddRange(polylines);
                 }
 
-                else if (expectedWholePolylinesNumber == _polylines.Count)
+                else if (segments.Count == _polylines.Count)
                 {
-                    var index = _polylines.Count > 1
-                        ? (_polylines.Count - 1) * MaxPointsInPolylineQuantity - overlay
-                        : (_polylines.Count - 1) * MaxPointsInPolylineQuantity;
-                    var count = _polylines.Count > 1
-                        ? _trackDataStorage.TrackPoints.Count - (_polylines.Count - 1) * MaxPointsInPolylineQuantity +
-                          overlay
-                        : _trackDataStorage.TrackPoints.Count - (_polylines.Count - 1) * MaxPointsInPolylineQuantity;
-
                     var lastPolyline = _polylines.Last();
-                    var newSegment = _trackDataStorage.TrackPoints.GetRange(index, count);
+                    var newSegment = segments.Last();
 
                     lastPolyline.Points = newSegment;
                 }
 
-                if (expectedWholePolylinesNumber > _polylines.Count)
+                if (segments.Count > _polylines.Count)
                 {
-                    var index = _polylines.Count * MaxPointsInPolylineQuantity - overlay;
-                    var count = _trackDataStorage.TrackPoints.Count - _polylines.Count * MaxPointsInPolylineQuantity +
-                                overlay;
-
-                    var newSegment = _trackDataStorage.TrackPoints.GetRange(index, count);
+                    var newSegment = segments.Last();
                     var polyline = CreatePolyline(_map, newSegment, new PolylineOptions());
 
                     _polylines.Add(polyline);
@@ -251,11 +213,11 @@ namespace GpsTracker
 
                 if (_currentPositionMarker == null)
                 {
-                    _currentPositionMarker = CreateCurrentPositionMarker(_map, _trackDataStorage.TrackPoints.Last());
+                    _currentPositionMarker = CreateCurrentPositionMarker(_map, _trackData.TrackPoints.Last());
                 }
                 else
                 {
-                    _currentPositionMarker.Position = _trackDataStorage.TrackPoints.Last();
+                    _currentPositionMarker.Position = _trackData.TrackPoints.Last();
                 }
             }
 
@@ -344,24 +306,6 @@ namespace GpsTracker
             if (savedInstanceState != null)
             {
                 _zoom = savedInstanceState.GetFloat("zoom");
-            }
-        }
-
-        private void GeneratedFakeTrack(int n)
-        {
-            var random = new Random();
-            var lat = 53.926193;
-
-            if (!_trackDataStorage.TrackPoints.Any())
-            {
-                for (var i = 0; i < n; i++)
-                {
-                    lat += 0.000008;
-
-                    var x = (double)1 / random.Next(-100000, 100000);
-
-                    _trackDataStorage.TrackPoints.Add(new LatLng(lat, 27.689841 + x));
-                }
             }
         }
 
