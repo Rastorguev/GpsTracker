@@ -12,24 +12,27 @@ namespace GpsTracker
 
         public static Location ToLocation(this LatLng latLng)
         {
-            return new Location("") { Latitude = latLng.Latitude, Longitude = latLng.Longitude };
+            return new Location("") {Latitude = latLng.Latitude, Longitude = latLng.Longitude};
         }
 
-        public static float DistanceTo(this LatLng startPoint, LatLng destination)
+        public static float DistanceTo(this LatLng point1, LatLng point2)
         {
-            var distance = (startPoint.ToLocation()).DistanceTo(destination.ToLocation());
+            var location1 = point1.ToLocation();
+            var location2 = point2.ToLocation();
+
+            var distance = location1.DistanceTo(location2);
 
             return distance;
         }
 
         public static float MetersToKilometers(this float meters)
         {
-            return meters / 1000;
+            return meters/1000;
         }
 
         public static float MetersPerSecondToKilometersPerHour(this float speed)
         {
-            return speed * (float)3.6;
+            return speed*(float) 3.6;
         }
     }
 }

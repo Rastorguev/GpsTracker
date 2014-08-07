@@ -26,10 +26,6 @@ namespace GpsTracker
         private readonly List<Polyline> _polylines = new List<Polyline>();
         private static TrackData _trackData;
 
-        //Constants
-        private const int MinimalDisplacement = 3;
-        private const int MaxPointsInPolylineQuantity = 500;
-
         #region Life Circle
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -52,8 +48,6 @@ namespace GpsTracker
 
             _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
-            //_map.MyLocationEnabled = true;
-
             _map.UiSettings.MyLocationButtonEnabled = true;
             _map.UiSettings.CompassEnabled = true;
         }
@@ -65,8 +59,7 @@ namespace GpsTracker
             _locationClient = new LocationClient(this, this, this);
             _locationClient.Connect();
 
-            UpdateTrackPointsWidget(_trackData.TrackPoints.Count);
-            UpdateDistanceWidget(_trackData.TotalDistance.MetersToKilometers());
+            UpdateTrackInfo();
         }
 
         protected override void OnSaveInstanceState(Bundle outState)
@@ -107,7 +100,6 @@ namespace GpsTracker
             locationRequest.SetPriority(LocationRequest.PriorityHighAccuracy);
             locationRequest.SetFastestInterval(1000);
             locationRequest.SetInterval(2000);
-            //locationRequest.SetSmallestDisplacement(1);
 
             _locationClient.RequestLocationUpdates(locationRequest, this);
 
@@ -134,24 +126,12 @@ namespace GpsTracker
             }
 
             var trackPoint = location.ToLatLng();
+            var pointAdded = TrackOperations.TryAddTrackPoint(_trackData, trackPoint);
 
-            if (_trackData.TrackPoints.Any())
+            if (pointAdded)
             {
-                var displacement = _trackData.TrackPoints.Last().DistanceTo(trackPoint);
-
-                if (displacement >= MinimalDisplacement)
-                {
-                    TrackOperations.AddTrackPoint(_trackData, trackPoint);
-                }
+                UpdateTrackInfo();
             }
-            else
-            {
-                TrackOperations.AddTrackPoint(_trackData, trackPoint);
-            }
-
-            UpdateTrackPointsWidget(_trackData.TrackPoints.Count);
-            UpdateDistanceWidget(_trackData.TotalDistance.MetersToKilometers());
-            ShowTrack();
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -168,25 +148,32 @@ namespace GpsTracker
 
         #region Path Display Methods
 
-        private void ShowTrack()
+        private void UpdateTrackInfo()
+        {
+            ShowTrack(_trackData.TrackPoints);
+            UpdateTrackPointsWidget(_trackData.TrackPoints.Count);
+            UpdateDistanceWidget(_trackData.TotalDistance.MetersToKilometers());
+        }
+
+        private void ShowTrack(List<LatLng> trackPoints)
         {
             var st = DateTime.Now;
 
-            if (_trackData.TrackPoints.Any())
+            if (trackPoints.Any())
             {
                 if (_startPositionMarker == null)
                 {
-                    _startPositionMarker = CreateStartPositionMarker(_map, _trackData.TrackPoints.First());
+                    _startPositionMarker = CreateStartPositionMarker(_map, trackPoints.First());
                 }
                 else
                 {
-                    _startPositionMarker.Position = _trackData.TrackPoints.First();
+                    _startPositionMarker.Position = trackPoints.First();
                 }
             }
 
-            if (_trackData.TrackPoints.Count > 1)
+            if (trackPoints.Count > 1)
             {
-                var segments = TrackOperations.SplitTrackOnSegments(_trackData.TrackPoints, MaxPointsInPolylineQuantity);
+                var segments = TrackOperations.SplitTrackOnSegments(trackPoints);
 
                 if (!_polylines.Any())
                 {
@@ -213,11 +200,11 @@ namespace GpsTracker
 
                 if (_currentPositionMarker == null)
                 {
-                    _currentPositionMarker = CreateCurrentPositionMarker(_map, _trackData.TrackPoints.Last());
+                    _currentPositionMarker = CreateCurrentPositionMarker(_map, trackPoints.Last());
                 }
                 else
                 {
-                    _currentPositionMarker.Position = _trackData.TrackPoints.Last();
+                    _currentPositionMarker.Position = trackPoints.Last();
                 }
             }
 
@@ -251,19 +238,25 @@ namespace GpsTracker
 
         private Polyline CreatePolyline(GoogleMap map, List<LatLng> trackPoints, PolylineOptions polylineOptions)
         {
-            var color = Resources.GetColor(Resource.Color.track_color);
-            //var random = new Random();
-            //var red = random.Next(0, 255);
-            //var green = random.Next(0, 255);
-            //var blue = random.Next(0, 255);
-            //polylineOptions.InvokeColor(Color.Argb(255, red, green, blue));
-            polylineOptions.InvokeColor(color);
+            polylineOptions.InvokeColor(GetPolylineColor());
             polylineOptions.InvokeWidth(6);
 
             trackPoints.ForEach(p => polylineOptions.Add(p));
             var polyline = map.AddPolyline(polylineOptions);
 
             return polyline;
+        }
+
+        private Color GetPolylineColor()
+        {
+            var color = Resources.GetColor(Resource.Color.track_color);
+            //var random = new Random();
+            //var red = random.Next(0, 255);
+            //var green = random.Next(0, 255);
+            //var blue = random.Next(0, 255);
+            //var color=Color.Argb(255, red, green, blue));
+
+            return color;
         }
 
         private void MoveCamera(LatLng trackPoint)
@@ -288,7 +281,7 @@ namespace GpsTracker
         private void UpdateDistanceWidget(float distance)
         {
             var distanceWidget = FindViewById<TextView>(Resource.Id.DistanceWidget);
-            distanceWidget.Text = String.Format("{0:0.00}", distance);
+            distanceWidget.Text = String.Format("{0:0.000}", distance);
         }
 
         private void UpdateSpeedWidget(double speed)

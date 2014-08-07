@@ -7,57 +7,74 @@ namespace GpsTracker
 {
     internal static class TrackOperations
     {
-        public static TrackData AddTrackPoint(TrackData trackData, LatLng trackPoint)
-        {
-            trackData.TrackPoints.Add(trackPoint);
+        private const int MinimalDisplacement = 3;
+        private const int SegmentMaxLength = 500;
 
-            if (trackData.TrackPoints.Count > 1)
+        public static bool TryAddTrackPoint(TrackData trackData, LatLng trackPoint)
+        {
+            var trackPoints = trackData.TrackPoints;
+
+            if (trackPoints.Any())
             {
-                var distance = CalculateDistanceBetweenTwoLastPoints(trackData);
-                trackData.TotalDistance += distance;
+                var pointsAreEqual = trackPoints.Last().Equals(trackPoint);
+
+                if (!pointsAreEqual)
+                {
+                    if (trackPoints.Count > 1)
+                    {
+                        var distanceBetweenTwoLastPoints =
+                            trackPoints.Last().DistanceTo(trackPoints[trackPoints.Count - 2]);
+
+                        if (distanceBetweenTwoLastPoints < MinimalDisplacement)
+                        {
+                            trackPoints.Remove(trackPoints.Last());
+                            trackData.TotalDistance -= distanceBetweenTwoLastPoints;
+                        }
+                    }
+
+                    var displacement = trackPoints.Last().DistanceTo(trackPoint);
+
+                    trackData.TrackPoints.Add(trackPoint);
+                    trackData.TotalDistance += displacement;
+
+                    return true;
+                }
+            }
+            else
+            {
+                trackData.TrackPoints.Add(trackPoint);
+
+                return true;
             }
 
-            return trackData;
+            return false;
         }
 
-        private static float CalculateDistanceBetweenTwoLastPoints(TrackData trackData)
-        {
-            if (trackData.TrackPoints.Count > 1)
-            {
-                var distance =
-                    (trackData.TrackPoints.Last()).DistanceTo(trackData.TrackPoints[trackData.TrackPoints.Count - 2]);
-
-                return distance;
-            }
-
-            return 0;
-        }
-
-        public static List<List<LatLng>> SplitTrackOnSegments(List<LatLng> trackPoints, int segmentMaxLength)
+        public static List<List<LatLng>> SplitTrackOnSegments(List<LatLng> trackPoints)
         {
             const int overlay = 1;
             var expectedSegmentsNumber =
-                Math.Ceiling(((decimal) trackPoints.Count/segmentMaxLength));
+                Math.Ceiling(((decimal) trackPoints.Count/SegmentMaxLength));
 
             var segments = new List<List<LatLng>>();
             var n = 0;
 
             while (segments.Count < expectedSegmentsNumber)
             {
-                if (trackPoints.Count >= segmentMaxLength*(n + 1))
+                if (trackPoints.Count >= SegmentMaxLength*(n + 1))
                 {
-                    var index = n != 0 ? n*segmentMaxLength - overlay : n*segmentMaxLength;
-                    var count = n != 0 ? segmentMaxLength + overlay : segmentMaxLength;
+                    var index = n != 0 ? n*SegmentMaxLength - overlay : n*SegmentMaxLength;
+                    var count = n != 0 ? SegmentMaxLength + overlay : SegmentMaxLength;
 
                     segments.Add(trackPoints.GetRange(index, count));
                     n++;
                 }
                 else
                 {
-                    var index = n != 0 ? n*segmentMaxLength - overlay : n*segmentMaxLength;
+                    var index = n != 0 ? n*SegmentMaxLength - overlay : n*SegmentMaxLength;
                     var count = n != 0
-                        ? trackPoints.Count - n*segmentMaxLength + overlay
-                        : trackPoints.Count - n*segmentMaxLength;
+                        ? trackPoints.Count - n*SegmentMaxLength + overlay
+                        : trackPoints.Count - n*SegmentMaxLength;
 
                     segments.Add(trackPoints.GetRange(index, count));
                 }
@@ -65,7 +82,6 @@ namespace GpsTracker
 
             return segments;
         }
-
 
         public static List<LatLng> GeneratedFakeTrack(int n)
         {
