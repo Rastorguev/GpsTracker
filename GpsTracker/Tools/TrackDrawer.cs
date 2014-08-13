@@ -13,7 +13,7 @@ namespace GpsTracker
         private Marker _startPositionMarker;
         private readonly List<Polyline> _polylines = new List<Polyline>();
         private readonly GoogleMap _map;
-        private const int SegmentMaxLength = 4;
+        private const int SegmentMaxLength = 500;
 
         #region Path Display Methods
 

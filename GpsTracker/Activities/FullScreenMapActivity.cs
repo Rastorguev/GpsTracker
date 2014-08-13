@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Android.App;
 using Android.Gms.Common;
 using Android.Gms.Location;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
-using Android.Graphics;
 using Android.Locations;
 using Android.OS;
 using Android.Widget;
+using GpsTracker.Managers;
 using ILocationListener = Android.Gms.Location.ILocationListener;
 
 namespace GpsTracker
@@ -23,8 +21,8 @@ namespace GpsTracker
         private float _zoom = 18;
         private Marker _currentPositionMarker;
         private Marker _startPositionMarker;
-        private static TrackData _trackData;
         private ITrackDrawer _trackDrawer;
+        private static ActiveTrackManager _activeTrackManager;
 
         #region Life Circle
 
@@ -35,33 +33,41 @@ namespace GpsTracker
 
             SetContentView(Resource.Layout.FullScreenMap);
 
-
-            if (_trackData == null)
+            if (_activeTrackManager == null)
             {
-                _trackData = new TrackData();
-
-                //var trackPoints = TrackOperations.GeneratedFakeTrack(1000);
-
-                //trackPoints.ForEach(p => TrackOperations.AddTrackPoint(_trackData, p));
+                _activeTrackManager = new ActiveTrackManager();
+                _activeTrackManager.StartTrack();
             }
 
-            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+            if (!_activeTrackManager.IsStarted)
+            {
+                _activeTrackManager.StartTrack();
+            }
+
+            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.Map);
 
             _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
 
             _map.UiSettings.MyLocationButtonEnabled = true;
             _map.UiSettings.CompassEnabled = true;
-            _trackDrawer=new TrackDrawer(_map);
+
+            _trackDrawer = new TrackDrawer(_map);
+
+            _locationClient = new LocationClient(this, this, this);
+            _locationClient.Connect();
         }
 
         protected override void OnStart()
         {
             base.OnStart();
+            UpdateTrackInfo();
+        }
 
-            _locationClient = new LocationClient(this, this, this);
-            _locationClient.Connect();
-
+        protected override void OnPause()
+        {
+            _trackDrawer.RemoveTrack();
+            base.OnStart();
             UpdateTrackInfo();
         }
 
@@ -129,7 +135,7 @@ namespace GpsTracker
             }
 
             var trackPoint = location.ToLatLng();
-            var pointAdded = TrackOperations.TryAddTrackPoint(_trackData, trackPoint);
+            var pointAdded = _activeTrackManager.TryAddTrackPoint(trackPoint);
 
             if (pointAdded)
             {
@@ -153,9 +159,12 @@ namespace GpsTracker
 
         private void UpdateTrackInfo()
         {
-            _trackDrawer.DrawTrack(_trackData.TrackPoints);
-            UpdateTrackPointsWidget(_trackData.TrackPoints.Count);
-            UpdateDistanceWidget(_trackData.TotalDistance.MetersToKilometers());
+            var trackPoints = _activeTrackManager.TrackPoints;
+            var distance = _activeTrackManager.Distance;
+
+            _trackDrawer.DrawTrack(trackPoints);
+            UpdateTrackPointsWidget(trackPoints.Count);
+            UpdateDistanceWidget(distance.MetersToKilometers());
         }
 
         private void MoveCamera(LatLng trackPoint)
