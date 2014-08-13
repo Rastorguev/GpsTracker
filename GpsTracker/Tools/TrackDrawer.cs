@@ -104,16 +104,18 @@ namespace GpsTracker
 
             if (segments.Count > _polylines.Count)
             {
-                for (var i = _polylines.Count - 2; i < segments.Count - 1; i++)
+                for (var i = _polylines.Count - 1; i <= segments.Count - 1; i++)
                 {
                     if (_polylines.ElementAtOrDefault(i) != null)
                     {
-                        _polylines[i].Remove();
+                        _polylines[i].Points = segments[i];
                     }
+                    else
+                    {
+                        var polyline = CreatePolyline(segments[i]);
 
-                    var polyline = CreatePolyline(segments[i]);
-
-                    _polylines[i] = polyline;
+                        _polylines.Add(polyline);
+                    }
                 }
             }
         }
@@ -172,16 +174,16 @@ namespace GpsTracker
         {
             const int overlay = 1;
             var expectedSegmentsNumber =
-                Math.Ceiling(((decimal) trackPoints.Count/SegmentMaxLength));
+                Math.Ceiling(((decimal)trackPoints.Count / SegmentMaxLength));
 
             var segments = new List<List<LatLng>>();
             var n = 0;
 
             while (segments.Count < expectedSegmentsNumber)
             {
-                if (trackPoints.Count >= SegmentMaxLength*(n + 1))
+                if (trackPoints.Count >= SegmentMaxLength * (n + 1))
                 {
-                    var index = n != 0 ? n*SegmentMaxLength - overlay : n*SegmentMaxLength;
+                    var index = n != 0 ? n * SegmentMaxLength - overlay : n * SegmentMaxLength;
                     var count = n != 0 ? SegmentMaxLength + overlay : SegmentMaxLength;
 
                     segments.Add(trackPoints.GetRange(index, count));
@@ -189,10 +191,10 @@ namespace GpsTracker
                 }
                 else
                 {
-                    var index = n != 0 ? n*SegmentMaxLength - overlay : n*SegmentMaxLength;
+                    var index = n != 0 ? n * SegmentMaxLength - overlay : n * SegmentMaxLength;
                     var count = n != 0
-                        ? trackPoints.Count - n*SegmentMaxLength + overlay
-                        : trackPoints.Count - n*SegmentMaxLength;
+                        ? trackPoints.Count - n * SegmentMaxLength + overlay
+                        : trackPoints.Count - n * SegmentMaxLength;
 
                     segments.Add(trackPoints.GetRange(index, count));
                 }
