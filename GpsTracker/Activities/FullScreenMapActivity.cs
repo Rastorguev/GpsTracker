@@ -23,6 +23,9 @@ namespace GpsTracker
         private Marker _startPositionMarker;
         private ITrackDrawer _trackDrawer;
         private static ActiveTrackManager _activeTrackManager;
+        private TextView _trackPointsQuantityWidget;
+        private TextView _distanceWidget;
+        private TextView _speedWidget;
 
         #region Life Circle
 
@@ -44,7 +47,7 @@ namespace GpsTracker
                 _activeTrackManager.StartTrack();
             }
 
-            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.Map);
+            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
 
             _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
@@ -67,8 +70,7 @@ namespace GpsTracker
         protected override void OnPause()
         {
             _trackDrawer.RemoveTrack();
-            base.OnStart();
-            UpdateTrackInfo();
+            base.OnPause();
         }
 
         protected override void OnSaveInstanceState(Bundle outState)
@@ -182,20 +184,32 @@ namespace GpsTracker
 
         private void UpdateTrackPointsWidget(int trackPointsQuantity)
         {
-            var trackPointsQuantityWidget = FindViewById<TextView>(Resource.Id.TrackPointsQuantityWidget);
-            trackPointsQuantityWidget.Text = trackPointsQuantity.ToString();
+            if (_trackPointsQuantityWidget == null)
+            {
+                _trackPointsQuantityWidget = FindViewById<TextView>(Resource.Id.TrackPointsQuantityWidget);
+            }
+
+            _trackPointsQuantityWidget.Text = trackPointsQuantity.ToString();
         }
 
         private void UpdateDistanceWidget(float distance)
         {
-            var distanceWidget = FindViewById<TextView>(Resource.Id.DistanceWidget);
-            distanceWidget.Text = String.Format("{0:0.000}", distance);
+            if (_distanceWidget == null)
+            {
+                _distanceWidget = FindViewById<TextView>(Resource.Id.DistanceWidget);
+            }
+
+            _distanceWidget.Text = String.Format("{0:0.000}", distance);
         }
 
         private void UpdateSpeedWidget(double speed)
         {
-            var speedWidget = FindViewById<TextView>(Resource.Id.SpeedWidget);
-            speedWidget.Text = String.Format("{0:0.00}", speed);
+            if (_speedWidget == null)
+            {
+                _speedWidget = FindViewById<TextView>(Resource.Id.SpeedWidget);
+            }
+
+            _speedWidget.Text = String.Format("{0:0.00}", speed);
         }
 
         #endregion
