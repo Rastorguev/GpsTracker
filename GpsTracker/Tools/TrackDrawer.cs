@@ -47,15 +47,21 @@ namespace GpsTracker
             if (_startPositionMarker != null)
             {
                 _startPositionMarker.Remove();
+                _startPositionMarker.Dispose();
                 _startPositionMarker = null;
             }
             if (_currentPositionMarker != null)
             {
                 _currentPositionMarker.Remove();
+                _currentPositionMarker.Dispose();
                 _currentPositionMarker = null;
             }
 
-            _polylines.ForEach(p => p.Remove());
+            _polylines.ForEach(p =>
+            {
+                p.Remove();
+                p.Dispose();
+            });
             _polylines.Clear();
         }
 

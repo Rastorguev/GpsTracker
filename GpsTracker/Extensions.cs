@@ -30,9 +30,9 @@ namespace GpsTracker
             return meters/1000;
         }
 
-        public static float MetersPerSecondToKilometersPerHour(this float speed)
+        public static double MetersPerSecondToKilometersPerHour(this double speed)
         {
-            return speed*(float) 3.6;
+            return speed*3.6;
         }
     }
 }

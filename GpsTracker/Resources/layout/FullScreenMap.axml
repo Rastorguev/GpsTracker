@@ -83,7 +83,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginRight="10dip">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,6 +112,27 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/full_screen_map_track_widget_text_name"
                 android:layout_weight="1"
+                android:gravity="left"
+                android:textColor="@color/full_screen_map_track_widget_text_name"
+                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:text="00:00:00"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/DurationWidget"
+                android:textSize="@dimen/full_screen_map_track_widget_text_value"
+                android:gravity="left"
+                android:textColor="@color/full_screen_map_track_widget_text_value" />
+            <TextView
+                android:text="@string/duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/full_screen_map_track_widget_text_name"
                 android:gravity="left"
                 android:textColor="@color/full_screen_map_track_widget_text_name"
                 android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />

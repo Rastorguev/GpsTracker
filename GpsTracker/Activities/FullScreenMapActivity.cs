@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using Android.App;
 using Android.Gms.Common;
 using Android.Gms.Location;
@@ -26,6 +27,8 @@ namespace GpsTracker
         private TextView _trackPointsQuantityWidget;
         private TextView _distanceWidget;
         private TextView _speedWidget;
+        private Timer _trackInfoUpdateTimer;
+        private TextView _durationWidget;
 
         #region Life Circle
 
@@ -47,7 +50,7 @@ namespace GpsTracker
                 _activeTrackManager.StartTrack();
             }
 
-            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.Map);
 
             _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
@@ -59,18 +62,28 @@ namespace GpsTracker
 
             _locationClient = new LocationClient(this, this, this);
             _locationClient.Connect();
+
+            _trackInfoUpdateTimer = new Timer(1000);
         }
 
         protected override void OnStart()
         {
             base.OnStart();
             UpdateTrackInfo();
+
+            _trackInfoUpdateTimer.Elapsed += UpdateTrackInfoEventHandler;
+            _trackInfoUpdateTimer.Start();
         }
 
         protected override void OnPause()
         {
-            _trackDrawer.RemoveTrack();
             base.OnPause();
+
+            _trackDrawer.RemoveTrack();
+            _trackInfoUpdateTimer.Elapsed -= UpdateTrackInfoEventHandler;
+            _trackInfoUpdateTimer.Stop();
+
+            GC.Collect();
         }
 
         protected override void OnSaveInstanceState(Bundle outState)
@@ -97,7 +110,7 @@ namespace GpsTracker
                 _locationClient.Dispose();
             }
 
-            GC.Collect();
+            GC.Collect(GC.MaxGeneration);
         }
 
         #endregion
@@ -109,9 +122,9 @@ namespace GpsTracker
             var locationRequest = new LocationRequest();
 
             locationRequest.SetPriority(LocationRequest.PriorityHighAccuracy);
+            locationRequest.SetInterval(1000);
             locationRequest.SetFastestInterval(1000);
-            locationRequest.SetInterval(2000);
-
+           
             _locationClient.RequestLocationUpdates(locationRequest, this);
 
             var location = _locationClient.LastLocation;
@@ -130,12 +143,6 @@ namespace GpsTracker
 
         public void OnLocationChanged(Location location)
         {
-            if (location.HasSpeed)
-            {
-                var speed = location.Speed;
-                UpdateSpeedWidget(speed.MetersPerSecondToKilometersPerHour());
-            }
-
             var trackPoint = location.ToLatLng();
             var pointAdded = _activeTrackManager.TryAddTrackPoint(trackPoint);
 
@@ -210,6 +217,23 @@ namespace GpsTracker
             }
 
             _speedWidget.Text = String.Format("{0:0.00}", speed);
+        }
+
+
+        private void UpdateDurationWidget(TimeSpan duration)
+        {
+            if (_durationWidget == null)
+            {
+                _durationWidget = FindViewById<TextView>(Resource.Id.DurationWidget);
+            }
+
+            _durationWidget.Text = String.Format("{0:hh\\:mm\\:ss}", duration);
+        }
+
+        private void UpdateTrackInfoEventHandler(object sender, EventArgs e)
+        {
+            RunOnUiThread(() => UpdateDurationWidget(_activeTrackManager.Duration));
+            RunOnUiThread(() => UpdateSpeedWidget(_activeTrackManager.Speed.MetersPerSecondToKilometersPerHour()));
         }
 
         #endregion

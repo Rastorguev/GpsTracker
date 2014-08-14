@@ -1177,14 +1177,17 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070050
 			public const int DistanceWidget = 2131165264;
 			
+			// aapt resource value: 0x7f070052
+			public const int DurationWidget = 2131165266;
+			
 			// aapt resource value: 0x7f07004e
 			public const int Map = 2131165262;
 			
 			// aapt resource value: 0x7f070051
 			public const int SpeedWidget = 2131165265;
 			
-			// aapt resource value: 0x7f070052
-			public const int StartButton = 2131165266;
+			// aapt resource value: 0x7f070053
+			public const int StartButton = 2131165267;
 			
 			// aapt resource value: 0x7f07004f
 			public const int TrackPointsQuantityWidget = 2131165263;
@@ -1312,20 +1315,20 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070024
 			public const int match_parent = 2131165220;
 			
-			// aapt resource value: 0x7f070056
-			public const int media_route_control_frame = 2131165270;
-			
 			// aapt resource value: 0x7f070057
-			public const int media_route_disconnect_button = 2131165271;
+			public const int media_route_control_frame = 2131165271;
 			
-			// aapt resource value: 0x7f070053
-			public const int media_route_list = 2131165267;
+			// aapt resource value: 0x7f070058
+			public const int media_route_disconnect_button = 2131165272;
 			
 			// aapt resource value: 0x7f070054
-			public const int media_route_volume_layout = 2131165268;
+			public const int media_route_list = 2131165268;
 			
 			// aapt resource value: 0x7f070055
-			public const int media_route_volume_slider = 2131165269;
+			public const int media_route_volume_layout = 2131165269;
+			
+			// aapt resource value: 0x7f070056
+			public const int media_route_volume_slider = 2131165270;
 			
 			// aapt resource value: 0x7f070012
 			public const int middle = 2131165202;
@@ -1694,10 +1697,13 @@ namespace GpsTracker
 			public const int distance = 2131034160;
 			
 			// aapt resource value: 0x7f050031
-			public const int km = 2131034161;
+			public const int duration = 2131034161;
 			
 			// aapt resource value: 0x7f050032
-			public const int km_h = 2131034162;
+			public const int km = 2131034162;
+			
+			// aapt resource value: 0x7f050033
+			public const int km_h = 2131034163;
 			
 			// aapt resource value: 0x7f050002
 			public const int mr_media_route_button_content_description = 2131034114;
@@ -2560,7 +2566,7 @@ namespace GpsTracker
 					16843055,
 					16843056,
 					16843057,
-					16843754};
+					16843788};
 			
 			// aapt resource value: 4
 			public const int MenuView_android_headerBackground = 4;
