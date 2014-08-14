@@ -49,8 +49,6 @@ namespace GpsTracker.Managers
             get { return _activeTrack.TrackPoints; }
         }
 
-        public float? CurrentSpeed { get; set; }
-
         public void StartTrack()
         {
             _startTime = DateTime.Now;

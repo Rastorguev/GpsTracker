@@ -52,7 +52,7 @@ namespace GpsTracker
                 _activeTrackManager.StartTrack();
             }
 
-            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.Map);
+            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
 
             _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
@@ -147,21 +147,12 @@ namespace GpsTracker
 
         public void OnLocationChanged(Location location)
         {
-            if (location.HasSpeed)
-            {
-                _activeTrackManager.CurrentSpeed = location.Speed;
-            }
-            else
-            {
-                _activeTrackManager.CurrentSpeed = null;
-            }
+            var currentSpeed = !location.HasSpeed ? (float?) location.Speed : null;
 
-            UpdateCurrentSpeedWidget(_activeTrackManager.CurrentSpeed);
+            UpdateCurrentSpeedWidget(currentSpeed);
 
             var trackPoint = location.ToLatLng();
             var pointAdded = _activeTrackManager.TryAddTrackPoint(trackPoint);
-
-         
 
             if (pointAdded)
             {
@@ -172,7 +163,6 @@ namespace GpsTracker
 
                 UpdateTrackPointsWidget(trackPoints.Count);
                 UpdateDistanceWidget(distance.MetersToKilometers());
-                
             }
         }
 
@@ -195,12 +185,12 @@ namespace GpsTracker
             var trackPoints = _activeTrackManager.TrackPoints;
             var distance = _activeTrackManager.Distance.MetersToKilometers();
             var duration = _activeTrackManager.Duration;
-            var currentSpeed = _activeTrackManager.CurrentSpeed;
 
             UpdateTrackPointsWidget(trackPoints.Count);
             UpdateDistanceWidget(distance);
             UpdateDurationWidget(duration);
-            UpdateCurrentSpeedWidget(currentSpeed);
+
+            UpdateCurrentSpeedWidget(null);
         }
 
         private void MoveCamera(LatLng trackPoint)
@@ -258,10 +248,10 @@ namespace GpsTracker
                 _currentSpeedWidgetUnit = FindViewById<TextView>(Resource.Id.CurrentSpeedWidget_Unit);
             }
 
-            if (speed!=null)
+            if (speed != null)
             {
                 _currentSpeedWidgetValue.Text = String.Format("{0:0.0}", speed);
-                _currentSpeedWidgetUnit.Visibility=ViewStates.Visible;
+                _currentSpeedWidgetUnit.Visibility = ViewStates.Visible;
             }
             else
             {
