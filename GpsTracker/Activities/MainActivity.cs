@@ -3,7 +3,7 @@ using Android.App;
 using Android.OS;
 using Android.Widget;
 
-namespace GpsTracker
+namespace GpsTracker.Activities
 {
     [Activity(Label = "@string/app_name", MainLauncher = true)]
     internal class MainActivity : Activity
@@ -29,8 +29,6 @@ namespace GpsTracker
                     Console.WriteLine(e.Message);
                 }
             };
-
-            var text = _startButton.Text;
         }
     }
 }

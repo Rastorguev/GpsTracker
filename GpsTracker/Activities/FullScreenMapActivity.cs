@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Timers;
 using Android.App;
-using Android.Gms.Common;
+using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
@@ -12,17 +13,14 @@ using Android.Widget;
 using GpsTracker.Managers;
 using ILocationListener = Android.Gms.Location.ILocationListener;
 
-namespace GpsTracker
+namespace GpsTracker.Activities
 {
     [Activity(Label = "@string/app_name", MainLauncher = false)]
-    internal class FullScreenMapActivity : Activity, IGooglePlayServicesClientConnectionCallbacks,
-        IGooglePlayServicesClientOnConnectionFailedListener, GoogleMap.IOnCameraChangeListener, ILocationListener
+    internal class FullScreenMapActivity : Activity, IGoogleApiClientConnectionCallbacks, GoogleMap.IOnCameraChangeListener, ILocationListener
     {
-        private LocationClient _locationClient;
+        private IGoogleApiClient _locationClient;
         private GoogleMap _map;
         private float _zoom = 18;
-        private Marker _currentPositionMarker;
-        private Marker _startPositionMarker;
         private ITrackDrawer _trackDrawer;
         private static ActiveTrackManager _activeTrackManager;
         private TextView _trackPointsQuantityWidgetValue;
@@ -52,7 +50,7 @@ namespace GpsTracker
                 _activeTrackManager.StartTrack();
             }
 
-            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.Map);
 
             _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
@@ -62,10 +60,14 @@ namespace GpsTracker
 
             _trackDrawer = new TrackDrawer(_map);
 
-            _locationClient = new LocationClient(this, this, this);
-            _locationClient.Connect();
-
             _trackInfoUpdateTimer = new Timer(1000);
+
+            _locationClient = new GoogleApiClientBuilder(this)
+               .AddApi(LocationServices.Api)
+               .AddConnectionCallbacks(this)
+               .Build();
+
+            _locationClient.Connect();
         }
 
         protected override void OnStart()
@@ -73,6 +75,7 @@ namespace GpsTracker
             base.OnStart();
 
             _trackDrawer.DrawTrack(_activeTrackManager.TrackPoints);
+
             UpdateWidgets();
 
             _trackInfoUpdateTimer.Elapsed += UpdateTrackInfoEventHandler;
@@ -103,13 +106,9 @@ namespace GpsTracker
 
             if (_locationClient != null)
             {
-                if (_locationClient.IsConnected)
-                {
-                    _locationClient.RemoveLocationUpdates(this);
-                }
+                LocationServices.FusedLocationApi.RemoveLocationUpdates(_locationClient, this);
 
                 _locationClient.UnregisterConnectionCallbacks(this);
-                _locationClient.UnregisterConnectionFailedListener(this);
                 _locationClient.Disconnect();
                 _locationClient.Dispose();
             }
@@ -129,25 +128,27 @@ namespace GpsTracker
             locationRequest.SetInterval(1000);
             locationRequest.SetFastestInterval(1000);
 
-            _locationClient.RequestLocationUpdates(locationRequest, this);
 
-            var location = _locationClient.LastLocation;
+           // LocationServices.FusedLocationApi.RemoveLocationUpdates(_locationClient, this);
+            LocationServices.FusedLocationApi.RequestLocationUpdates(_locationClient, locationRequest, this);
+
+            var location = LocationServices.FusedLocationApi.GetLastLocation(_locationClient);
 
             if (location != null)
             {
-                MoveCamera(_locationClient.LastLocation.ToLatLng());
+                MoveCamera(location.ToLatLng());
                 OnLocationChanged(location);
             }
         }
 
-        public void OnConnectionFailed(ConnectionResult result)
+        public void OnConnectionSuspended(int cause)
         {
-            Toast.MakeText(this, String.Format("Connection Failed"), ToastLength.Long).Show();
+            Console.WriteLine(cause);
         }
 
         public void OnLocationChanged(Location location)
         {
-            var currentSpeed = !location.HasSpeed ? (float?) location.Speed : null;
+            var currentSpeed = location.HasSpeed ? (float?)location.Speed : null;
 
             UpdateCurrentSpeedWidget(currentSpeed);
 
@@ -169,11 +170,6 @@ namespace GpsTracker
         public void OnCameraChange(CameraPosition position)
         {
             _zoom = position.Zoom;
-        }
-
-        public void OnDisconnected()
-        {
-            Toast.MakeText(this, String.Format("Disconnected"), ToastLength.Long).Show();
         }
 
         #endregion
@@ -213,7 +209,7 @@ namespace GpsTracker
                 _trackPointsQuantityWidgetValue = FindViewById<TextView>(Resource.Id.TrackPointsQuantityWidget_Value);
             }
 
-            _trackPointsQuantityWidgetValue.Text = trackPointsQuantity.ToString();
+            _trackPointsQuantityWidgetValue.Text = trackPointsQuantity.ToString(CultureInfo.InvariantCulture);
         }
 
         private void UpdateDistanceWidget(float distance)
