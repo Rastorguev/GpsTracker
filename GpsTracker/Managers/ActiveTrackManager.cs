@@ -9,11 +9,8 @@ namespace GpsTracker.Managers
     internal class ActiveTrackManager
     {
         private const double MinimalDisplacement = 1;
-        private const int SpeedResetDelay = 5;
-
         private static TrackData _activeTrack;
         private DateTime _startTime;
-        private DateTime _lastTrackUpdateTime;
        
 
         //public TrackData ActiveTrack
@@ -47,12 +44,12 @@ namespace GpsTracker.Managers
             get { return _activeTrack.Duration + (DateTime.Now - _startTime); }
         }
 
-        public double Speed { get; private set; }
-
         public List<LatLng> TrackPoints
         {
             get { return _activeTrack.TrackPoints; }
         }
+
+        public float? CurrentSpeed { get; set; }
 
         public void StartTrack()
         {
@@ -61,7 +58,7 @@ namespace GpsTracker.Managers
             if (_activeTrack == null)
             {
                 _activeTrack = new TrackData(_startTime);
-                //GeneratedFakeTrack(5);
+                //GeneratedFakeTrack(100);
             }
 
             IsStarted = true;
@@ -80,27 +77,13 @@ namespace GpsTracker.Managers
             if (_activeTrack.TrackPoints.Any())
             {
                 var displacement = _activeTrack.TrackPoints.Last().DistanceTo(trackPoint);
-                var time = (DateTime.Now - _lastTrackUpdateTime).TotalSeconds;
 
                 if (displacement >= MinimalDisplacement)
                 {
-                    Speed = displacement/time;
-
-                    _lastTrackUpdateTime = DateTime.Now;
-                    Console.WriteLine(String.Format("!!!!! Displacement {0} !!!!!", displacement));
-                    Console.WriteLine(String.Format("!!!!! Seconds {0} !!!!!", time));
-                    Console.WriteLine(String.Format("!!!!! Speed {0} !!!!!", Speed));
-
-
                     _activeTrack.TrackPoints.Add(trackPoint);
                     _activeTrack.Distance += displacement;
 
                     isTrackPointAdded = true;
-                }
-                else if (displacement < MinimalDisplacement && time >= SpeedResetDelay )
-                {
-                    Speed = 0;
-                    _lastTrackUpdateTime = DateTime.Now;
                 }
             }
             else

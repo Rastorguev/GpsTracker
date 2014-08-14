@@ -7,6 +7,7 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
+using Android.Views;
 using Android.Widget;
 using GpsTracker.Managers;
 using ILocationListener = Android.Gms.Location.ILocationListener;
@@ -24,11 +25,12 @@ namespace GpsTracker
         private Marker _startPositionMarker;
         private ITrackDrawer _trackDrawer;
         private static ActiveTrackManager _activeTrackManager;
-        private TextView _trackPointsQuantityWidget;
-        private TextView _distanceWidget;
-        private TextView _speedWidget;
+        private TextView _trackPointsQuantityWidgetValue;
+        private TextView _distanceWidgetValue;
+        private TextView _currentSpeedWidgetValue;
+        private TextView _currentSpeedWidgetUnit;
         private Timer _trackInfoUpdateTimer;
-        private TextView _durationWidget;
+        private TextView _durationWidgetValue;
 
         #region Life Circle
 
@@ -69,7 +71,9 @@ namespace GpsTracker
         protected override void OnStart()
         {
             base.OnStart();
-            UpdateTrackInfo();
+
+            _trackDrawer.DrawTrack(_activeTrackManager.TrackPoints);
+            UpdateWidgets();
 
             _trackInfoUpdateTimer.Elapsed += UpdateTrackInfoEventHandler;
             _trackInfoUpdateTimer.Start();
@@ -124,7 +128,7 @@ namespace GpsTracker
             locationRequest.SetPriority(LocationRequest.PriorityHighAccuracy);
             locationRequest.SetInterval(1000);
             locationRequest.SetFastestInterval(1000);
-           
+
             _locationClient.RequestLocationUpdates(locationRequest, this);
 
             var location = _locationClient.LastLocation;
@@ -143,12 +147,32 @@ namespace GpsTracker
 
         public void OnLocationChanged(Location location)
         {
+            if (location.HasSpeed)
+            {
+                _activeTrackManager.CurrentSpeed = location.Speed;
+            }
+            else
+            {
+                _activeTrackManager.CurrentSpeed = null;
+            }
+
+            UpdateCurrentSpeedWidget(_activeTrackManager.CurrentSpeed);
+
             var trackPoint = location.ToLatLng();
             var pointAdded = _activeTrackManager.TryAddTrackPoint(trackPoint);
 
+         
+
             if (pointAdded)
             {
-                UpdateTrackInfo();
+                var trackPoints = _activeTrackManager.TrackPoints;
+                var distance = _activeTrackManager.Distance;
+
+                _trackDrawer.DrawTrack(_activeTrackManager.TrackPoints);
+
+                UpdateTrackPointsWidget(trackPoints.Count);
+                UpdateDistanceWidget(distance.MetersToKilometers());
+                
             }
         }
 
@@ -166,14 +190,17 @@ namespace GpsTracker
 
         #region Path Display Methods
 
-        private void UpdateTrackInfo()
+        private void UpdateWidgets()
         {
             var trackPoints = _activeTrackManager.TrackPoints;
-            var distance = _activeTrackManager.Distance;
+            var distance = _activeTrackManager.Distance.MetersToKilometers();
+            var duration = _activeTrackManager.Duration;
+            var currentSpeed = _activeTrackManager.CurrentSpeed;
 
-            _trackDrawer.DrawTrack(trackPoints);
             UpdateTrackPointsWidget(trackPoints.Count);
-            UpdateDistanceWidget(distance.MetersToKilometers());
+            UpdateDistanceWidget(distance);
+            UpdateDurationWidget(duration);
+            UpdateCurrentSpeedWidget(currentSpeed);
         }
 
         private void MoveCamera(LatLng trackPoint)
@@ -191,49 +218,61 @@ namespace GpsTracker
 
         private void UpdateTrackPointsWidget(int trackPointsQuantity)
         {
-            if (_trackPointsQuantityWidget == null)
+            if (_trackPointsQuantityWidgetValue == null)
             {
-                _trackPointsQuantityWidget = FindViewById<TextView>(Resource.Id.TrackPointsQuantityWidget);
+                _trackPointsQuantityWidgetValue = FindViewById<TextView>(Resource.Id.TrackPointsQuantityWidget_Value);
             }
 
-            _trackPointsQuantityWidget.Text = trackPointsQuantity.ToString();
+            _trackPointsQuantityWidgetValue.Text = trackPointsQuantity.ToString();
         }
 
         private void UpdateDistanceWidget(float distance)
         {
-            if (_distanceWidget == null)
+            if (_distanceWidgetValue == null)
             {
-                _distanceWidget = FindViewById<TextView>(Resource.Id.DistanceWidget);
+                _distanceWidgetValue = FindViewById<TextView>(Resource.Id.DistanceWidget_Value);
             }
 
-            _distanceWidget.Text = String.Format("{0:0.000}", distance);
+            _distanceWidgetValue.Text = String.Format("{0:0.000}", distance);
         }
-
-        private void UpdateSpeedWidget(double speed)
-        {
-            if (_speedWidget == null)
-            {
-                _speedWidget = FindViewById<TextView>(Resource.Id.SpeedWidget);
-            }
-
-            _speedWidget.Text = String.Format("{0:0.00}", speed);
-        }
-
 
         private void UpdateDurationWidget(TimeSpan duration)
         {
-            if (_durationWidget == null)
+            if (_durationWidgetValue == null)
             {
-                _durationWidget = FindViewById<TextView>(Resource.Id.DurationWidget);
+                _durationWidgetValue = FindViewById<TextView>(Resource.Id.DurationWidget_Value);
             }
 
-            _durationWidget.Text = String.Format("{0:hh\\:mm\\:ss}", duration);
+            _durationWidgetValue.Text = String.Format("{0:hh\\:mm\\:ss}", duration);
+        }
+
+        private void UpdateCurrentSpeedWidget(float? speed)
+        {
+            if (_currentSpeedWidgetValue == null)
+            {
+                _currentSpeedWidgetValue = FindViewById<TextView>(Resource.Id.CurrentSpeedWidget_Value);
+            }
+
+            if (_currentSpeedWidgetUnit == null)
+            {
+                _currentSpeedWidgetUnit = FindViewById<TextView>(Resource.Id.CurrentSpeedWidget_Unit);
+            }
+
+            if (speed!=null)
+            {
+                _currentSpeedWidgetValue.Text = String.Format("{0:0.0}", speed);
+                _currentSpeedWidgetUnit.Visibility=ViewStates.Visible;
+            }
+            else
+            {
+                _currentSpeedWidgetValue.Text = "-.-";
+                _currentSpeedWidgetUnit.Visibility = ViewStates.Gone;
+            }
         }
 
         private void UpdateTrackInfoEventHandler(object sender, EventArgs e)
         {
             RunOnUiThread(() => UpdateDurationWidget(_activeTrackManager.Duration));
-            RunOnUiThread(() => UpdateSpeedWidget(_activeTrackManager.Speed.MetersPerSecondToKilometersPerHour()));
         }
 
         #endregion

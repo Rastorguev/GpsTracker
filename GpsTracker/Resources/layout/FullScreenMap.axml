@@ -31,7 +31,7 @@
                 android:text="0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/TrackPointsQuantityWidget"
+                android:id="@+id/TrackPointsQuantityWidget_Value"
                 android:textSize="@dimen/full_screen_map_track_widget_text_value"
                 android:gravity="left"
                 android:textColor="@color/full_screen_map_track_widget_text_value" />
@@ -57,7 +57,7 @@
                     android:text="0.000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/DistanceWidget"
+                    android:id="@+id/DistanceWidget_Value"
                     android:textSize="@dimen/full_screen_map_track_widget_text_value"
                     android:gravity="left"
                     android:layout_marginRight="3dip"
@@ -85,46 +85,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginRight="10dip">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:text="0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/SpeedWidget"
-                    android:textSize="@dimen/full_screen_map_track_widget_text_value"
-                    android:gravity="left"
-                    android:layout_marginRight="3dip"
-                    android:textColor="@color/full_screen_map_track_widget_text_value" />
-                <TextView
-                    android:text="@string/km_h"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/full_screen_map_track_widget_text_unit"
-                    android:gravity="left"
-                    android:textColor="@color/full_screen_map_track_widget_text_unit" />
-            </LinearLayout>
-            <TextView
-                android:text="@string/speed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/full_screen_map_track_widget_text_name"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:textColor="@color/full_screen_map_track_widget_text_name"
-                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
             <TextView
                 android:text="00:00:00"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/DurationWidget"
+                android:id="@+id/DurationWidget_Value"
                 android:textSize="@dimen/full_screen_map_track_widget_text_value"
                 android:gravity="left"
                 android:textColor="@color/full_screen_map_track_widget_text_value" />
@@ -133,6 +98,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/full_screen_map_track_widget_text_name"
+                android:gravity="left"
+                android:textColor="@color/full_screen_map_track_widget_text_name"
+                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="-.-"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/CurrentSpeedWidget_Value"
+                    android:textSize="@dimen/full_screen_map_track_widget_text_value"
+                    android:gravity="left"
+                    android:layout_marginRight="3dip"
+                    android:textColor="@color/full_screen_map_track_widget_text_value" />
+                <TextView
+                    android:text="@string/km_h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/CurrentSpeedWidget_Unit"
+                    android:textSize="@dimen/full_screen_map_track_widget_text_unit"
+                    android:gravity="left"
+                    android:textColor="@color/full_screen_map_track_widget_text_unit"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <TextView
+                android:text="@string/speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/full_screen_map_track_widget_text_name"
+                android:layout_weight="1"
                 android:gravity="left"
                 android:textColor="@color/full_screen_map_track_widget_text_name"
                 android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />

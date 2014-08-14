@@ -14,6 +14,7 @@ namespace GpsTracker
         private readonly List<Polyline> _polylines = new List<Polyline>();
         private readonly GoogleMap _map;
         private const int SegmentMaxLength = 500;
+        private const string PolylineColor = "#AA3E97D1";
 
         #region Path Display Methods
 
@@ -168,7 +169,7 @@ namespace GpsTracker
 
         protected virtual Color GetPolylineColor()
         {
-            var color = Color.ParseColor("#3E97D1");
+            var color = Color.ParseColor(PolylineColor);
             return color;
         }
 
