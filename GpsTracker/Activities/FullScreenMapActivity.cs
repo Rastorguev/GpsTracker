@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Timers;
 using Android.App;
 using Android.Gms.Common.Apis;
@@ -10,25 +11,30 @@ using Android.Locations;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using GpsTracker.Config.GpsTracker;
 using GpsTracker.Managers;
 using ILocationListener = Android.Gms.Location.ILocationListener;
 
 namespace GpsTracker.Activities
 {
     [Activity(Label = "@string/app_name", MainLauncher = false)]
-    internal class FullScreenMapActivity : Activity, IGoogleApiClientConnectionCallbacks, GoogleMap.IOnCameraChangeListener, ILocationListener
+    internal class FullScreenMapActivity : Activity, IGoogleApiClientConnectionCallbacks,
+        GoogleMap.IOnCameraChangeListener, ILocationListener
     {
         private IGoogleApiClient _locationClient;
         private GoogleMap _map;
         private float _zoom = 18;
+        private const int AutoreturnDelay = 5000;
         private ITrackDrawer _trackDrawer;
         private static ActiveTrackManager _activeTrackManager;
         private TextView _trackPointsQuantityWidgetValue;
         private TextView _distanceWidgetValue;
         private TextView _currentSpeedWidgetValue;
         private TextView _currentSpeedWidgetUnit;
-        private Timer _trackInfoUpdateTimer;
         private TextView _durationWidgetValue;
+
+        private Timer _trackInfoUpdateTimer;
+        private Timer _autoreturnTimer;
 
         #region Life Circle
 
@@ -50,7 +56,7 @@ namespace GpsTracker.Activities
                 _activeTrackManager.StartTrack();
             }
 
-            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.Map);
+            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
 
             _map = mapFragment.Map;
             _map.SetOnCameraChangeListener(this);
@@ -62,10 +68,16 @@ namespace GpsTracker.Activities
 
             _trackInfoUpdateTimer = new Timer(1000);
 
+            _autoreturnTimer = new Timer
+            {
+                AutoReset = false,
+                Interval = AutoreturnDelay
+            };
+
             _locationClient = new GoogleApiClientBuilder(this)
-               .AddApi(LocationServices.Api)
-               .AddConnectionCallbacks(this)
-               .Build();
+                .AddApi(LocationServices.Api)
+                .AddConnectionCallbacks(this)
+                .Build();
 
             _locationClient.Connect();
         }
@@ -79,6 +91,7 @@ namespace GpsTracker.Activities
             UpdateWidgets();
 
             _trackInfoUpdateTimer.Elapsed += UpdateTrackInfoEventHandler;
+            _autoreturnTimer.Elapsed += AutoreturnEventHandler;
             _trackInfoUpdateTimer.Start();
         }
 
@@ -106,7 +119,10 @@ namespace GpsTracker.Activities
 
             if (_locationClient != null)
             {
-                LocationServices.FusedLocationApi.RemoveLocationUpdates(_locationClient, this);
+                if (_locationClient.IsConnected)
+                {
+                    LocationServices.FusedLocationApi.RemoveLocationUpdates(_locationClient, this);
+                }
 
                 _locationClient.UnregisterConnectionCallbacks(this);
                 _locationClient.Disconnect();
@@ -128,8 +144,6 @@ namespace GpsTracker.Activities
             locationRequest.SetInterval(1000);
             locationRequest.SetFastestInterval(1000);
 
-
-           // LocationServices.FusedLocationApi.RemoveLocationUpdates(_locationClient, this);
             LocationServices.FusedLocationApi.RequestLocationUpdates(_locationClient, locationRequest, this);
 
             var location = LocationServices.FusedLocationApi.GetLastLocation(_locationClient);
@@ -148,7 +162,7 @@ namespace GpsTracker.Activities
 
         public void OnLocationChanged(Location location)
         {
-            var currentSpeed = location.HasSpeed ? (float?)location.Speed : null;
+            var currentSpeed = location.HasSpeed ? (float?) location.Speed : null;
 
             UpdateCurrentSpeedWidget(currentSpeed);
 
@@ -164,12 +178,24 @@ namespace GpsTracker.Activities
 
                 UpdateTrackPointsWidget(trackPoints.Count);
                 UpdateDistanceWidget(distance.MetersToKilometers());
+
+                if (UserConfig.RotateMapInAccordanceWithTheMovement && IsTrackPointVisible(trackPoint))
+                {
+                    MoveCamera(trackPoint);
+                }
             }
         }
 
         public void OnCameraChange(CameraPosition position)
         {
             _zoom = position.Zoom;
+
+            var currentPosition = _activeTrackManager.TrackPoints.Last();
+
+            if (UserConfig.Autoreturn && !IsTrackPointVisible(currentPosition))
+            {
+               Autoreturn();
+            }
         }
 
         #endregion
@@ -195,11 +221,12 @@ namespace GpsTracker.Activities
 
             builder.Target(trackPoint);
             builder.Zoom(_zoom);
+            builder.Bearing(_activeTrackManager.Bearing);
 
             var cameraPosition = builder.Build();
             var cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
 
-            _map.MoveCamera(cameraUpdate);
+            _map.AnimateCamera(cameraUpdate);
         }
 
         private void UpdateTrackPointsWidget(int trackPointsQuantity)
@@ -256,9 +283,22 @@ namespace GpsTracker.Activities
             }
         }
 
+        private void Autoreturn()
+        {
+            _autoreturnTimer.Stop();
+            _autoreturnTimer.Start();
+        }
+
         private void UpdateTrackInfoEventHandler(object sender, EventArgs e)
         {
             RunOnUiThread(() => UpdateDurationWidget(_activeTrackManager.Duration));
+        }
+
+        private void AutoreturnEventHandler(object sender, EventArgs e)
+        {
+            var currentPosition = _activeTrackManager.TrackPoints.Last();
+
+            RunOnUiThread(() => MoveCamera(currentPosition));
         }
 
         #endregion
@@ -274,5 +314,11 @@ namespace GpsTracker.Activities
         }
 
         #endregion
+
+        private bool IsTrackPointVisible(LatLng trackPoint)
+        {
+            var bounds = _map.Projection.VisibleRegion.LatLngBounds;
+            return bounds.Contains(trackPoint);
+        }
     }
 }

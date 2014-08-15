@@ -73,6 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\UserConfig.cs" />
     <Compile Include="Managers\ActiveTrackManager.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Activities\FullScreenMapActivity.cs" />

@@ -11,7 +11,6 @@ namespace GpsTracker.Managers
         private const double MinimalDisplacement = 1;
         private static TrackData _activeTrack;
         private DateTime _startTime;
-       
 
         //public TrackData ActiveTrack
         //{
@@ -47,6 +46,16 @@ namespace GpsTracker.Managers
         public List<LatLng> TrackPoints
         {
             get { return _activeTrack.TrackPoints; }
+        }
+
+        public float Bearing
+        {
+            get
+            {
+                return TrackPoints.Count > 1
+                    ? TrackPoints[TrackPoints.Count - 2].ToLocation().BearingTo(TrackPoints.Last().ToLocation())
+                    : 0;
+            }
         }
 
         public void StartTrack()
@@ -90,7 +99,6 @@ namespace GpsTracker.Managers
 
                 isTrackPointAdded = true;
             }
-
 
             return isTrackPointAdded;
         }
