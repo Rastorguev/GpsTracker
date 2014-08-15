@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Android.Gms.Maps.Model;
 
-namespace GpsTracker
+namespace GpsTracker.Tools
 {
     internal interface ITrackDrawer
     {

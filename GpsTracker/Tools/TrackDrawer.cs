@@ -5,7 +5,7 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
 
-namespace GpsTracker
+namespace GpsTracker.Tools
 {
     internal class TrackDrawer : ITrackDrawer
     {

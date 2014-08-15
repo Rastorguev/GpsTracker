@@ -6,12 +6,12 @@ namespace GpsTracker.Config
         {
             public static bool RotateMapInAccordanceWithTheMovement
             {
-                get { return false; }
+                get { return true; }
             }
 
             public static bool Autoreturn
             {
-                get { return false; }
+                get { return true; }
             }
         }
     }

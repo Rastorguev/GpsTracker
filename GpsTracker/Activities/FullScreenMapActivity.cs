@@ -13,6 +13,7 @@ using Android.Views;
 using Android.Widget;
 using GpsTracker.Config.GpsTracker;
 using GpsTracker.Managers;
+using GpsTracker.Tools;
 using ILocationListener = Android.Gms.Location.ILocationListener;
 
 namespace GpsTracker.Activities
@@ -41,10 +42,30 @@ namespace GpsTracker.Activities
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
             RestoreSavedState(savedInstanceState);
 
             SetContentView(Resource.Layout.FullScreenMap);
 
+            InitMap();
+            InitActiveTrackManager();
+            InitLocationClient();
+            InitTrackDrawer();
+            InitTimers();
+        }
+
+        #region Initializtion
+
+        private void InitMap()
+        {
+            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+
+            _map = mapFragment.Map;
+            _map.SetOnCameraChangeListener(this);
+        }
+
+        private void InitActiveTrackManager()
+        {
             if (_activeTrackManager == null)
             {
                 _activeTrackManager = new ActiveTrackManager();
@@ -55,25 +76,10 @@ namespace GpsTracker.Activities
             {
                 _activeTrackManager.StartTrack();
             }
+        }
 
-            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
-
-            _map = mapFragment.Map;
-            _map.SetOnCameraChangeListener(this);
-
-            _map.UiSettings.MyLocationButtonEnabled = true;
-            _map.UiSettings.CompassEnabled = true;
-
-            _trackDrawer = new TrackDrawer(_map);
-
-            _trackInfoUpdateTimer = new Timer(1000);
-
-            _autoreturnTimer = new Timer
-            {
-                AutoReset = false,
-                Interval = AutoreturnDelay
-            };
-
+        private void InitLocationClient()
+        {
             _locationClient = new GoogleApiClientBuilder(this)
                 .AddApi(LocationServices.Api)
                 .AddConnectionCallbacks(this)
@@ -81,6 +87,24 @@ namespace GpsTracker.Activities
 
             _locationClient.Connect();
         }
+
+        private void InitTrackDrawer()
+        {
+            _trackDrawer = new TrackDrawer(_map);
+        }
+
+        private void InitTimers()
+        {
+            _trackInfoUpdateTimer = new Timer(1000);
+
+            _autoreturnTimer = new Timer
+            {
+                AutoReset = false,
+                Interval = AutoreturnDelay
+            };
+        }
+
+        #endregion
 
         protected override void OnStart()
         {
@@ -91,8 +115,9 @@ namespace GpsTracker.Activities
             UpdateWidgets();
 
             _trackInfoUpdateTimer.Elapsed += UpdateTrackInfoEventHandler;
-            _autoreturnTimer.Elapsed += AutoreturnEventHandler;
             _trackInfoUpdateTimer.Start();
+
+            _autoreturnTimer.Elapsed += AutoreturnEventHandler;
         }
 
         protected override void OnPause()
@@ -102,6 +127,8 @@ namespace GpsTracker.Activities
             _trackDrawer.RemoveTrack();
             _trackInfoUpdateTimer.Elapsed -= UpdateTrackInfoEventHandler;
             _trackInfoUpdateTimer.Stop();
+
+            _autoreturnTimer.Elapsed -= AutoreturnEventHandler;
 
             GC.Collect();
         }
@@ -194,7 +221,7 @@ namespace GpsTracker.Activities
 
             if (UserConfig.Autoreturn && !IsTrackPointVisible(currentPosition))
             {
-               Autoreturn();
+                Autoreturn();
             }
         }
 
@@ -313,12 +340,14 @@ namespace GpsTracker.Activities
             }
         }
 
-        #endregion
-
         private bool IsTrackPointVisible(LatLng trackPoint)
         {
             var bounds = _map.Projection.VisibleRegion.LatLngBounds;
             return bounds.Contains(trackPoint);
         }
+
+        #endregion
+
+        
     }
 }
