@@ -1,18 +1,15 @@
 namespace GpsTracker.Config
 {
-    namespace GpsTracker
+    internal static class UserConfig
     {
-        internal static class UserConfig
+        public static bool RotateMapInAccordanceWithTheMovement
         {
-            public static bool RotateMapInAccordanceWithTheMovement
-            {
-                get { return true; }
-            }
+            get { return true; }
+        }
 
-            public static bool Autoreturn
-            {
-                get { return true; }
-            }
+        public static bool Autoreturn
+        {
+            get { return true; }
         }
     }
 }

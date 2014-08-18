@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-                    android:text="-.-"
+                    android:text="0.0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/CurrentSpeedWidget_Value"
@@ -126,8 +126,7 @@
                     android:id="@+id/CurrentSpeedWidget_Unit"
                     android:textSize="@dimen/full_screen_map_track_widget_text_unit"
                     android:gravity="left"
-                    android:textColor="@color/full_screen_map_track_widget_text_unit"
-                    android:visibility="gone" />
+                    android:textColor="@color/full_screen_map_track_widget_text_unit" />
             </LinearLayout>
             <TextView
                 android:text="@string/speed"

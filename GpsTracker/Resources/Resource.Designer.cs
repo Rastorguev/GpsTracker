@@ -1186,6 +1186,9 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070051
 			public const int DurationWidget_Value = 2131165265;
 			
+			// aapt resource value: 0x7f070055
+			public const int FullScreenButton = 2131165269;
+			
 			// aapt resource value: 0x7f07004e
 			public const int Map = 2131165262;
 			
@@ -1318,20 +1321,20 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070024
 			public const int match_parent = 2131165220;
 			
-			// aapt resource value: 0x7f070058
-			public const int media_route_control_frame = 2131165272;
-			
 			// aapt resource value: 0x7f070059
-			public const int media_route_disconnect_button = 2131165273;
+			public const int media_route_control_frame = 2131165273;
 			
-			// aapt resource value: 0x7f070055
-			public const int media_route_list = 2131165269;
+			// aapt resource value: 0x7f07005a
+			public const int media_route_disconnect_button = 2131165274;
 			
 			// aapt resource value: 0x7f070056
-			public const int media_route_volume_layout = 2131165270;
+			public const int media_route_list = 2131165270;
 			
 			// aapt resource value: 0x7f070057
-			public const int media_route_volume_slider = 2131165271;
+			public const int media_route_volume_layout = 2131165271;
+			
+			// aapt resource value: 0x7f070058
+			public const int media_route_volume_slider = 2131165272;
 			
 			// aapt resource value: 0x7f070012
 			public const int middle = 2131165202;
@@ -1555,16 +1558,19 @@ namespace GpsTracker
 			public const int Main = 2130903065;
 			
 			// aapt resource value: 0x7f03001a
-			public const int mr_media_route_chooser_dialog = 2130903066;
+			public const int MainTrackingLayout = 2130903066;
 			
 			// aapt resource value: 0x7f03001b
-			public const int mr_media_route_controller_dialog = 2130903067;
+			public const int mr_media_route_chooser_dialog = 2130903067;
 			
 			// aapt resource value: 0x7f03001c
-			public const int mr_media_route_list_item = 2130903068;
+			public const int mr_media_route_controller_dialog = 2130903068;
 			
 			// aapt resource value: 0x7f03001d
-			public const int support_simple_spinner_dropdown_item = 2130903069;
+			public const int mr_media_route_list_item = 2130903069;
+			
+			// aapt resource value: 0x7f03001e
+			public const int support_simple_spinner_dropdown_item = 2130903070;
 			
 			static Layout()
 			{
@@ -1699,8 +1705,14 @@ namespace GpsTracker
 			// aapt resource value: 0x7f050030
 			public const int distance = 2131034160;
 			
+			// aapt resource value: 0x7f050034
+			public const int distance_format = 2131034164;
+			
 			// aapt resource value: 0x7f050031
 			public const int duration = 2131034161;
+			
+			// aapt resource value: 0x7f050035
+			public const int duration_format = 2131034165;
 			
 			// aapt resource value: 0x7f050032
 			public const int km = 2131034162;
@@ -1731,6 +1743,9 @@ namespace GpsTracker
 			
 			// aapt resource value: 0x7f05002e
 			public const int speed = 2131034158;
+			
+			// aapt resource value: 0x7f050036
+			public const int speed_format = 2131034166;
 			
 			// aapt resource value: 0x7f05002c
 			public const int wallet_buy_button_place_holder = 2131034156;

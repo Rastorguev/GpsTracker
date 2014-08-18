@@ -6,11 +6,32 @@ using GpsTracker.Entities;
 
 namespace GpsTracker.Managers
 {
-    internal class ActiveTrackManager
+    public class ActiveTrackManager
     {
         private const double MinimalDisplacement = 1;
         private static TrackData _activeTrack;
         private DateTime _startTime;
+
+        private static ActiveTrackManager _instance;
+        private static readonly object Locker = new Object();
+
+        private ActiveTrackManager() {}
+
+        public static ActiveTrackManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (Locker)
+                    {
+                        if (_instance == null)
+                            _instance = new ActiveTrackManager();
+                    }
+                }
+                return _instance;
+            }
+        }
 
         //public TrackData ActiveTrack
         //{

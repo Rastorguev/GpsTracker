@@ -73,10 +73,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\BaseActiveTrackActivity.cs" />
+    <Compile Include="Activities\MainTrackingActivity.cs" />
+    <Compile Include="Config\Constants.cs" />
     <Compile Include="Config\UserConfig.cs" />
     <Compile Include="Managers\ActiveTrackManager.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Activities\FullScreenMapActivity.cs" />
+    <Compile Include="Activities\ActiveTrackFullScreenMapActivity.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +91,7 @@
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\FullScreenMap.axml" />
+    <AndroidResource Include="Resources\layout\MainTrackingLayout.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />

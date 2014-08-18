@@ -1,11 +1,12 @@
 ﻿using System;
 using Android.App;
+using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
 
 namespace GpsTracker.Activities
 {
-    [Activity(Label = "@string/app_name", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     internal class MainActivity : Activity
     {
         private Button _startButton;
@@ -22,7 +23,7 @@ namespace GpsTracker.Activities
             {
                 try
                 {
-                    StartActivity(typeof (FullScreenMapActivity));
+                    StartActivity(typeof(MainTrackingActivity));
                 }
                 catch (Exception e)
                 {
