@@ -5,6 +5,6 @@ namespace GpsTracker.Config
         public const int AutoreturnDelay = 5000; //milliseconds
         public const int LocationUpdateInterval = 1000; //milliseconds
         public const int LocationUpdateFastestInterval = 1000; //milliseconds
-        public const int DefaultZoom = 18;
+        public const int DefaultMapZoom = 18;
     }
 }

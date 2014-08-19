@@ -30,7 +30,7 @@ namespace GpsTracker.Activities
 
         protected override void SetView()
         {
-            SetContentView(Resource.Layout.FullScreenMap);
+            SetContentView(Resource.Layout.ActiveTrackFullScreenMapLayout);
         }
 
         protected override GoogleMap GetMap()
@@ -44,7 +44,6 @@ namespace GpsTracker.Activities
         {
             _trackInfoUpdateTimer = new Timer(1000);
         }
-
 
         protected override void OnStart()
         {
@@ -70,13 +69,13 @@ namespace GpsTracker.Activities
 
         #region Location Callbacks
 
-        public override void OnLocationChanged(Location location)
+        public override void LocationListenerOnLocationChanged(Location location)
         {
-            base.OnLocationChanged(location);
+            base.LocationListenerOnLocationChanged(location);
 
             var currentSpeed = location.Speed.MetersToKilometers();
-            var trackPoints = ActiveTrackManager.TrackPoints;
-            var distance = ActiveTrackManager.Distance;
+            var trackPoints = App.ActiveTrackManager.TrackPoints;
+            var distance = App.ActiveTrackManager.Distance;
 
             UpdateCurrentSpeedWidget(currentSpeed);
             UpdateTrackPointsWidget(trackPoints.Count);
@@ -89,9 +88,9 @@ namespace GpsTracker.Activities
 
         private void UpdateWidgets()
         {
-            var trackPoints = ActiveTrackManager.TrackPoints;
-            var distance = ActiveTrackManager.Distance.MetersToKilometers();
-            var duration = ActiveTrackManager.Duration;
+            var trackPoints = App.ActiveTrackManager.TrackPoints;
+            var distance = App.ActiveTrackManager.Distance.MetersToKilometers();
+            var duration = App.ActiveTrackManager.Duration;
 
             UpdateTrackPointsWidget(trackPoints.Count);
             UpdateDistanceWidget(distance);
@@ -142,7 +141,7 @@ namespace GpsTracker.Activities
 
         private void UpdateTrackInfoEventHandler(object sender, EventArgs e)
         {
-            RunOnUiThread(() => UpdateDurationWidget(ActiveTrackManager.Duration));
+            RunOnUiThread(() => UpdateDurationWidget(App.ActiveTrackManager.Duration));
         }
 
         #endregion

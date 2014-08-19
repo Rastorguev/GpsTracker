@@ -22,6 +22,19 @@
             android:text="Full Screen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/FullScreenButton" />
+            android:id="@+id/FullScreenButton"
+            android:background="#a3a3a3" />
+        <Button
+            android:text="Start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/StartButton"
+            android:background="#009688" />
+        <Button
+            android:text="Stop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/StopButton"
+            android:background="#ea3c0b" />
     </LinearLayout>
 </LinearLayout>

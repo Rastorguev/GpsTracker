@@ -12,26 +12,26 @@ namespace GpsTracker.Managers
         private static TrackData _activeTrack;
         private DateTime _startTime;
 
-        private static ActiveTrackManager _instance;
-        private static readonly object Locker = new Object();
+        //private static ActiveTrackManager _instance;
+        //private static readonly object Locker = new Object();
 
-        private ActiveTrackManager() {}
+        //private ActiveTrackManager() {}
 
-        public static ActiveTrackManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    lock (Locker)
-                    {
-                        if (_instance == null)
-                            _instance = new ActiveTrackManager();
-                    }
-                }
-                return _instance;
-            }
-        }
+        //public static ActiveTrackManager Instance
+        //{
+        //    get
+        //    {
+        //        if (_instance == null)
+        //        {
+        //            lock (Locker)
+        //            {
+        //                if (_instance == null)
+        //                    _instance = new ActiveTrackManager();
+        //            }
+        //        }
+        //        return _instance;
+        //    }
+        //}
 
         //public TrackData ActiveTrack
         //{
@@ -56,17 +56,17 @@ namespace GpsTracker.Managers
 
         public float Distance
         {
-            get { return _activeTrack.Distance; }
+            get { return _activeTrack != null ? _activeTrack.Distance : 0; }
         }
 
         public TimeSpan Duration
         {
-            get { return _activeTrack.Duration + (DateTime.Now - _startTime); }
+            get { return _activeTrack != null ? _activeTrack.Duration + (DateTime.Now - _startTime) : new TimeSpan(); }
         }
 
         public List<LatLng> TrackPoints
         {
-            get { return _activeTrack.TrackPoints; }
+            get { return _activeTrack != null ? _activeTrack.TrackPoints : new List<LatLng>(); }
         }
 
         public float Bearing
@@ -96,6 +96,11 @@ namespace GpsTracker.Managers
         {
             IsStarted = false;
             _activeTrack.Duration += DateTime.Now - _startTime;
+        }
+
+        public void StopTrack()
+        {
+            _activeTrack = null;
         }
 
         public bool TryAddTrackPoint(LatLng trackPoint)

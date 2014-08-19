@@ -6,7 +6,7 @@ using Android.Widget;
 
 namespace GpsTracker.Activities
 {
-    [Activity(Label = "@string/app_name", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "@string/app_name", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait)]
     internal class MainActivity : Activity
     {
         private Button _startButton;
@@ -15,7 +15,7 @@ namespace GpsTracker.Activities
         {
             base.OnCreate(savedInstanceState);
 
-            SetContentView(Resource.Layout.Main);
+            SetContentView(Resource.Layout.MainLayout);
 
             _startButton = FindViewById<Button>(Resource.Id.StartButton);
 
