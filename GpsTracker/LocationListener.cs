@@ -14,6 +14,11 @@ namespace GpsTracker
         public event Action<Location> Connected;
         public event Action<Location> LocationChanged;
 
+        public Location LastLocation
+        {
+            get { return LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient); }
+        }
+
         public void OnConnected(Bundle connectionHint)
         {
             StartListenLocationUpdates();
@@ -22,13 +27,9 @@ namespace GpsTracker
             var trackPoint = location.ToLatLng();
 
             App.ActiveTrackManager.TryAddTrackPoint(trackPoint);
-
-            if (Connected != null)
-            {
-                Connected(location);
-            }
+            TriggerConnected(location);
         }
-
+        
         public virtual void OnConnectionSuspended(int cause) {}
 
         public void OnLocationChanged(Location location)
@@ -37,12 +38,16 @@ namespace GpsTracker
 
             if (App.ActiveTrackManager.HasActiveTrack)
             {
-                var pointAdded = App.ActiveTrackManager.TryAddTrackPoint(trackPoint);
+                var tracPointAdded = App.ActiveTrackManager.TryAddTrackPoint(trackPoint);
 
-                if (pointAdded && LocationChanged != null)
+                if (tracPointAdded)
                 {
-                    LocationChanged(location);
+                    TriggerLocationChanged(location);
                 }
+            }
+            else
+            {
+                TriggerLocationChanged(location);
             }
         }
 
@@ -55,6 +60,22 @@ namespace GpsTracker
             locationRequest.SetFastestInterval(Constants.LocationUpdateFastestInterval);
 
             LocationServices.FusedLocationApi.RequestLocationUpdates(App.LocationClient, locationRequest, this);
+        }
+
+        private void TriggerConnected(Location location)
+        {
+            if (Connected != null)
+            {
+                Connected(location);
+            }
+        }
+
+        private void TriggerLocationChanged(Location location)
+        {
+            if (LocationChanged != null)
+            {
+                LocationChanged(location);
+            }
         }
     }
 }

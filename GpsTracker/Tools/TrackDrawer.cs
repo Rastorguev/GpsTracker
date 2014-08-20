@@ -30,15 +30,14 @@ namespace GpsTracker.Tools
 
         public virtual void DrawTrack(List<LatLng> trackPoints)
         {
-            if (trackPoints.Any())
-            {
-                DrawStartPositionMarker(trackPoints.First());
-            }
-
             if (trackPoints.Count > 1)
             {
+                DrawStartPositionMarker(trackPoints.First());
                 DrawTrackLine(trackPoints);
+            }
 
+            if (trackPoints.Any())
+            {
                 DrawCurrentPositionMarker(trackPoints.Last());
             }
         }
@@ -66,7 +65,7 @@ namespace GpsTracker.Tools
             _polylines.Clear();
         }
 
-        protected virtual void DrawStartPositionMarker(LatLng trackPoint)
+        public virtual void DrawStartPositionMarker(LatLng trackPoint)
         {
             if (_startPositionMarker == null)
             {
@@ -78,7 +77,7 @@ namespace GpsTracker.Tools
             }
         }
 
-        protected virtual void DrawCurrentPositionMarker(LatLng trackPoint)
+        public virtual void DrawCurrentPositionMarker(LatLng trackPoint)
         {
             if (_currentPositionMarker == null)
             {
@@ -90,7 +89,7 @@ namespace GpsTracker.Tools
             }
         }
 
-        protected virtual void DrawTrackLine(List<LatLng> trackPoints)
+        public virtual void DrawTrackLine(List<LatLng> trackPoints)
         {
             var segments = SplitTrackOnSegments(trackPoints);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using Android.App;
@@ -18,8 +19,45 @@ namespace GpsTracker.Activities
 
         protected Timer AutoreturnTimer;
         protected ITrackDrawer TrackDrawer;
-        private const float DefaultMapZoom = Constants.DefaultMapZoom;
+        protected const float DefaultMapZoom = Constants.DefaultMapZoom;
         protected static float Zoom = DefaultMapZoom;
+
+        protected LatLng CurrentPosition
+        {
+            get
+            {
+                var lastLocation = App.LocationListener.LastLocation;
+
+                var currentPosition = lastLocation != null
+                    ? lastLocation.ToLatLng()
+                    : null;
+
+                return currentPosition;
+            }
+        }
+
+        protected static float _bearing = 0;
+
+        public float Bearing
+        {
+            get
+            {
+                var bearing = _bearing;
+
+                if (App.ActiveTrackManager.TrackPoints.Count > 1 && UserConfig.RotateMapInAccordanceWithTheMovement)
+                {
+                    var lastButOneLocation =
+                        App.ActiveTrackManager.TrackPoints[App.ActiveTrackManager.TrackPoints.Count - 2].ToLocation();
+                    var lastLocation = App.ActiveTrackManager.TrackPoints.Last().ToLocation();
+
+                    bearing = lastButOneLocation.BearingTo(lastLocation);
+                }
+
+                return bearing;
+            }
+
+            set { _bearing = value; }
+        }
 
         protected GoogleMap Map
         {
@@ -32,33 +70,31 @@ namespace GpsTracker.Activities
         {
             base.OnCreate(savedInstanceState);
 
-            //RestoreSavedState(savedInstanceState);
-
             SetView();
             InitMap();
 
             InitTrackDrawer();
             InitAutoreturnTimer();
-
-            SubscribeOnLocationListenerEvents();
         }
 
         protected override void OnStart()
         {
             base.OnStart();
 
-            if (App.ActiveTrackManager.HasActiveTrack)
+            SubscribeOnLocationListenerEvents();
+
+            if (!App.LocationClient.IsConnected)
             {
-                TrackDrawer.DrawTrack(App.ActiveTrackManager.TrackPoints);
-                AutoreturnTimer.Elapsed += AutoreturnEventHandler;
-
-                if (App.ActiveTrackManager.TrackPoints.Any())
-                {
-                    var trackPoint = App.ActiveTrackManager.TrackPoints.Last();
-
-                    MoveCamera(trackPoint, Zoom);
-                }
+                App.LocationClient.Connect();
             }
+
+            if (CurrentPosition != null)
+            {
+                DrawTrack();
+                MoveCamera(CurrentPosition, Zoom);
+            }
+
+            AutoreturnTimer.Elapsed += AutoreturnEventHandler;
         }
 
         protected override void OnPause()
@@ -67,23 +103,15 @@ namespace GpsTracker.Activities
 
             TrackDrawer.RemoveTrack();
 
+            UnsubscribeFromLocationListenerEvents();
             AutoreturnTimer.Elapsed -= AutoreturnEventHandler;
 
             GC.Collect();
         }
 
-        //protected override void OnSaveInstanceState(Bundle outState)
-        //{
-        //    base.OnSaveInstanceState(outState);
-
-        //    outState.PutFloat("zoom", Zoom);
-        //}
-
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-            UnsubscribeFromLocationListenerEvents();
 
             GC.Collect(GC.MaxGeneration);
         }
@@ -136,27 +164,24 @@ namespace GpsTracker.Activities
 
         public virtual void LocationListenerOnConnected(Location location)
         {
-            if (location != null)
+            Zoom = DefaultMapZoom;
+
+            if (CurrentPosition != null)
             {
-                Zoom = DefaultMapZoom;
-                MoveCamera(location.ToLatLng(), DefaultMapZoom, true);
-                LocationListenerOnLocationChanged(location);
+                DrawTrack();
+                MoveCamera(CurrentPosition, Zoom, true);
             }
         }
 
         public virtual void LocationListenerOnLocationChanged(Location location)
         {
-            var trackPoint = App.ActiveTrackManager != null && App.ActiveTrackManager.TrackPoints.Any()
-                ? App.ActiveTrackManager.TrackPoints.Last()
-                : null;
-
-            if (trackPoint != null)
+            if (CurrentPosition != null)
             {
-                TrackDrawer.DrawTrack(App.ActiveTrackManager.TrackPoints);
+                DrawTrack();
 
-                if (UserConfig.RotateMapInAccordanceWithTheMovement && IsTrackPointVisible(trackPoint))
+                if (IsTrackPointVisible(CurrentPosition))
                 {
-                    MoveCamera(trackPoint, Zoom, true);
+                    MoveCamera(CurrentPosition, Zoom, true);
                 }
             }
         }
@@ -168,15 +193,11 @@ namespace GpsTracker.Activities
         public void OnCameraChange(CameraPosition position)
         {
             Zoom = position.Zoom;
+            Bearing = position.Bearing;
 
-            if (App.ActiveTrackManager.HasActiveTrack && App.ActiveTrackManager.TrackPoints.Any())
+            if (UserConfig.Autoreturn && !IsTrackPointVisible(CurrentPosition))
             {
-                var currentPosition = App.ActiveTrackManager.TrackPoints.Last();
-
-                if (UserConfig.Autoreturn && !IsTrackPointVisible(currentPosition))
-                {
-                    Autoreturn();
-                }
+                Autoreturn();
             }
         }
 
@@ -190,7 +211,7 @@ namespace GpsTracker.Activities
 
             builder.Target(trackPoint);
             builder.Zoom(zoom);
-            builder.Bearing(App.ActiveTrackManager.Bearing);
+            builder.Bearing(Bearing);
 
             var cameraPosition = builder.Build();
             var cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
@@ -213,22 +234,28 @@ namespace GpsTracker.Activities
 
         private void AutoreturnEventHandler(object sender, EventArgs e)
         {
-            var currentPosition = App.ActiveTrackManager.TrackPoints.Last();
-
-            RunOnUiThread(() => MoveCamera(currentPosition, Zoom, true));
+            RunOnUiThread(() => MoveCamera(CurrentPosition, Zoom, true));
         }
 
         #endregion
 
         #region Helpers
 
-        //protected virtual void RestoreSavedState(Bundle savedInstanceState)
-        //{
-        //    if (savedInstanceState != null)
-        //    {
-        //        Zoom = savedInstanceState.GetFloat("zoom");
-        //    }
-        //}
+        private void DrawTrack()
+        {
+            List<LatLng> trackPoints;
+
+            if (App.ActiveTrackManager.HasActiveTrack)
+            {
+                trackPoints = App.ActiveTrackManager.TrackPoints;
+            }
+            else
+            {
+                trackPoints = CurrentPosition != null ? new List<LatLng> {CurrentPosition} : new List<LatLng>();
+            }
+
+            TrackDrawer.DrawTrack(trackPoints);
+        }
 
         private bool IsTrackPointVisible(LatLng trackPoint)
         {
