@@ -28,7 +28,7 @@ namespace GpsTracker
                 {
                     _lastLocation = value;
 
-                    LastLocationChanged(_lastLocation);
+                    LocationChangedHandler(_lastLocation);
                     TriggerLocationChanged(_lastLocation);
                 }
             }
@@ -50,7 +50,7 @@ namespace GpsTracker
             LastLocation = location;
         }
 
-        public void LastLocationChanged(Location location)
+        public void LocationChangedHandler(Location location)
         {
             var trackPoint = location.ToLatLng();
 

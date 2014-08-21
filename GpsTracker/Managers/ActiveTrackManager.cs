@@ -8,7 +8,6 @@ namespace GpsTracker.Managers
 {
     public class ActiveTrackManager
     {
-        private const double MinimalDisplacement = 1;
         private static TrackData _activeTrack;
         private DateTime _startTime;
 

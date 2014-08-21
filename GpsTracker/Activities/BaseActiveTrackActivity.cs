@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Timers;
 using Android.App;
 using Android.Gms.Maps;
@@ -21,43 +20,8 @@ namespace GpsTracker.Activities
         protected ITrackDrawer TrackDrawer;
         protected const float DefaultMapZoom = Constants.DefaultMapZoom;
         protected static float Zoom = DefaultMapZoom;
-
-        protected LatLng CurrentPosition
-        {
-            get
-            {
-                var lastLocation = App.LocationListener.LastLocation;
-
-                var currentPosition = lastLocation != null
-                    ? lastLocation.ToLatLng()
-                    : null;
-
-                return currentPosition;
-            }
-        }
-
-        protected static float _bearing = 0;
-
-        public float Bearing
-        {
-            get
-            {
-                var bearing = _bearing;
-
-                if (App.ActiveTrackManager.TrackPoints.Count > 1 && UserConfig.RotateMapInAccordanceWithTheMovement)
-                {
-                    var lastButOneLocation =
-                        App.ActiveTrackManager.TrackPoints[App.ActiveTrackManager.TrackPoints.Count - 2].ToLocation();
-                    var lastLocation = App.ActiveTrackManager.TrackPoints.Last().ToLocation();
-
-                    bearing = lastButOneLocation.BearingTo(lastLocation);
-                }
-
-                return bearing;
-            }
-
-            set { _bearing = value; }
-        }
+        protected static LatLng Position;
+        protected static float Bearing;
 
         protected GoogleMap Map
         {
@@ -88,10 +52,12 @@ namespace GpsTracker.Activities
                 App.LocationClient.Connect();
             }
 
-            if (CurrentPosition != null)
+            var lastLocation = App.LocationListener.LastLocation;
+
+            if (lastLocation != null)
             {
                 DrawTrack();
-                MoveCamera(CurrentPosition, Zoom);
+                MoveCamera(lastLocation.ToLatLng(), Zoom);
             }
 
             AutoreturnTimer.Elapsed += AutoreturnEventHandler;
@@ -164,25 +130,21 @@ namespace GpsTracker.Activities
 
         public virtual void LocationListenerOnConnected(Location location)
         {
-            Zoom = DefaultMapZoom;
+            var lastLocation = App.LocationListener.LastLocation;
 
-            if (CurrentPosition != null)
+            if (lastLocation != null)
             {
                 DrawTrack();
-                MoveCamera(CurrentPosition, Zoom, true);
+                MoveCamera(lastLocation.ToLatLng(), DefaultMapZoom, true);
             }
         }
 
         public virtual void LocationListenerOnLocationChanged(Location location)
         {
-            if (CurrentPosition != null)
+            var lastLocation = App.LocationListener.LastLocation;
+            if (lastLocation != null)
             {
                 DrawTrack();
-
-                if (IsTrackPointVisible(CurrentPosition))
-                {
-                    MoveCamera(CurrentPosition, Zoom, true);
-                }
             }
         }
 
@@ -194,8 +156,11 @@ namespace GpsTracker.Activities
         {
             Zoom = position.Zoom;
             Bearing = position.Bearing;
+            Position = position.Target;
 
-            if (UserConfig.Autoreturn && !IsTrackPointVisible(CurrentPosition))
+            var lastLocation = App.LocationListener.LastLocation;
+
+            if (UserConfig.Autoreturn && lastLocation != null && !IsTrackPointVisible(lastLocation.ToLatLng()))
             {
                 Autoreturn();
             }
@@ -234,7 +199,14 @@ namespace GpsTracker.Activities
 
         private void AutoreturnEventHandler(object sender, EventArgs e)
         {
-            RunOnUiThread(() => MoveCamera(CurrentPosition, Zoom, true));
+            RunOnUiThread(() =>
+            {
+                var lastLocation = App.LocationListener.LastLocation;
+                if (lastLocation != null)
+                {
+                    MoveCamera(lastLocation.ToLatLng(), Zoom, true);
+                }
+            });
         }
 
         #endregion
@@ -251,7 +223,9 @@ namespace GpsTracker.Activities
             }
             else
             {
-                trackPoints = CurrentPosition != null ? new List<LatLng> {CurrentPosition} : new List<LatLng>();
+                var lastLocation = App.LocationListener.LastLocation;
+
+                trackPoints = lastLocation != null ? new List<LatLng> { lastLocation.ToLatLng() } : new List<LatLng>();
             }
 
             TrackDrawer.DrawTrack(trackPoints);
