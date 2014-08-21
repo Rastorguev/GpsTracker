@@ -34,16 +34,6 @@ namespace GpsTracker.Managers
             get { return HasActiveTrack ? _activeTrack.TrackPoints : new List<LatLng>(); }
         }
 
-        //public LatLng StartPosition
-        //{
-        //    get { return TrackPoints.Any() ? TrackPoints.First() : null; }
-        //}
-
-        //public LatLng CurrentPosition
-        //{
-        //    get { return TrackPoints.Any() ? TrackPoints.Last() : null; }
-        //}
-
         public void StartTrack()
         {
             _startTime = DateTime.Now;
@@ -52,7 +42,7 @@ namespace GpsTracker.Managers
             {
                 _activeTrack = new TrackData(_startTime);
             }
-            GeneratedFakeTrack(5000);
+            //GeneratedFakeTrack(5000);
 
             IsStarted = true;
         }
@@ -74,25 +64,40 @@ namespace GpsTracker.Managers
 
             if (HasActiveTrack)
             {
-                if (_activeTrack.TrackPoints.Count > 1 && trackPoint != _activeTrack.TrackPoints.Last())
+                if (_activeTrack.TrackPoints.Any())
                 {
-                    var lastButOneTrackPoint = _activeTrack.TrackPoints[_activeTrack.TrackPoints.Count - 2];
-                    var lastTrackPoint = _activeTrack.TrackPoints.Last();
-                    var displacement = lastButOneTrackPoint.DistanceTo(lastTrackPoint);
-
-                    if (displacement < MinimalDisplacement)
+                    if (!trackPoint.Equals(_activeTrack.TrackPoints.Last()))
                     {
-                        _activeTrack.TrackPoints.Remove(lastTrackPoint);
-                    }
+                        if (_activeTrack.TrackPoints.Count > 1)
+                        {
+                            var lastButOneTrackPoint = _activeTrack.TrackPoints[_activeTrack.TrackPoints.Count - 2];
+                            var displacement = lastButOneTrackPoint.DistanceTo(_activeTrack.TrackPoints.Last());
 
-                    _activeTrack.TrackPoints.Add(trackPoint);
+                            if (displacement < MinimalDisplacement)
+                            {
+                                _activeTrack.Distance -= displacement;
+                                _activeTrack.TrackPoints.Remove(_activeTrack.TrackPoints.Last());
+                            }
+
+                            if (_activeTrack.Distance < 0)
+                            {
+                                Console.WriteLine();
+                            }
+                          
+                        }
+
+                        _activeTrack.Distance += _activeTrack.TrackPoints.Last().DistanceTo(trackPoint);
+                        _activeTrack.TrackPoints.Add(trackPoint);
+
+                        isTrackPointAdded = true;
+  
+                    }
                 }
                 else
                 {
                     _activeTrack.TrackPoints.Add(trackPoint);
+                    isTrackPointAdded = true;
                 }
-
-                isTrackPointAdded = true;
             }
 
             return isTrackPointAdded;
