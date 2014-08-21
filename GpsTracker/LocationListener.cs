@@ -14,39 +14,50 @@ namespace GpsTracker
         public event Action<Location> Connected;
         public event Action<Location> LocationChanged;
 
+        private Location _lastLocation;
         public Location LastLocation
         {
-            get { return LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient); }
+            get { return _lastLocation; }
+            set
+            {
+                if (value == null) return;
+
+                if (_lastLocation == null ||
+                    (!_lastLocation.Equals(value) &&
+                     _lastLocation.DistanceTo(value) >= Constants.MinimalDisplacement))
+                {
+                    _lastLocation = value;
+
+                    LastLocationChanged(_lastLocation);
+                    TriggerLocationChanged(_lastLocation);
+                }
+            }
         }
 
         public void OnConnected(Bundle connectionHint)
         {
             StartListenLocationUpdates();
 
-            var location = LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient);
-            var trackPoint = location.ToLatLng();
+            LastLocation = LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient);
 
-            App.ActiveTrackManager.TryAddTrackPoint(trackPoint);
-            TriggerConnected(location);
+            TriggerConnected(LastLocation);
         }
-        
+
         public virtual void OnConnectionSuspended(int cause) {}
 
         public void OnLocationChanged(Location location)
+        {
+            LastLocation = location;
+        }
+
+        public void LastLocationChanged(Location location)
         {
             var trackPoint = location.ToLatLng();
 
             if (App.ActiveTrackManager.HasActiveTrack)
             {
-                var tracPointAdded = App.ActiveTrackManager.TryAddTrackPoint(trackPoint);
+                App.ActiveTrackManager.AddTrackPoint(trackPoint);
 
-                if (tracPointAdded)
-                {
-                    TriggerLocationChanged(location);
-                }
-            }
-            else
-            {
                 TriggerLocationChanged(location);
             }
         }

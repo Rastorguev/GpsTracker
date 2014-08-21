@@ -84,9 +84,9 @@ namespace GpsTracker.Activities
 
         private void StartButtonClickEventHandler(object sender, EventArgs e)
         {
-            //App.LocationClient.Connect();
-
-            App.ActiveTrackManager.StartTrack();
+            var lastLocation = App.LocationListener.LastLocation;
+            var startPosition = lastLocation != null ? lastLocation.ToLatLng() : null;
+            App.ActiveTrackManager.StartTrack(startPosition);
 
             _startButton.Visibility = ViewStates.Gone;
             _stopButton.Visibility = ViewStates.Visible;
@@ -94,8 +94,6 @@ namespace GpsTracker.Activities
 
         private void StopButtonClickEventHandler(object sender, EventArgs e)
         {
-            //App.LocationClient.Disconnect();
-
             _startButton.Visibility = ViewStates.Visible;
             _stopButton.Visibility = ViewStates.Gone;
 

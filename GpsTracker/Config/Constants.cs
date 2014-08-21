@@ -6,5 +6,6 @@ namespace GpsTracker.Config
         public const int LocationUpdateInterval = 1000; //milliseconds
         public const int LocationUpdateFastestInterval = 1000; //milliseconds
         public const int DefaultMapZoom = 18;
+        public const double MinimalDisplacement = 1;//meters
     }
 }

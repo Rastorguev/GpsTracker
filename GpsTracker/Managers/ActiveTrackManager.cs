@@ -34,7 +34,7 @@ namespace GpsTracker.Managers
             get { return HasActiveTrack ? _activeTrack.TrackPoints : new List<LatLng>(); }
         }
 
-        public void StartTrack()
+        public void StartTrack(LatLng trackPoint)
         {
             _startTime = DateTime.Now;
 
@@ -42,6 +42,8 @@ namespace GpsTracker.Managers
             {
                 _activeTrack = new TrackData(_startTime);
             }
+
+            AddTrackPoint(trackPoint);
             //GeneratedFakeTrack(5000);
 
             IsStarted = true;
@@ -58,49 +60,17 @@ namespace GpsTracker.Managers
             _activeTrack = null;
         }
 
-        public bool TryAddTrackPoint(LatLng trackPoint)
+        public void AddTrackPoint(LatLng trackPoint)
         {
-            var isTrackPointAdded = false;
-
             if (HasActiveTrack)
             {
-                if (_activeTrack.TrackPoints.Any())
+                if (TrackPoints.Any())
                 {
-                    if (!trackPoint.Equals(_activeTrack.TrackPoints.Last()))
-                    {
-                        if (_activeTrack.TrackPoints.Count > 1)
-                        {
-                            var lastButOneTrackPoint = _activeTrack.TrackPoints[_activeTrack.TrackPoints.Count - 2];
-                            var displacement = lastButOneTrackPoint.DistanceTo(_activeTrack.TrackPoints.Last());
-
-                            if (displacement < MinimalDisplacement)
-                            {
-                                _activeTrack.Distance -= displacement;
-                                _activeTrack.TrackPoints.Remove(_activeTrack.TrackPoints.Last());
-                            }
-
-                            if (_activeTrack.Distance < 0)
-                            {
-                                Console.WriteLine();
-                            }
-                          
-                        }
-
-                        _activeTrack.Distance += _activeTrack.TrackPoints.Last().DistanceTo(trackPoint);
-                        _activeTrack.TrackPoints.Add(trackPoint);
-
-                        isTrackPointAdded = true;
-  
-                    }
+                    _activeTrack.Distance += _activeTrack.TrackPoints.Last().DistanceTo(trackPoint);
                 }
-                else
-                {
-                    _activeTrack.TrackPoints.Add(trackPoint);
-                    isTrackPointAdded = true;
-                }
+
+                _activeTrack.TrackPoints.Add(trackPoint);
             }
-
-            return isTrackPointAdded;
         }
 
         private void GeneratedFakeTrack(int n)
