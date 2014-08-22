@@ -7,6 +7,11 @@ namespace GpsTracker.Config
         //    get { return true; }
         //}
 
+        public static bool FitTrackToScreen
+        {
+            get { return true; }
+        }
+
         public static bool Autoreturn
         {
             get { return true; }

@@ -16,8 +16,8 @@ namespace GpsTracker.Activities
         private TextView _distanceWidgetValue;
         private TextView _currentSpeedWidgetValue;
         private TextView _durationWidgetValue;
-
         private Timer _trackInfoUpdateTimer;
+        private MapFragment _mapFragment;
 
         #region Life Circle
 
@@ -35,9 +35,12 @@ namespace GpsTracker.Activities
 
         protected override GoogleMap GetMap()
         {
-            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+            if (_mapFragment == null)
+            {
+                _mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+            }
 
-            return mapFragment.Map;
+            return _mapFragment.Map;
         }
 
         protected void InitTrackInfoUpdateTimer()

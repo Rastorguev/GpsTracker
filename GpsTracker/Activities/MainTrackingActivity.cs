@@ -14,6 +14,7 @@ namespace GpsTracker.Activities
         private Button _fullScreenButton;
         private Button _startButton;
         private Button _stopButton;
+        private MapFragment _mapFragment;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -23,18 +24,7 @@ namespace GpsTracker.Activities
             _startButton = FindViewById<Button>(Resource.Id.StartButton);
             _stopButton = FindViewById<Button>(Resource.Id.StopButton);
 
-            _fullScreenButton.Click += delegate
-            {
-                try
-                {
-                    StartActivity(typeof (ActiveTrackFullScreenMapActivity));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            };
-
+            _fullScreenButton.Click += FullScreenButtonClickEventHandler;
             _startButton.Click += StartButtonClickEventHandler;
             _stopButton.Click += StopButtonClickEventHandler;
         }
@@ -46,9 +36,12 @@ namespace GpsTracker.Activities
 
         protected override GoogleMap GetMap()
         {
-            var mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+            if (_mapFragment == null)
+            {
+                _mapFragment = (MapFragment) FragmentManager.FindFragmentById(Resource.Id.Map);
+            }
 
-            return mapFragment.Map;
+            return _mapFragment.Map;
         }
 
         protected override void InitMap()
@@ -82,14 +75,21 @@ namespace GpsTracker.Activities
             GC.Collect();
         }
 
+        private void FullScreenButtonClickEventHandler(object sender, EventArgs e)
+        {
+            StartActivity(typeof (ActiveTrackFullScreenMapActivity));
+        }
+
         private void StartButtonClickEventHandler(object sender, EventArgs e)
         {
-            var lastLocation = App.LocationListener.Location;
-            var startPosition = lastLocation != null ? lastLocation.ToLatLng() : null;
-            App.ActiveTrackManager.StartTrack(startPosition);
-
             _startButton.Visibility = ViewStates.Gone;
             _stopButton.Visibility = ViewStates.Visible;
+
+            var lastLocation = App.LocationListener.Location;
+            var startPosition = lastLocation != null ? lastLocation.ToLatLng() : null;
+
+            App.ActiveTrackManager.StartTrack(startPosition);
+            DrawTrack();
         }
 
         private void StopButtonClickEventHandler(object sender, EventArgs e)
@@ -100,6 +100,12 @@ namespace GpsTracker.Activities
             App.ActiveTrackManager.StopTrack();
 
             TrackDrawer.RemoveTrack();
+            DrawTrack();
+
+            if (App.LocationListener.Location != null)
+            {
+                MoveCamera(App.LocationListener.Location.ToLatLng(), Zoom);
+            }
         }
     }
 }
