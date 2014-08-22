@@ -89,7 +89,7 @@ namespace GpsTracker.Tools
             }
         }
 
-        public virtual void DrawTrackLine(List<LatLng> trackPoints)
+        private void DrawTrackLine(List<LatLng> trackPoints)
         {
             var segments = SplitTrackOnSegments(trackPoints);
 

@@ -14,51 +14,40 @@ namespace GpsTracker
         public event Action<Location> Connected;
         public event Action<Location> LocationChanged;
 
-        private Location _lastLocation;
-        public Location LastLocation
+        public Location Location { get; private set; }
+
+        private bool ChangeLastLocation(Location location)
         {
-            get { return _lastLocation; }
-            set
-            {
-                if (value == null) return;
+            if (location == null ||
+                (Location != null &&
+                 (Location.Equals(location) || !(Location.DistanceTo(location) >= Constants.MinimalDisplacement))))
+                return false;
 
-                if (_lastLocation == null ||
-                    (!_lastLocation.Equals(value) &&
-                     _lastLocation.DistanceTo(value) >= Constants.MinimalDisplacement))
-                {
-                    _lastLocation = value;
+            Location = location;
 
-                    LocationChangedHandler(_lastLocation);
-                    TriggerLocationChanged(_lastLocation);
-                }
-            }
+            return true;
         }
 
         public void OnConnected(Bundle connectionHint)
         {
             StartListenLocationUpdates();
 
-            LastLocation = LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient);
+            ChangeLastLocation(LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient));
 
-            TriggerConnected(LastLocation);
+            UpdateActiveTrack(Location);
+
+            TriggerConnected(Location);
         }
 
         public virtual void OnConnectionSuspended(int cause) {}
 
         public void OnLocationChanged(Location location)
         {
-            LastLocation = location;
-        }
-
-        public void LocationChangedHandler(Location location)
-        {
-            var trackPoint = location.ToLatLng();
-
-            if (App.ActiveTrackManager.HasActiveTrack)
+            var locationChanged = ChangeLastLocation(location);
+            if (locationChanged)
             {
-                App.ActiveTrackManager.AddTrackPoint(trackPoint);
-
-                TriggerLocationChanged(location);
+                UpdateActiveTrack(Location);
+                TriggerLocationChanged(Location);
             }
         }
 
@@ -86,6 +75,23 @@ namespace GpsTracker
             if (LocationChanged != null)
             {
                 LocationChanged(location);
+            }
+        }
+
+        public void UpdateActiveTrack(Location location)
+        {
+            if (location == null)
+            {
+                return;
+            }
+
+            var trackPoint = location.ToLatLng();
+
+            if (App.ActiveTrackManager.HasActiveTrack)
+            {
+                App.ActiveTrackManager.AddTrackPoint(trackPoint);
+
+                TriggerLocationChanged(location);
             }
         }
     }

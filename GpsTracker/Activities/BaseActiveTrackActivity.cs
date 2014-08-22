@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using Android.App;
 using Android.Gms.Maps;
@@ -12,7 +12,7 @@ using GpsTracker.Tools;
 namespace GpsTracker.Activities
 {
     internal abstract class BaseActiveTrackActivity : Activity,
-        GoogleMap.IOnCameraChangeListener
+        GoogleMap.IOnCameraChangeListener, GoogleMap.IOnMapLoadedCallback
     {
         private GoogleMap _map;
 
@@ -22,6 +22,7 @@ namespace GpsTracker.Activities
         protected static float Zoom = DefaultMapZoom;
         protected static LatLng Position;
         protected static float Bearing;
+        protected bool MapIsLoaded;
 
         protected GoogleMap Map
         {
@@ -52,7 +53,7 @@ namespace GpsTracker.Activities
                 App.LocationClient.Connect();
             }
 
-            var lastLocation = App.LocationListener.LastLocation;
+            var lastLocation = App.LocationListener.Location;
 
             if (lastLocation != null)
             {
@@ -92,6 +93,7 @@ namespace GpsTracker.Activities
         protected virtual void InitMap()
         {
             Map.SetOnCameraChangeListener(this);
+            Map.SetOnMapLoadedCallback(this);
         }
 
         protected virtual void InitTrackDrawer()
@@ -130,7 +132,7 @@ namespace GpsTracker.Activities
 
         public virtual void LocationListenerOnConnected(Location location)
         {
-            var lastLocation = App.LocationListener.LastLocation;
+            var lastLocation = App.LocationListener.Location;
 
             if (lastLocation != null)
             {
@@ -141,7 +143,7 @@ namespace GpsTracker.Activities
 
         public virtual void LocationListenerOnLocationChanged(Location location)
         {
-            var lastLocation = App.LocationListener.LastLocation;
+            var lastLocation = App.LocationListener.Location;
             if (lastLocation != null)
             {
                 DrawTrack();
@@ -154,16 +156,28 @@ namespace GpsTracker.Activities
 
         public void OnCameraChange(CameraPosition position)
         {
-            Zoom = position.Zoom;
-            Bearing = position.Bearing;
-            Position = position.Target;
-
-            var lastLocation = App.LocationListener.LastLocation;
-
-            if (UserConfig.Autoreturn && lastLocation != null && !IsTrackPointVisible(lastLocation.ToLatLng()))
+            if (MapIsLoaded)
             {
-                Autoreturn();
+                Zoom = position.Zoom;
+                Bearing = position.Bearing;
+                Position = position.Target;
+
+                var lastLocation = App.LocationListener.Location;
+
+                if (UserConfig.Autoreturn && lastLocation != null && !IsTrackPointVisible(lastLocation.ToLatLng()))
+                {
+                    Autoreturn();
+                }
             }
+        }
+
+        #endregion
+
+        #region IOnMapLoadedCallback implementation
+
+        public void OnMapLoaded()
+        {
+            MapIsLoaded = true;
         }
 
         #endregion
@@ -201,7 +215,7 @@ namespace GpsTracker.Activities
         {
             RunOnUiThread(() =>
             {
-                var lastLocation = App.LocationListener.LastLocation;
+                var lastLocation = App.LocationListener.Location;
                 if (lastLocation != null)
                 {
                     MoveCamera(lastLocation.ToLatLng(), Zoom, true);
@@ -215,20 +229,14 @@ namespace GpsTracker.Activities
 
         private void DrawTrack()
         {
-            List<LatLng> trackPoints;
-
-            if (App.ActiveTrackManager.HasActiveTrack)
+            if (App.ActiveTrackManager.HasActiveTrack && App.ActiveTrackManager.TrackPoints.Any())
             {
-                trackPoints = App.ActiveTrackManager.TrackPoints;
+                TrackDrawer.DrawTrack(App.ActiveTrackManager.TrackPoints);
             }
-            else
+            else if (App.LocationListener.Location != null)
             {
-                var lastLocation = App.LocationListener.LastLocation;
-
-                trackPoints = lastLocation != null ? new List<LatLng> { lastLocation.ToLatLng() } : new List<LatLng>();
+                TrackDrawer.DrawCurrentPositionMarker(App.LocationListener.Location.ToLatLng());
             }
-
-            TrackDrawer.DrawTrack(trackPoints);
         }
 
         private bool IsTrackPointVisible(LatLng trackPoint)

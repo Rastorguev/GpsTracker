@@ -84,7 +84,7 @@ namespace GpsTracker.Activities
 
         private void StartButtonClickEventHandler(object sender, EventArgs e)
         {
-            var lastLocation = App.LocationListener.LastLocation;
+            var lastLocation = App.LocationListener.Location;
             var startPosition = lastLocation != null ? lastLocation.ToLatLng() : null;
             App.ActiveTrackManager.StartTrack(startPosition);
 
