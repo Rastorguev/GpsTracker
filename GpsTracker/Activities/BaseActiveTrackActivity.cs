@@ -87,6 +87,8 @@ namespace GpsTracker.Activities
         {
             base.OnDestroy();
 
+            TrackDrawer.CleanUp();
+
             GC.Collect(GC.MaxGeneration);
         }
 
@@ -109,7 +111,7 @@ namespace GpsTracker.Activities
 
         protected virtual void InitTrackDrawer()
         {
-            TrackDrawer = new TrackDrawer(Map);
+            TrackDrawer = new TrackDrawer(Map, this);
         }
 
         protected virtual void InitAutoreturnTimer()

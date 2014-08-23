@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Android.App;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
@@ -13,8 +14,16 @@ namespace GpsTracker.Tools
         private Marker _startPositionMarker;
         private readonly List<Polyline> _polylines = new List<Polyline>();
         private readonly GoogleMap _map;
+        private readonly Activity _context;
         private const int SegmentMaxLength = 500;
         private const string PolylineColor = "#AA3E97D1";
+
+        private Bitmap _currentPositionMarkerIcon;
+
+        private Bitmap CurrentPositionMarkerIcon
+        {
+            get { return _currentPositionMarkerIcon ?? (_currentPositionMarkerIcon = GetCurrentPositionMarkerIcon()); }
+        }
 
         #region Path Display Methods
 
@@ -23,9 +32,10 @@ namespace GpsTracker.Tools
             return _map;
         }
 
-        public TrackDrawer(GoogleMap map)
+        public TrackDrawer(GoogleMap map, Activity context)
         {
             _map = map;
+            _context = context;
         }
 
         public virtual void DrawTrack(List<LatLng> trackPoints)
@@ -141,14 +151,34 @@ namespace GpsTracker.Tools
 
         private Marker CreateCurrentPositionMarker(LatLng trackPoint)
         {
+            //var size = _context.Resources.GetDimensionPixelSize(Resource.Dimension.map_dot_marker_size);
+            //var dotMarkerBitmap = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
+            //var canvas = new Canvas(dotMarkerBitmap);
+
+            //var dot = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerDot);
+            //var halo = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
+
+            //halo.SetBounds(0, 0, dotMarkerBitmap.Width, dotMarkerBitmap.Width);
+
+            //const double x = 2.9;
+            //dot.SetBounds((int) (
+            //    dotMarkerBitmap.Width/x),
+            //    (int) (dotMarkerBitmap.Height/x),
+            //    dotMarkerBitmap.Width - (int) (dotMarkerBitmap.Width/x),
+            //    dotMarkerBitmap.Height - (int) (dotMarkerBitmap.Height/x));
+
+            //halo.Draw(canvas);
+            //dot.Draw(canvas);
+
             var map = GetMap();
             var options = new MarkerOptions();
-            var color = BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueGreen);
 
             options.SetPosition(trackPoint);
-            options.InvokeIcon(color);
+            options.InvokeIcon(BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIcon));
+            options.Anchor(.5f, .5f);
 
             var marker = map.AddMarker(options);
+
             return marker;
         }
 
@@ -158,7 +188,7 @@ namespace GpsTracker.Tools
             var polylineOptions = new PolylineOptions();
 
             polylineOptions.InvokeColor(GetPolylineColor());
-            polylineOptions.InvokeWidth(6);
+            polylineOptions.InvokeWidth(14);
 
             trackPoints.ForEach(p => polylineOptions.Add(p));
             var polyline = map.AddPolyline(polylineOptions);
@@ -174,22 +204,50 @@ namespace GpsTracker.Tools
 
         #endregion
 
+        private Bitmap GetCurrentPositionMarkerIcon()
+        {
+            const double ratio = 2.9;
+            var size = _context.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
+            var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(markerIcon);
+            var dot = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerDot);
+            var halo = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
+
+            halo.SetBounds(0, 0, markerIcon.Width, markerIcon.Width);
+
+            dot.SetBounds((int) (
+                markerIcon.Width/ratio),
+                (int) (markerIcon.Height/ratio),
+                markerIcon.Width - (int) (markerIcon.Width/ratio),
+                markerIcon.Height - (int) (markerIcon.Height/ratio));
+
+            halo.Draw(canvas);
+            dot.Draw(canvas);
+
+            return markerIcon;
+        }
+
+        public void CleanUp()
+        {
+            CurrentPositionMarkerIcon.Recycle();
+        }
+
         #region Helpers
 
         private static List<List<LatLng>> SplitTrackOnSegments(List<LatLng> trackPoints)
         {
             const int overlay = 1;
             var expectedSegmentsNumber =
-                Math.Ceiling(((decimal)trackPoints.Count / SegmentMaxLength));
+                Math.Ceiling(((decimal) trackPoints.Count/SegmentMaxLength));
 
             var segments = new List<List<LatLng>>();
             var n = 0;
 
             while (segments.Count < expectedSegmentsNumber)
             {
-                if (trackPoints.Count >= SegmentMaxLength * (n + 1))
+                if (trackPoints.Count >= SegmentMaxLength*(n + 1))
                 {
-                    var index = n != 0 ? n * SegmentMaxLength - overlay : n * SegmentMaxLength;
+                    var index = n != 0 ? n*SegmentMaxLength - overlay : n*SegmentMaxLength;
                     var count = n != 0 ? SegmentMaxLength + overlay : SegmentMaxLength;
 
                     segments.Add(trackPoints.GetRange(index, count));
@@ -197,10 +255,10 @@ namespace GpsTracker.Tools
                 }
                 else
                 {
-                    var index = n != 0 ? n * SegmentMaxLength - overlay : n * SegmentMaxLength;
+                    var index = n != 0 ? n*SegmentMaxLength - overlay : n*SegmentMaxLength;
                     var count = n != 0
-                        ? trackPoints.Count - n * SegmentMaxLength + overlay
-                        : trackPoints.Count - n * SegmentMaxLength;
+                        ? trackPoints.Count - n*SegmentMaxLength + overlay
+                        : trackPoints.Count - n*SegmentMaxLength;
 
                     segments.Add(trackPoints.GetRange(index, count));
                 }

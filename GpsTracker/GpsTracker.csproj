@@ -94,6 +94,8 @@
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\ActiveTrackFullScreenMapLayout.axml" />
     <AndroidResource Include="Resources\layout\MainTrackingLayout.axml" />
+    <AndroidResource Include="Resources\drawable\CurrentPositionMarkerDot.axml" />
+    <AndroidResource Include="Resources\drawable\CurrentPositionMarkerHalo.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\MainLayout.axml" />

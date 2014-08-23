@@ -9,5 +9,6 @@ namespace GpsTracker.Tools
         void DrawStartPositionMarker(LatLng trackPoint);
         void DrawCurrentPositionMarker(LatLng trackPoint);
         void RemoveTrack();
+        void CleanUp();
     }
 }
