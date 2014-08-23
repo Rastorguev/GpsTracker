@@ -96,6 +96,7 @@
     <AndroidResource Include="Resources\layout\MainTrackingLayout.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerDot.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerHalo.axml" />
+    <AndroidResource Include="Resources\drawable\StartPositionMarkerDot.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\MainLayout.axml" />

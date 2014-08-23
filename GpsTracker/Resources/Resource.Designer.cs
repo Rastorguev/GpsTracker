@@ -1170,6 +1170,9 @@ namespace GpsTracker
 			// aapt resource value: 0x7f020088
 			public const int powered_by_google_light = 2130837640;
 			
+			// aapt resource value: 0x7f020089
+			public const int StartPositionMarkerDot = 2130837641;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
