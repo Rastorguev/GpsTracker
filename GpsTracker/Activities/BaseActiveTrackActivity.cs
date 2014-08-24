@@ -23,6 +23,7 @@ namespace GpsTracker.Activities
         protected static LatLng Position;
         protected static float Bearing;
         protected bool MapIsLoaded;
+        protected bool FirstOnCameraChangeEventOccured;
 
         protected GoogleMap Map
         {
@@ -54,19 +55,7 @@ namespace GpsTracker.Activities
 
             DrawTrack();
 
-            var location = App.LocationListener.Location;
-
-            if (UserConfig.FitTrackToScreen)
-            {
-                if (MapIsLoaded)
-                {
-                    FitTrackToScreen();
-                }
-            }
-            else if (location != null)
-            {
-                MoveCamera(location.ToLatLng(), Zoom);
-            }
+            AdjustCamera(Zoom);
 
             AutoreturnTimer.Elapsed += AutoreturnEventHandler;
         }
@@ -103,11 +92,6 @@ namespace GpsTracker.Activities
         {
             Map.SetOnCameraChangeListener(this);
             Map.SetOnMapLoadedCallback(this);
-
-            if (UserConfig.FitTrackToScreen)
-            {
-                DisableMapControl();
-            }
         }
 
         protected virtual void InitTrackDrawer()
@@ -146,35 +130,18 @@ namespace GpsTracker.Activities
 
         public virtual void LocationListenerOnConnected(Location location)
         {
-            var lastLocation = App.LocationListener.Location;
+            DrawTrack();
 
-            if (lastLocation != null)
-            {
-                DrawTrack();
-
-                if (UserConfig.FitTrackToScreen)
-                {
-                    FitTrackToScreen(true);
-                }
-                else
-                {
-                    MoveCamera(App.LocationListener.Location.ToLatLng(), DefaultMapZoom, true);
-                }
-            }
+            AdjustCamera(DefaultMapZoom, true);
         }
 
         public virtual void LocationListenerOnLocationChanged(Location location)
         {
-            var lastLocation = App.LocationListener.Location;
+            DrawTrack();
 
-            if (lastLocation != null)
+            if (!AutoreturnTimer.Enabled)
             {
-                DrawTrack();
-
-                if (UserConfig.FitTrackToScreen)
-                {
-                    FitTrackToScreen(true);
-                }
+                AdjustCamera(Zoom, true);
             }
         }
 
@@ -190,13 +157,16 @@ namespace GpsTracker.Activities
 
             var lastLocation = App.LocationListener.Location;
 
-            if (UserConfig.Autoreturn && lastLocation != null && !IsTrackPointVisible(lastLocation.ToLatLng()))
+            if (UserConfig.Autoreturn && lastLocation != null)
             {
                 Autoreturn();
             }
 
-            if (UserConfig.FitTrackToScreen)
+            //TODO: Check
+            if (UserConfig.FitTrackToScreen && !FirstOnCameraChangeEventOccured)
             {
+                FirstOnCameraChangeEventOccured = true;
+
                 FitTrackToScreen();
             }
         }
@@ -213,6 +183,23 @@ namespace GpsTracker.Activities
         #endregion
 
         #region Camera position methods
+
+        protected void AdjustCamera(float zoom, bool animate = false)
+        {
+            var location = App.LocationListener.Location;
+
+            if (UserConfig.FitTrackToScreen)
+            {
+                if (MapIsLoaded)
+                {
+                    FitTrackToScreen(animate);
+                }
+            }
+            else if (location != null)
+            {
+                MoveCamera(location.ToLatLng(), zoom, animate);
+            }
+        }
 
         protected void MoveCamera(LatLng trackPoint, float zoom, bool animate = false)
         {
@@ -251,13 +238,20 @@ namespace GpsTracker.Activities
             var bounds = builder.Build();
             var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
 
-            if (animate)
+            try
             {
-                Map.AnimateCamera(cameraUpdate);
+                if (animate)
+                {
+                    Map.AnimateCamera(cameraUpdate);
+                }
+                else
+                {
+                    Map.MoveCamera(cameraUpdate);
+                }
             }
-            else
+            catch (Exception e)
             {
-                Map.MoveCamera(cameraUpdate);
+                Console.WriteLine(e);
             }
         }
 
@@ -269,14 +263,7 @@ namespace GpsTracker.Activities
 
         private void AutoreturnEventHandler(object sender, EventArgs e)
         {
-            RunOnUiThread(() =>
-            {
-                var lastLocation = App.LocationListener.Location;
-                if (lastLocation != null)
-                {
-                    MoveCamera(lastLocation.ToLatLng(), Zoom, true);
-                }
-            });
+            RunOnUiThread(() => AdjustCamera(Zoom, true));
         }
 
         #endregion
