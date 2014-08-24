@@ -52,20 +52,20 @@ namespace GpsTracker.Activities
                 App.LocationClient.Connect();
             }
 
-            var lastLocation = App.LocationListener.Location;
+            DrawTrack();
 
-            if (lastLocation != null)
+            var location = App.LocationListener.Location;
+
+            if (UserConfig.FitTrackToScreen)
             {
-                DrawTrack();
-
-                if (MapIsLoaded && UserConfig.FitTrackToScreen && App.ActiveTrackManager.HasActiveTrack)
+                if (MapIsLoaded)
                 {
                     FitTrackToScreen();
                 }
-                else
-                {
-                    MoveCamera(App.LocationListener.Location.ToLatLng(), Zoom);
-                }
+            }
+            else if (location != null)
+            {
+                MoveCamera(location.ToLatLng(), Zoom);
             }
 
             AutoreturnTimer.Elapsed += AutoreturnEventHandler;
@@ -102,6 +102,7 @@ namespace GpsTracker.Activities
         protected virtual void InitMap()
         {
             Map.SetOnCameraChangeListener(this);
+            Map.SetOnMapLoadedCallback(this);
 
             if (UserConfig.FitTrackToScreen)
             {
@@ -151,7 +152,7 @@ namespace GpsTracker.Activities
             {
                 DrawTrack();
 
-                if (UserConfig.FitTrackToScreen && App.ActiveTrackManager.HasActiveTrack)
+                if (UserConfig.FitTrackToScreen)
                 {
                     FitTrackToScreen(true);
                 }
@@ -236,31 +237,27 @@ namespace GpsTracker.Activities
 
         private void FitTrackToScreen(bool animate = false)
         {
-            if (App.ActiveTrackManager.HasActiveTrack && App.ActiveTrackManager.TrackPoints.Any())
+            var builder = new LatLngBounds.Builder();
+
+            if (App.ActiveTrackManager.HasActiveTrack)
             {
-                var builder = new LatLngBounds.Builder();
-
                 App.ActiveTrackManager.TrackPoints.ForEach(p => builder.Include(p));
+            }
+            else if (App.LocationListener.Location != null)
+            {
+                builder.Include(App.LocationListener.Location.ToLatLng());
+            }
 
-                var bounds = builder.Build();
+            var bounds = builder.Build();
+            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
 
-                try
-                {
-                    var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
-
-                    if (animate)
-                    {
-                        Map.AnimateCamera(cameraUpdate);
-                    }
-                    else
-                    {
-                        Map.MoveCamera(cameraUpdate);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+            if (animate)
+            {
+                Map.AnimateCamera(cameraUpdate);
+            }
+            else
+            {
+                Map.MoveCamera(cameraUpdate);
             }
         }
 
