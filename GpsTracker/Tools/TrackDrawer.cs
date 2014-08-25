@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 using Android.App;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
@@ -13,19 +14,35 @@ namespace GpsTracker.Tools
     {
         private const int SegmentMaxLength = 500;
         private const double MarkerDotHaloRatio = 2.9;
+        private const int CurrentPositionMarkerIconResetDelay = 5000;
 
         private Marker _currentPositionMarker;
         private Marker _startPositionMarker;
         private readonly List<Polyline> _polylines = new List<Polyline>();
         private readonly GoogleMap _map;
         private readonly Activity _context;
+        private bool _disposed;
 
-        private Bitmap _currentPositionMarkerIcon;
+        private Bitmap _currentPositionMarkerIconStatic;
+        private Bitmap _currentPositionMarkerIconMoving;
         private Bitmap _startPositionMarkerIcon;
 
-        private Bitmap CurrentPositionMarkerIcon
+        private Bitmap CurrentPositionMarkerIconStatic
         {
-            get { return _currentPositionMarkerIcon ?? (_currentPositionMarkerIcon = GetCurrentPositionMarkerIcon()); }
+            get
+            {
+                return _currentPositionMarkerIconStatic ??
+                       (_currentPositionMarkerIconStatic = GetCurrentPositionMarkerIconStatic());
+            }
+        }
+
+        private Bitmap CurrentPositionMarkerIconMoving
+        {
+            get
+            {
+                return _currentPositionMarkerIconMoving ??
+                       (_currentPositionMarkerIconMoving = GetCurrentPositionMarkerIconMoving());
+            }
         }
 
         private Bitmap StartPositionMarkerIcon
@@ -33,17 +50,27 @@ namespace GpsTracker.Tools
             get { return _startPositionMarkerIcon ?? (_startPositionMarkerIcon = GetStartPositionMarkerIcon()); }
         }
 
-        #region Path Display Methods
-
-        protected GoogleMap GetMap()
-        {
-            return _map;
-        }
+        private readonly Timer _currentPositionMarkerIconResetTimer;
 
         public TrackDrawer(GoogleMap map, Activity context)
         {
             _map = map;
             _context = context;
+
+            _currentPositionMarkerIconResetTimer = new Timer
+            {
+                AutoReset = false,
+                Interval = CurrentPositionMarkerIconResetDelay
+            };
+
+            _currentPositionMarkerIconResetTimer.Elapsed += CurrentPositionMarkerIconResetHandler;
+        }
+
+        #region Path Display Methods
+
+        protected GoogleMap GetMap()
+        {
+            return _map;
         }
 
         public virtual void DrawTrack(List<LatLng> trackPoints)
@@ -83,6 +110,20 @@ namespace GpsTracker.Tools
             _polylines.Clear();
         }
 
+        public virtual void DrawCurrentPositionMarker(LatLng trackPoint)
+        {
+            if (_currentPositionMarker == null)
+            {
+                _currentPositionMarker = CreateCurrentPositionMarker(trackPoint);
+            }
+            else
+            {
+                _currentPositionMarker.Position = trackPoint;
+            }
+
+            SetCurrentPositionMarkerIcon();
+        }
+
         public virtual void DrawStartPositionMarker(LatLng trackPoint)
         {
             if (_startPositionMarker == null)
@@ -95,16 +136,44 @@ namespace GpsTracker.Tools
             }
         }
 
-        public virtual void DrawCurrentPositionMarker(LatLng trackPoint)
+        private void SetCurrentPositionMarkerIcon()
         {
-            if (_currentPositionMarker == null)
+            var bearing = App.LocationListener.Bearing;
+
+            if (bearing != null)
             {
-                _currentPositionMarker = CreateCurrentPositionMarker(trackPoint);
+                _currentPositionMarker.SetIcon(BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIconMoving));
+                _currentPositionMarker.Rotation = bearing.Value;
+
+                InitCurrentPositionMarkerIconReset();
             }
             else
             {
-                _currentPositionMarker.Position = trackPoint;
+                _currentPositionMarker.SetIcon(BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIconStatic));
             }
+        }
+
+        private void InitCurrentPositionMarkerIconReset()
+        {
+            _currentPositionMarkerIconResetTimer.Stop();
+            _currentPositionMarkerIconResetTimer.Start();
+        }
+
+        private void CurrentPositionMarkerIconResetHandler(object sender, EventArgs e)
+        {
+            _context.RunOnUiThread(
+                () =>
+                {
+                    if (_currentPositionMarker != null)
+                    {
+                        _currentPositionMarker.SetIcon(
+                            BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIconStatic));
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                    }
+                });
         }
 
         private void DrawTrackLine(List<LatLng> trackPoints)
@@ -152,6 +221,7 @@ namespace GpsTracker.Tools
             options.SetPosition(trackPoint);
             options.InvokeIcon(BitmapDescriptorFactory.FromBitmap(StartPositionMarkerIcon));
             options.Anchor(.5f, .5f);
+            options.Flat(true);
 
             var marker = map.AddMarker(options);
             return marker;
@@ -163,8 +233,9 @@ namespace GpsTracker.Tools
             var options = new MarkerOptions();
 
             options.SetPosition(trackPoint);
-            options.InvokeIcon(BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIcon));
+            options.InvokeIcon(BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIconStatic));
             options.Anchor(.5f, .5f);
+            options.Flat(true);
 
             var marker = map.AddMarker(options);
 
@@ -193,12 +264,33 @@ namespace GpsTracker.Tools
 
         #endregion
 
-        private Bitmap GetCurrentPositionMarkerIcon()
+        private Bitmap GetCurrentPositionMarkerIconStatic()
         {
             var size = _context.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
             var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
             var canvas = new Canvas(markerIcon);
             var dot = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerDot);
+            var halo = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
+
+            halo.SetBounds(0, 0, markerIcon.Width, markerIcon.Width);
+            dot.SetBounds((int) (
+                markerIcon.Width/MarkerDotHaloRatio),
+                (int) (markerIcon.Height/MarkerDotHaloRatio),
+                markerIcon.Width - (int) (markerIcon.Width/MarkerDotHaloRatio),
+                markerIcon.Height - (int) (markerIcon.Height/MarkerDotHaloRatio));
+
+            halo.Draw(canvas);
+            dot.Draw(canvas);
+
+            return markerIcon;
+        }
+
+        private Bitmap GetCurrentPositionMarkerIconMoving()
+        {
+            var size = _context.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
+            var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(markerIcon);
+            var dot = _context.Resources.GetDrawable(Resource.Drawable.Arrow);
             var halo = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
 
             halo.SetBounds(0, 0, markerIcon.Width, markerIcon.Width);
@@ -230,12 +322,6 @@ namespace GpsTracker.Tools
             dot.Draw(canvas);
 
             return markerIcon;
-        }
-
-        public void CleanUp()
-        {
-            CurrentPositionMarkerIcon.Recycle();
-            StartPositionMarkerIcon.Recycle();
         }
 
         #region Helpers
@@ -271,6 +357,36 @@ namespace GpsTracker.Tools
             }
 
             return segments;
+        }
+
+        #endregion
+
+        #region IDisposable impementation
+
+        ~TrackDrawer()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    CurrentPositionMarkerIconStatic.Recycle();
+                    StartPositionMarkerIcon.Recycle();
+                    _currentPositionMarkerIconResetTimer.Elapsed -= CurrentPositionMarkerIconResetHandler;
+                }
+
+                _disposed = true;
+            }
         }
 
         #endregion

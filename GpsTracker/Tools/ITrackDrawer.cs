@@ -1,14 +1,14 @@
+using System;
 using System.Collections.Generic;
 using Android.Gms.Maps.Model;
 
 namespace GpsTracker.Tools
 {
-    internal interface ITrackDrawer
+    internal interface ITrackDrawer: IDisposable
     {
         void DrawTrack(List<LatLng> trackPoints);
         void DrawStartPositionMarker(LatLng trackPoint);
         void DrawCurrentPositionMarker(LatLng trackPoint);
         void RemoveTrack();
-        void CleanUp();
     }
 }

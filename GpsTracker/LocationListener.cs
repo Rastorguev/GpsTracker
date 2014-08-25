@@ -15,14 +15,26 @@ namespace GpsTracker
         public event Action<Location> LocationChanged;
 
         public Location Location { get; private set; }
+        public Location PreviousLocation { get; private set; }
 
-        private bool ChangeLastLocation(Location location)
+        public float? Bearing
+        {
+            get
+            {
+                return Location != null && PreviousLocation != null
+                    ? (float?) PreviousLocation.BearingTo(Location)
+                    : null;
+            }
+        }
+
+        private bool ChangeLocation(Location location)
         {
             if (location == null ||
                 (Location != null &&
                  (Location.Equals(location) || !(Location.DistanceTo(location) >= Constants.MinimalDisplacement))))
                 return false;
 
+            PreviousLocation = Location;
             Location = location;
 
             return true;
@@ -32,7 +44,7 @@ namespace GpsTracker
         {
             StartListenLocationUpdates();
 
-            ChangeLastLocation(LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient));
+            ChangeLocation(LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient));
 
             UpdateActiveTrack(Location);
 
@@ -43,7 +55,7 @@ namespace GpsTracker
 
         public void OnLocationChanged(Location location)
         {
-            var locationChanged = ChangeLastLocation(location);
+            var locationChanged = ChangeLocation(location);
             if (locationChanged)
             {
                 UpdateActiveTrack(Location);

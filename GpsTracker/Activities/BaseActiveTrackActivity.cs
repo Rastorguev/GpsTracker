@@ -57,7 +57,7 @@ namespace GpsTracker.Activities
 
             AdjustCamera(Zoom);
 
-            AutoreturnTimer.Elapsed += AutoreturnEventHandler;
+            AutoreturnTimer.Elapsed += AutoreturnHandler;
         }
 
         protected override void OnPause()
@@ -67,7 +67,7 @@ namespace GpsTracker.Activities
             TrackDrawer.RemoveTrack();
 
             UnsubscribeFromLocationListenerEvents();
-            AutoreturnTimer.Elapsed -= AutoreturnEventHandler;
+            AutoreturnTimer.Elapsed -= AutoreturnHandler;
 
             GC.Collect();
         }
@@ -76,7 +76,7 @@ namespace GpsTracker.Activities
         {
             base.OnDestroy();
 
-            TrackDrawer.CleanUp();
+            TrackDrawer.Dispose();
 
             GC.Collect(GC.MaxGeneration);
         }
@@ -116,7 +116,7 @@ namespace GpsTracker.Activities
 
         #endregion
 
-        #region CleanUp
+        #region CleanUp1
 
         private void UnsubscribeFromLocationListenerEvents()
         {
@@ -159,7 +159,7 @@ namespace GpsTracker.Activities
 
             if (UserConfig.Autoreturn && lastLocation != null)
             {
-                Autoreturn();
+                InitAutoreturn();
             }
 
             //TODO: Check
@@ -255,13 +255,13 @@ namespace GpsTracker.Activities
             }
         }
 
-        private void Autoreturn()
+        private void InitAutoreturn()
         {
             AutoreturnTimer.Stop();
             AutoreturnTimer.Start();
         }
 
-        private void AutoreturnEventHandler(object sender, EventArgs e)
+        private void AutoreturnHandler(object sender, EventArgs e)
         {
             RunOnUiThread(() => AdjustCamera(Zoom, true));
         }

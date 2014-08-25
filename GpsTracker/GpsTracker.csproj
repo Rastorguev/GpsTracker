@@ -97,6 +97,7 @@
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerDot.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerHalo.axml" />
     <AndroidResource Include="Resources\drawable\StartPositionMarkerDot.axml" />
+    <AndroidResource Include="Resources\drawable\CurrentPositionMarkerArrow.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\MainLayout.axml" />
@@ -113,6 +114,7 @@
     <Content Include="Properties\AndroidManifest.xml" />
     <AndroidResource Include="Resources\values\Colors.xml" />
     <AndroidResource Include="Resources\values\Dimensions.xml" />
+    <AndroidResource Include="Resources\drawable\Arrow.png" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="googleplayservices">
