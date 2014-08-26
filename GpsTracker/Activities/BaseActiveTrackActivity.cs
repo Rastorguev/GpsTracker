@@ -54,7 +54,7 @@ namespace GpsTracker.Activities
                 App.LocationClient.Connect();
             }
 
-            DrawTrack();
+            ShowLocationChanges();
 
             AdjustCamera(Zoom);
 
@@ -81,10 +81,6 @@ namespace GpsTracker.Activities
 
             GC.Collect(GC.MaxGeneration);
         }
-
-        #endregion
-
-        #region Initializtion
 
         protected abstract void SetView();
         protected abstract GoogleMap GetMap();
@@ -115,10 +111,6 @@ namespace GpsTracker.Activities
             App.LocationListener.LocationChanged += LocationListenerOnLocationChanged;
         }
 
-        #endregion
-
-        #region CleanUp1
-
         protected void UnsubscribeFromLocationListenerEvents()
         {
             App.LocationListener.Connected -= LocationListenerOnConnected;
@@ -131,14 +123,14 @@ namespace GpsTracker.Activities
 
         public virtual void LocationListenerOnConnected(Location location)
         {
-            DrawTrack();
+            ShowLocationChanges();
 
             AdjustCamera(DefaultMapZoom, true);
         }
 
         public virtual void LocationListenerOnLocationChanged(Location location)
         {
-            DrawTrack();
+            ShowLocationChanges();
 
             if (!AutoreturnTimer.Enabled)
             {
@@ -152,7 +144,8 @@ namespace GpsTracker.Activities
 
         public virtual void OnCameraChange(CameraPosition position)
         {
-            if (AutoSetMapBounds == null || !AutoSetMapBounds.Equals(Map.Projection.VisibleRegion.LatLngBounds))
+            if (FirstOnCameraChangeEventOccured &&
+                (AutoSetMapBounds == null || !AutoSetMapBounds.Equals(Map.Projection.VisibleRegion.LatLngBounds)))
             {
                 Zoom = position.Zoom;
                 Bearing = position.Bearing;
@@ -164,14 +157,13 @@ namespace GpsTracker.Activities
                 {
                     InitAutoreturn();
                 }
+            }
 
-                //TODO: Check
-                if (UserConfig.FitTrackToScreen && !FirstOnCameraChangeEventOccured)
-                {
-                    FirstOnCameraChangeEventOccured = true;
+            if (UserConfig.FitTrackToScreen && !FirstOnCameraChangeEventOccured)
+            {
+                FirstOnCameraChangeEventOccured = true;
 
-                    FitTrackToScreen();
-                }
+                FitTrackToScreen();
             }
         }
 
@@ -278,9 +270,9 @@ namespace GpsTracker.Activities
 
         #endregion
 
-        #region Track Display
+        #region Location Display
 
-        public void DrawTrack()
+        public void ShowLocationChanges()
         {
             if (App.ActiveTrackManager.HasActiveTrack && App.ActiveTrackManager.TrackPoints.Any())
             {
@@ -290,25 +282,6 @@ namespace GpsTracker.Activities
             {
                 TrackDrawer.DrawCurrentPositionMarker(App.LocationListener.Location.ToLatLng());
             }
-        }
-
-        #endregion
-
-        #region Helpers
-
-        protected bool IsTrackPointVisible(LatLng trackPoint)
-        {
-            var bounds = Map.Projection.VisibleRegion.LatLngBounds;
-            return bounds.Contains(trackPoint);
-        }
-
-        protected void DisableMapControl()
-        {
-            Map.UiSettings.ZoomControlsEnabled = false;
-            Map.UiSettings.ZoomGesturesEnabled = false;
-            Map.UiSettings.ScrollGesturesEnabled = false;
-            Map.UiSettings.RotateGesturesEnabled = false;
-            Map.UiSettings.TiltGesturesEnabled = false;
         }
 
         #endregion

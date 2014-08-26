@@ -89,7 +89,7 @@ namespace GpsTracker.Activities
             var startPosition = lastLocation != null ? lastLocation.ToLatLng() : null;
 
             App.ActiveTrackManager.StartTrack(startPosition);
-            DrawTrack();
+            ShowLocationChanges();
         }
 
         private void StopButtonClickEventHandler(object sender, EventArgs e)
@@ -100,7 +100,7 @@ namespace GpsTracker.Activities
             App.ActiveTrackManager.StopTrack();
 
             TrackDrawer.RemoveTrack();
-            DrawTrack();
+            ShowLocationChanges();
 
             if (App.LocationListener.Location != null)
             {
