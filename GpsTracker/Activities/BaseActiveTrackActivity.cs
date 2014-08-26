@@ -12,7 +12,7 @@ using GpsTracker.Tools;
 namespace GpsTracker.Activities
 {
     internal abstract class BaseActiveTrackActivity : Activity,
-        GoogleMap.IOnCameraChangeListener, GoogleMap.IOnMapLoadedCallback
+        GoogleMap.IOnCameraChangeListener, GoogleMap.IOnMapLoadedCallback, GoogleMap.ICancelableCallback
     {
         private GoogleMap _map;
 
@@ -24,6 +24,7 @@ namespace GpsTracker.Activities
         protected static float Bearing;
         protected bool MapIsLoaded;
         protected bool FirstOnCameraChangeEventOccured;
+        protected LatLngBounds AutoSetMapBounds;
 
         protected GoogleMap Map
         {
@@ -108,7 +109,7 @@ namespace GpsTracker.Activities
             };
         }
 
-        private void SubscribeOnLocationListenerEvents()
+        protected void SubscribeOnLocationListenerEvents()
         {
             App.LocationListener.Connected += LocationListenerOnConnected;
             App.LocationListener.LocationChanged += LocationListenerOnLocationChanged;
@@ -118,7 +119,7 @@ namespace GpsTracker.Activities
 
         #region CleanUp1
 
-        private void UnsubscribeFromLocationListenerEvents()
+        protected void UnsubscribeFromLocationListenerEvents()
         {
             App.LocationListener.Connected -= LocationListenerOnConnected;
             App.LocationListener.LocationChanged -= LocationListenerOnLocationChanged;
@@ -151,23 +152,26 @@ namespace GpsTracker.Activities
 
         public virtual void OnCameraChange(CameraPosition position)
         {
-            Zoom = position.Zoom;
-            Bearing = position.Bearing;
-            Position = position.Target;
-
-            var lastLocation = App.LocationListener.Location;
-
-            if (UserConfig.Autoreturn && lastLocation != null)
+            if (AutoSetMapBounds == null || !AutoSetMapBounds.Equals(Map.Projection.VisibleRegion.LatLngBounds))
             {
-                InitAutoreturn();
-            }
+                Zoom = position.Zoom;
+                Bearing = position.Bearing;
+                Position = position.Target;
 
-            //TODO: Check
-            if (UserConfig.FitTrackToScreen && !FirstOnCameraChangeEventOccured)
-            {
-                FirstOnCameraChangeEventOccured = true;
+                var lastLocation = App.LocationListener.Location;
 
-                FitTrackToScreen();
+                if (UserConfig.Autoreturn && lastLocation != null)
+                {
+                    InitAutoreturn();
+                }
+
+                //TODO: Check
+                if (UserConfig.FitTrackToScreen && !FirstOnCameraChangeEventOccured)
+                {
+                    FirstOnCameraChangeEventOccured = true;
+
+                    FitTrackToScreen();
+                }
             }
         }
 
@@ -178,6 +182,20 @@ namespace GpsTracker.Activities
         public void OnMapLoaded()
         {
             MapIsLoaded = true;
+        }
+
+        #endregion
+
+        #region ICancelableCallback implementation
+
+        public void OnCancel()
+        {
+            AutoSetMapBounds = Map.Projection.VisibleRegion.LatLngBounds;
+        }
+
+        public void OnFinish()
+        {
+            AutoSetMapBounds = Map.Projection.VisibleRegion.LatLngBounds;
         }
 
         #endregion
@@ -212,17 +230,10 @@ namespace GpsTracker.Activities
             var cameraPosition = builder.Build();
             var cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
 
-            if (animate)
-            {
-                Map.AnimateCamera(cameraUpdate);
-            }
-            else
-            {
-                Map.MoveCamera(cameraUpdate);
-            }
+            SetCameraView(cameraUpdate, animate);
         }
 
-        private void FitTrackToScreen(bool animate = false)
+        protected void FitTrackToScreen(bool animate = false)
         {
             var builder = new LatLngBounds.Builder();
 
@@ -238,30 +249,29 @@ namespace GpsTracker.Activities
             var bounds = builder.Build();
             var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
 
-            try
+            SetCameraView(cameraUpdate, animate);
+        }
+
+        protected void SetCameraView(CameraUpdate cameraUpdate, bool animate = false)
+        {
+            if (animate)
             {
-                if (animate)
-                {
-                    Map.AnimateCamera(cameraUpdate);
-                }
-                else
-                {
-                    Map.MoveCamera(cameraUpdate);
-                }
+                Map.AnimateCamera(cameraUpdate, this);
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
+                Map.MoveCamera(cameraUpdate);
+                AutoSetMapBounds = Map.Projection.VisibleRegion.LatLngBounds;
             }
         }
 
-        private void InitAutoreturn()
+        protected void InitAutoreturn()
         {
             AutoreturnTimer.Stop();
             AutoreturnTimer.Start();
         }
 
-        private void AutoreturnHandler(object sender, EventArgs e)
+        protected void AutoreturnHandler(object sender, EventArgs e)
         {
             RunOnUiThread(() => AdjustCamera(Zoom, true));
         }
@@ -286,15 +296,13 @@ namespace GpsTracker.Activities
 
         #region Helpers
 
-        private bool IsTrackPointVisible(LatLng trackPoint)
+        protected bool IsTrackPointVisible(LatLng trackPoint)
         {
             var bounds = Map.Projection.VisibleRegion.LatLngBounds;
             return bounds.Contains(trackPoint);
         }
 
-        #endregion
-
-        private void DisableMapControl()
+        protected void DisableMapControl()
         {
             Map.UiSettings.ZoomControlsEnabled = false;
             Map.UiSettings.ZoomGesturesEnabled = false;
@@ -302,5 +310,7 @@ namespace GpsTracker.Activities
             Map.UiSettings.RotateGesturesEnabled = false;
             Map.UiSettings.TiltGesturesEnabled = false;
         }
+
+        #endregion
     }
 }
