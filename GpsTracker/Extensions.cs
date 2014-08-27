@@ -3,7 +3,7 @@ using Android.Locations;
 
 namespace GpsTracker
 {
-    internal static class Extensions
+    public static class Extensions
     {
         public static LatLng ToLatLng(this Location location)
         {
@@ -33,6 +33,19 @@ namespace GpsTracker
         public static double MetersPerSecondToKilometersPerHour(this double speed)
         {
             return speed*3.6;
+        }
+
+        public static string CapitalizeFirst(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            var a = s.ToCharArray();
+
+            a[0] = char.ToUpper(a[0]);
+
+            return new string(a);
         }
     }
 }

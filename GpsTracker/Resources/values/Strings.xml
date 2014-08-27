@@ -10,4 +10,7 @@
   <string name="distance_format">{0:0.000}</string>
   <string name="duration_format">{0:hh\\:mm\\:ss}</string>
   <string name="speed_format">{0:0.0}</string>
+  <string name="gps_disabled_message">Looks like GPS is disabled. Would you like to enable it?</string>
+  <string name="cancel">cancel</string>
+  <string name="settings">settings</string>
 </resources>

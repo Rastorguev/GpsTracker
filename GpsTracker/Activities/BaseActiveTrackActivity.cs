@@ -47,12 +47,19 @@ namespace GpsTracker.Activities
         {
             base.OnStart();
 
-            SubscribeOnLocationListenerEvents();
+            if (!Helpers.IsGpsEnabled(this))
+            {
+                Alerts.ShowGpsDisabledAlert(this);
+
+                return;
+            }
 
             if (!App.LocationClient.IsConnected)
             {
                 App.LocationClient.Connect();
             }
+
+            SubscribeOnLocationListenerEvents();
 
             ShowLocationChanges();
 
@@ -227,13 +234,18 @@ namespace GpsTracker.Activities
 
         protected void FitTrackToScreen(bool animate = false)
         {
+            if (App.LocationListener.Location == null)
+            {
+                return;
+            }
+
             var builder = new LatLngBounds.Builder();
 
             if (App.ActiveTrackManager.HasActiveTrack)
             {
                 App.ActiveTrackManager.TrackPoints.ForEach(p => builder.Include(p));
             }
-            else if (App.LocationListener.Location != null)
+            else
             {
                 builder.Include(App.LocationListener.Location.ToLatLng());
             }

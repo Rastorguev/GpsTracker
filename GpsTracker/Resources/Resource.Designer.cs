@@ -1648,6 +1648,9 @@ namespace GpsTracker
 			// aapt resource value: 0x7f05002d
 			public const int app_name = 2131034157;
 			
+			// aapt resource value: 0x7f050038
+			public const int cancel = 2131034168;
+			
 			// aapt resource value: 0x7f05001e
 			public const int common_google_play_services_enable_button = 2131034142;
 			
@@ -1735,6 +1738,9 @@ namespace GpsTracker
 			// aapt resource value: 0x7f050035
 			public const int duration_format = 2131034165;
 			
+			// aapt resource value: 0x7f050037
+			public const int gps_disabled_message = 2131034167;
+			
 			// aapt resource value: 0x7f050032
 			public const int km = 2131034162;
 			
@@ -1761,6 +1767,9 @@ namespace GpsTracker
 			
 			// aapt resource value: 0x7f05002f
 			public const int points = 2131034159;
+			
+			// aapt resource value: 0x7f050039
+			public const int settings = 2131034169;
 			
 			// aapt resource value: 0x7f05002e
 			public const int speed = 2131034158;

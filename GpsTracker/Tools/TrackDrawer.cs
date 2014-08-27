@@ -68,11 +68,6 @@ namespace GpsTracker.Tools
 
         #region Path Display Methods
 
-        protected GoogleMap GetMap()
-        {
-            return _map;
-        }
-
         public virtual void DrawTrack(List<LatLng> trackPoints)
         {
             if (trackPoints.Count > 1)
@@ -215,7 +210,6 @@ namespace GpsTracker.Tools
 
         private Marker CreateStartPositionMarker(LatLng trackPoint)
         {
-            var map = GetMap();
             var options = new MarkerOptions();
 
             options.SetPosition(trackPoint);
@@ -223,13 +217,12 @@ namespace GpsTracker.Tools
             options.Anchor(.5f, .5f);
             options.Flat(true);
 
-            var marker = map.AddMarker(options);
+            var marker = _map.AddMarker(options);
             return marker;
         }
 
         private Marker CreateCurrentPositionMarker(LatLng trackPoint)
         {
-            var map = GetMap();
             var options = new MarkerOptions();
 
             options.SetPosition(trackPoint);
@@ -237,21 +230,20 @@ namespace GpsTracker.Tools
             options.Anchor(.5f, .5f);
             options.Flat(true);
 
-            var marker = map.AddMarker(options);
+            var marker = _map.AddMarker(options);
 
             return marker;
         }
 
         private Polyline CreatePolyline(List<LatLng> trackPoints)
         {
-            var map = GetMap();
             var polylineOptions = new PolylineOptions();
 
             polylineOptions.InvokeColor(GetPolylineColor());
             polylineOptions.InvokeWidth(14);
 
             trackPoints.ForEach(p => polylineOptions.Add(p));
-            var polyline = map.AddPolyline(polylineOptions);
+            var polyline = _map.AddPolyline(polylineOptions);
 
             return polyline;
         }

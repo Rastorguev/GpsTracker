@@ -37,6 +37,18 @@ namespace GpsTracker
             PreviousLocation = Location;
             Location = location;
 
+            //var random = new Random();
+
+            //var x = random.Next(1, 5);
+            //var y = random.Next(3, 10);
+            //var fakeLocation = new Location("")
+            //{
+            //    Latitude = location.Latitude + (float)x / (y * 50),
+            //    Longitude = location.Longitude + (float)y / (x * 30)
+            //};
+
+            //Location = fakeLocation;
+
             return true;
         }
 

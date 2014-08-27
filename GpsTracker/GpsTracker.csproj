@@ -78,6 +78,7 @@
     <Compile Include="App.cs" />
     <Compile Include="Config\Constants.cs" />
     <Compile Include="Config\UserConfig.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="LocationListener.cs" />
     <Compile Include="Managers\ActiveTrackManager.cs" />
     <Compile Include="Extensions.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Tools\ITrackDrawer.cs" />
     <Compile Include="Tools\TrackDrawer.cs" />
     <Compile Include="Entities\TrackData.cs" />
+    <Compile Include="UI Utilities\Alerts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
