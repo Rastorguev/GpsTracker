@@ -85,11 +85,14 @@ namespace GpsTracker.Activities
             _startButton.Visibility = ViewStates.Gone;
             _stopButton.Visibility = ViewStates.Visible;
 
-            var lastLocation = App.LocationListener.Location;
-            var startPosition = lastLocation != null ? lastLocation.ToLatLng() : null;
+            var location = App.LocationListener.Location;
+            var startPosition = location != null ? location.ToLatLng() : null;
 
-            App.ActiveTrackManager.StartTrack(startPosition);
-            ShowLocationChanges();
+            if (startPosition!=null)
+            {
+                App.ActiveTrackManager.StartTrack(startPosition);
+                ShowLocationChanges();
+            }
         }
 
         private void StopButtonClickEventHandler(object sender, EventArgs e)
