@@ -13,4 +13,7 @@
   <string name="gps_disabled_message">Looks like GPS is disabled. Would you like to enable it?</string>
   <string name="cancel">cancel</string>
   <string name="settings">settings</string>
+  <string name="gp_services_not_installed">Looks like Google Play services are not installed. Would you like to install?</string>
+  <string name="gp_services_outdated">Looks like you have outdated Google Play services version. Would you like to update?</string>
+  <string name="get_latest_version">get latest version</string>
 </resources>

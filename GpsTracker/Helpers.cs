@@ -1,5 +1,6 @@
 using Android.Content;
 using Android.Content.PM;
+using Android.Gms.Common;
 using Android.Locations;
 
 namespace GpsTracker
@@ -23,6 +24,11 @@ namespace GpsTracker
             {
                 return false;
             }
+        }
+
+        public static int GetGooglePlayServicesStatus(Context context)
+        {
+            return  GooglePlayServicesUtil.IsGooglePlayServicesAvailable(context);
         }
     }
 }

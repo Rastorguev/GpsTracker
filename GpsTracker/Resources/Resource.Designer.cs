@@ -1738,6 +1738,15 @@ namespace GpsTracker
 			// aapt resource value: 0x7f050035
 			public const int duration_format = 2131034165;
 			
+			// aapt resource value: 0x7f05003c
+			public const int get_latest_version = 2131034172;
+			
+			// aapt resource value: 0x7f05003a
+			public const int gp_services_not_installed = 2131034170;
+			
+			// aapt resource value: 0x7f05003b
+			public const int gp_services_outdated = 2131034171;
+			
 			// aapt resource value: 0x7f050037
 			public const int gps_disabled_message = 2131034167;
 			
