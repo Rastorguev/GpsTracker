@@ -6,7 +6,6 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
-using Android.Widget;
 using GpsTracker.Config;
 using GpsTracker.Tools;
 
@@ -64,7 +63,10 @@ namespace GpsTracker.Activities
 
             ShowLocationChanges();
 
-            AdjustCamera(Zoom);
+            if (FirstOnCameraChangeEventOccured)
+            {
+                AdjustCamera(Zoom);
+            }
 
             AutoreturnTimer.Elapsed += AutoreturnHandler;
         }
@@ -140,7 +142,7 @@ namespace GpsTracker.Activities
         {
             ShowLocationChanges();
 
-            if (!AutoreturnTimer.Enabled)
+            if (!AutoreturnTimer.Enabled && FirstOnCameraChangeEventOccured)
             {
                 AdjustCamera(Zoom, true);
             }
@@ -152,13 +154,9 @@ namespace GpsTracker.Activities
 
         public virtual void OnCameraChange(CameraPosition position)
         {
-            Toast.MakeText(this, "OnCameraChange", ToastLength.Short).Show();
-
             if (FirstOnCameraChangeEventOccured &&
                 (AutoSetMapBounds == null || !AutoSetMapBounds.Equals(Map.Projection.VisibleRegion.LatLngBounds)))
             {
-
-                Toast.MakeText(this, "OnCameraChange update needed", ToastLength.Short).Show();
                 Zoom = position.Zoom;
                 Bearing = position.Bearing;
                 Position = position.Target;
@@ -175,7 +173,7 @@ namespace GpsTracker.Activities
             {
                 FirstOnCameraChangeEventOccured = true;
 
-                FitTrackToScreen();
+                AdjustCamera(Zoom);
             }
         }
 
@@ -212,10 +210,7 @@ namespace GpsTracker.Activities
 
             if (UserConfig.FitTrackToScreen)
             {
-                if (MapIsLoaded)
-                {
-                    FitTrackToScreen(animate);
-                }
+                FitTrackToScreen(animate);
             }
             else if (location != null)
             {
@@ -276,7 +271,6 @@ namespace GpsTracker.Activities
 
         protected void InitAutoreturn()
         {
-            Toast.MakeText(this, "Init Autoreturn", ToastLength.Short).Show();
             AutoreturnTimer.Stop();
             AutoreturnTimer.Start();
         }
