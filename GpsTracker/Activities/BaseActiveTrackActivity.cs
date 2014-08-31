@@ -47,9 +47,9 @@ namespace GpsTracker.Activities
         {
             base.OnStart();
 
-            if (!Helpers.IsGpsEnabled(this))
+            if (!Helpers.IsLocationEnabled(this))
             {
-                Alerts.ShowGpsDisabledAlert(this);
+                Alerts.ShowLocationDisabledAlert(this);
 
                 return;
             }

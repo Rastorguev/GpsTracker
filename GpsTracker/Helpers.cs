@@ -1,34 +1,33 @@
 using Android.Content;
-using Android.Content.PM;
-using Android.Gms.Common;
 using Android.Locations;
+using Android.Provider;
 
 namespace GpsTracker
 {
     public static class Helpers
     {
+        public static bool IsLocationEnabled(Context context)
+        {
+            return IsGpsEnabled(context) || (IsNetworkConnectionsEnabled(context) && !IsAirplaneModeOn(context));
+        }
+
         public static bool IsGpsEnabled(Context context)
         {
             var locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
             return locationManager.IsProviderEnabled(LocationManager.GpsProvider);
         }
 
-        public static bool IsGoogleMapsInstalled(Context context)
+        public static bool IsNetworkConnectionsEnabled(Context context)
         {
-            try
-            {
-                context.PackageManager.GetApplicationInfo("com.google.android.apps.maps", 0);
-                return true;
-            }
-            catch (PackageManager.NameNotFoundException e)
-            {
-                return false;
-            }
+            var locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
+            return locationManager.IsProviderEnabled(LocationManager.NetworkProvider);
         }
 
-        public static int GetGooglePlayServicesStatus(Context context)
+        public static bool IsAirplaneModeOn(Context context)
         {
-            return  GooglePlayServicesUtil.IsGooglePlayServicesAvailable(context);
+            var airplaneSetting =
+                Settings.System.GetInt(context.ContentResolver, Settings.Global.AirplaneModeOn, 0);
+            return airplaneSetting != 0;
         }
     }
 }

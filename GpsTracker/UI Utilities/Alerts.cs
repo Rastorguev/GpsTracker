@@ -9,11 +9,11 @@ namespace GpsTracker
 {
     public static class Alerts
     {
-        public static void ShowGpsDisabledAlert(Context context)
+        public static void ShowLocationDisabledAlert(Context context)
         {
             var alert = new AlertDialog.Builder(context);
 
-            alert.SetMessage(Resource.String.gps_disabled_message);
+            alert.SetMessage(Resource.String.location_disabled_message);
 
             alert.SetPositiveButton(context.Resources.GetString(Resource.String.settings).CapitalizeFirst(),
                 (s, e) => context.StartActivity(new Intent(Settings.ActionLocationSourceSettings)));
