@@ -12,7 +12,7 @@ using GpsTracker.Tools;
 namespace GpsTracker.Activities
 {
     internal abstract class BaseActiveTrackActivity : Activity,
-        GoogleMap.IOnCameraChangeListener, GoogleMap.IOnMapLoadedCallback, GoogleMap.ICancelableCallback
+        GoogleMap.IOnCameraChangeListener, GoogleMap.ICancelableCallback
     {
         private GoogleMap _map;
 
@@ -22,7 +22,6 @@ namespace GpsTracker.Activities
         protected static float Zoom = DefaultMapZoom;
         protected static LatLng Position;
         protected static float Bearing;
-        protected bool MapIsLoaded;
         protected bool FirstOnCameraChangeEventOccured;
         protected LatLngBounds AutoSetMapBounds;
 
@@ -98,7 +97,6 @@ namespace GpsTracker.Activities
         protected virtual void InitMap()
         {
             Map.SetOnCameraChangeListener(this);
-            Map.SetOnMapLoadedCallback(this);
         }
 
         protected virtual void InitTrackDrawer()
@@ -175,15 +173,6 @@ namespace GpsTracker.Activities
 
                 AdjustCamera(Zoom);
             }
-        }
-
-        #endregion
-
-        #region IOnMapLoadedCallback implementation
-
-        public void OnMapLoaded()
-        {
-            MapIsLoaded = true;
         }
 
         #endregion
