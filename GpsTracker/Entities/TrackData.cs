@@ -4,7 +4,7 @@ using Android.Gms.Maps.Model;
 
 namespace GpsTracker.Entities
 {
-    internal class TrackData
+    public class TrackData
     {
         public TrackData(DateTime starTime)
         {

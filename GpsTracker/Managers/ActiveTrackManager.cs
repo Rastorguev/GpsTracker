@@ -1,93 +1,83 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Android.Content;
 using Android.Gms.Maps.Model;
-using GpsTracker.Entities;
+using Android.OS;
+using GpsTracker.Services;
+using Object = Java.Lang.Object;
 
 namespace GpsTracker.Managers
 {
-    public class ActiveTrackManager
+    public class ActiveTrackManager : Object, IServiceConnection
     {
-        private static TrackData _activeTrack;
-        private DateTime _startTime;
-
-        public bool IsStarted { get; private set; }
+        private bool _isStarted;
+        private Context _context;
+        private ActiveTrackService _activeTrackService;
+        private bool _isBound;
 
         public bool HasActiveTrack
         {
-            get { return _activeTrack != null; }
+            get { return _isStarted && _activeTrackService != null && _activeTrackService.ActiveTrack != null; }
         }
 
         public float Distance
         {
-            get { return HasActiveTrack ? _activeTrack.Distance : 0; }
+            get { return HasActiveTrack ? _activeTrackService.ActiveTrack.Distance : 0; }
         }
 
         public TimeSpan Duration
         {
-            get { return HasActiveTrack ? _activeTrack.Duration + (DateTime.Now - _startTime) : new TimeSpan(); }
+            get
+            {
+                return HasActiveTrack
+                    ? _activeTrackService.ActiveTrack.Duration +
+                      (DateTime.Now - _activeTrackService.ActiveTrack.StartTime)
+                    : new TimeSpan();
+            }
         }
 
         public List<LatLng> TrackPoints
         {
-            get { return HasActiveTrack ? _activeTrack.TrackPoints : new List<LatLng>(); }
+            get { return HasActiveTrack ? _activeTrackService.ActiveTrack.TrackPoints : new List<LatLng>(); }
         }
 
-        public void StartTrack(LatLng trackPoint)
+        public void Start(Context context)
         {
-            _startTime = DateTime.Now;
+            _context = context;
 
-            if (_activeTrack == null)
+            _context.StartService(new Intent(_context, typeof (ActiveTrackService)));
+            _context.BindService(new Intent(_context, typeof (ActiveTrackService)), this, Bind.AutoCreate);
+
+            _isStarted = true;
+        }
+
+        public void Stop()
+        {
+            _context.StopService(new Intent(_context, typeof(ActiveTrackService)));
+            _activeTrackService = null;
+
+            if (_isBound)
             {
-                _activeTrack = new TrackData(_startTime);
+                _context.UnbindService(this);
             }
-
-            AddTrackPoint(trackPoint);
-            //GeneratedFakeTrack(5000);
-
-            IsStarted = true;
+          
+            _isStarted = false;
         }
 
-        public void PauseTrack()
+        public void OnServiceConnected(ComponentName name, IBinder service)
         {
-            IsStarted = false;
-            _activeTrack.Duration += DateTime.Now - _startTime;
-        }
+            var activeTrackServiceBinder = service as ActiveTrackServiceBinder;
 
-        public void StopTrack()
-        {
-            _activeTrack = null;
-        }
-
-        public void AddTrackPoint(LatLng trackPoint)
-        {
-            if (HasActiveTrack)
+            if (activeTrackServiceBinder != null)
             {
-                if (TrackPoints.Any())
-                {
-                    _activeTrack.Distance += _activeTrack.TrackPoints.Last().DistanceTo(trackPoint);
-                }
-
-                _activeTrack.TrackPoints.Add(trackPoint);
+                _activeTrackService = activeTrackServiceBinder.Service;
+                _isBound = true;
             }
         }
 
-        private void GeneratedFakeTrack(int n)
+        public void OnServiceDisconnected(ComponentName name)
         {
-            var random = new Random();
-            var lat = 53.926193;
-            var trackPoints = new List<LatLng>();
-
-            for (var i = 0; i < n; i++)
-            {
-                lat += 0.000008;
-
-                var x = (double) 1/random.Next(-100000, 100000);
-
-                trackPoints.Add(new LatLng(lat, 27.689841 + x));
-            }
-
-            _activeTrack.TrackPoints = trackPoints;
+            _isBound = false;
         }
     }
 }

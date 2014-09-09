@@ -37,18 +37,6 @@ namespace GpsTracker
             PreviousLocation = Location;
             Location = location;
 
-            //var random = new Random();
-
-            //var x = random.Next(1, 5);
-            //var y = random.Next(3, 10);
-            //var fakeLocation = new Location("")
-            //{
-            //    Latitude = location.Latitude + (float)x / (y * 50),
-            //    Longitude = location.Longitude + (float)y / (x * 30)
-            //};
-
-            //Location = fakeLocation;
-
             return true;
         }
 
@@ -58,9 +46,8 @@ namespace GpsTracker
 
             ChangeLocation(LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient));
 
-            UpdateActiveTrack(Location);
-
             TriggerConnected(Location);
+            TriggerLocationChanged(Location);
         }
 
         public virtual void OnConnectionSuspended(int cause) {}
@@ -70,7 +57,6 @@ namespace GpsTracker
             var locationChanged = ChangeLocation(location);
             if (locationChanged)
             {
-                UpdateActiveTrack(Location);
                 TriggerLocationChanged(Location);
             }
         }
@@ -99,23 +85,6 @@ namespace GpsTracker
             if (LocationChanged != null)
             {
                 LocationChanged(location);
-            }
-        }
-
-        public void UpdateActiveTrack(Location location)
-        {
-            if (location == null)
-            {
-                return;
-            }
-
-            var trackPoint = location.ToLatLng();
-
-            if (App.ActiveTrackManager.HasActiveTrack)
-            {
-                App.ActiveTrackManager.AddTrackPoint(trackPoint);
-
-                TriggerLocationChanged(location);
             }
         }
     }

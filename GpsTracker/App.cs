@@ -3,7 +3,6 @@ using Android.App;
 using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 using Android.Runtime;
-using GpsTracker.Activities;
 using GpsTracker.Managers;
 
 namespace GpsTracker

@@ -90,7 +90,7 @@ namespace GpsTracker.Activities
 
             if (startPosition!=null)
             {
-                App.ActiveTrackManager.StartTrack(startPosition);
+                App.ActiveTrackManager.Start(this);
                 ShowLocationChanges();
             }
         }
@@ -100,7 +100,7 @@ namespace GpsTracker.Activities
             _startButton.Visibility = ViewStates.Visible;
             _stopButton.Visibility = ViewStates.Gone;
 
-            App.ActiveTrackManager.StopTrack();
+            App.ActiveTrackManager.Stop();
 
             TrackDrawer.RemoveTrack();
             ShowLocationChanges();
