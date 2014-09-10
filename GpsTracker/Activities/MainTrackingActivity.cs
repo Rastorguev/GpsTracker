@@ -8,7 +8,7 @@ using Android.Widget;
 
 namespace GpsTracker.Activities
 {
-    [Activity(Label = "@string/app_name", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "@string/app_name", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait, LaunchMode = LaunchMode.SingleTop)]
     internal class MainTrackingActivity : BaseActiveTrackActivity
     {
         private Button _fullScreenButton;
@@ -52,9 +52,9 @@ namespace GpsTracker.Activities
             Map.UiSettings.CompassEnabled = false;
         }
 
-        protected override void OnStart()
+        protected override void OnResume()
         {
-            base.OnStart();
+            base.OnResume();
 
             if (App.ActiveTrackManager.HasActiveTrack)
             {
@@ -77,7 +77,7 @@ namespace GpsTracker.Activities
 
         private void FullScreenButtonClickEventHandler(object sender, EventArgs e)
         {
-            StartActivity(typeof (ActiveTrackFullScreenMapActivity));
+            StartActivity(typeof (FullScreenMapTrackingActivity));
         }
 
         private void StartButtonClickEventHandler(object sender, EventArgs e)

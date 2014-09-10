@@ -10,7 +10,7 @@ using Android.Widget;
 namespace GpsTracker.Activities
 {
     [Activity(Label = "@string/app_name", MainLauncher = false)]
-    internal class ActiveTrackFullScreenMapActivity : BaseActiveTrackActivity
+    internal class FullScreenMapTrackingActivity : BaseActiveTrackActivity
     {
         private TextView _trackPointsQuantityWidgetValue;
         private TextView _distanceWidgetValue;
@@ -48,9 +48,9 @@ namespace GpsTracker.Activities
             _trackInfoUpdateTimer = new Timer(1000);
         }
 
-        protected override void OnStart()
+        protected override void OnResume()
         {
-            base.OnStart();
+            base.OnResume();
 
             UpdateWidgets();
 

@@ -82,7 +82,7 @@
     <Compile Include="LocationListener.cs" />
     <Compile Include="Managers\ActiveTrackManager.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Activities\ActiveTrackFullScreenMapActivity.cs" />
+    <Compile Include="Activities\FullScreenMapTrackingActivity.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,6 +91,7 @@
     <Compile Include="Tools\TrackDrawer.cs" />
     <Compile Include="Entities\TrackData.cs" />
     <Compile Include="UI Utilities\Alerts.cs" />
+    <Compile Include="UI Utilities\TrackRecordingNotifications.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -118,6 +119,7 @@
     <AndroidResource Include="Resources\values\Colors.xml" />
     <AndroidResource Include="Resources\values\Dimensions.xml" />
     <AndroidResource Include="Resources\drawable\Arrow.png" />
+    <AndroidResource Include="Resources\drawable\Bear.png" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="googleplayservices">

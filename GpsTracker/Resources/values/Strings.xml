@@ -16,4 +16,6 @@
   <string name="gp_services_not_installed">Looks like Google Play services are not installed. Would you like to install?</string>
   <string name="gp_services_outdated">Looks like you have outdated Google Play services version. Would you like to update?</string>
   <string name="get_latest_version">get latest version</string>
+  <string name="recording">recording</string>
+  <string name="ended">ended</string>
 </resources>

@@ -5,8 +5,6 @@ using Android.Content;
 using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
-using Android.Support.V4.App;
-using GpsTracker.Activities;
 using GpsTracker.Entities;
 
 namespace GpsTracker.Services
@@ -14,7 +12,6 @@ namespace GpsTracker.Services
     [Service]
     public class ActiveTrackService : Service
     {
-        private readonly NotificationManager _notificationManager;
         private DateTime _startTime;
 
         public TrackData ActiveTrack { get; private set; }
@@ -36,12 +33,6 @@ namespace GpsTracker.Services
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-            //_notificationManager.Notify((int) NotificationFlags.ForegroundService, GetNotification());
-
-            //var notification = new Notification(Resource.Drawable.Icon, "DemoService in foreground");
-            //var pendingIntent = PendingIntent.GetActivity(this, 0, new Intent(this, typeof(MainTrackingActivity)), 0);
-            //notification.SetLatestEventInfo(this, "DemoService", "DemoService is running in the foreground", pendingIntent);
-
             _startTime = DateTime.Now;
 
             ActiveTrack = new TrackData(_startTime);
@@ -51,7 +42,8 @@ namespace GpsTracker.Services
 
             AddTrackPoint(startPosition);
 
-            StartForeground((int) NotificationFlags.ForegroundService, GetNotification());
+            StartForeground((int) NotificationFlags.ForegroundService,
+                TrackRecordingNotifications.GetRecordStartedNotification(this));
 
             return StartCommandResult.Sticky;
         }
@@ -64,17 +56,11 @@ namespace GpsTracker.Services
         public override void OnDestroy()
         {
             ActiveTrack = null;
-            App.LocationListener.LocationChanged -= OnLocationChanged;
-        }
 
-        private Notification GetNotification()
-        {
-            return new NotificationCompat.Builder(this)
-                .SetContentTitle("Service started")
-                .SetSmallIcon(Resource.Drawable.Icon)
-                .SetContentText("!!!Service started!!!")
-                .SetContentIntent(PendingIntent.GetActivity(this, 0, new Intent(this, typeof (MainTrackingActivity)), 0))
-                .Build();
+            var notificationManager = (NotificationManager) GetSystemService(NotificationService);
+
+            notificationManager.Notify((int)NotificationFlags.ForegroundService, TrackRecordingNotifications.GetRecordStopedNotification(this));
+            App.LocationListener.LocationChanged -= OnLocationChanged;
         }
 
         public virtual void OnLocationChanged(Location location)

@@ -42,9 +42,9 @@ namespace GpsTracker.Activities
             InitAutoreturnTimer();
         }
 
-        protected override void OnStart()
+        protected override void OnResume()
         {
-            base.OnStart();
+            base.OnResume();
 
             if (!Helpers.IsLocationEnabled(this))
             {
