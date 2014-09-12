@@ -11,11 +11,11 @@ namespace GpsTracker
 {
     public class LocationListener : Object, ILocationListener, IGoogleApiClientConnectionCallbacks
     {
-        public event Action<Location> Connected;
-        public event Action<Location> LocationChanged;
-
         public Location Location { get; private set; }
         public Location PreviousLocation { get; private set; }
+        public DateTime? LastLocationUpDateTime { get; private set; }
+
+        public double Speed { get; private set; }
 
         public float? Bearing
         {
@@ -26,6 +26,36 @@ namespace GpsTracker
                     : null;
             }
         }
+
+        public void OnConnected(Bundle connectionHint)
+        {
+            StartListenLocationUpdates();
+
+            var location = LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient);
+
+            TriggerConnected(location);
+            OnLocationChanged(location);
+        }
+
+        public virtual void OnConnectionSuspended(int cause) {}
+
+        public void OnLocationChanged(Location location)
+        {
+            var locationChanged = ChangeLocation(location);
+            if (locationChanged)
+            {
+                if (IsSpeedAvailable())
+                {
+                    Speed = CalculateSpeed();
+                }
+                LastLocationUpDateTime = DateTime.Now;
+
+                TriggerLocationChanged(Location);
+            }
+        }
+
+        public event Action<Location> Connected;
+        public event Action<Location> LocationChanged;
 
         private bool ChangeLocation(Location location)
         {
@@ -40,27 +70,6 @@ namespace GpsTracker
             return true;
         }
 
-        public void OnConnected(Bundle connectionHint)
-        {
-            StartListenLocationUpdates();
-
-            ChangeLocation(LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient));
-
-            TriggerConnected(Location);
-            TriggerLocationChanged(Location);
-        }
-
-        public virtual void OnConnectionSuspended(int cause) {}
-
-        public void OnLocationChanged(Location location)
-        {
-            var locationChanged = ChangeLocation(location);
-            if (locationChanged)
-            {
-                TriggerLocationChanged(Location);
-            }
-        }
-
         private void StartListenLocationUpdates()
         {
             var locationRequest = new LocationRequest();
@@ -70,6 +79,25 @@ namespace GpsTracker
             locationRequest.SetFastestInterval(Constants.LocationUpdateFastestInterval);
 
             LocationServices.FusedLocationApi.RequestLocationUpdates(App.LocationClient, locationRequest, this);
+        }
+
+        private double CalculateSpeed()
+        {
+            if (!IsSpeedAvailable())
+            {
+                return 0;
+            }
+
+            var distance = PreviousLocation.DistanceTo(Location);
+            var time = (DateTime.Now - LastLocationUpDateTime).Value.TotalSeconds;
+            var speed = distance/time;
+
+            return speed;
+        }
+
+        private bool IsSpeedAvailable()
+        {
+            return Location != null && PreviousLocation != null && LastLocationUpDateTime != null;
         }
 
         private void TriggerConnected(Location location)

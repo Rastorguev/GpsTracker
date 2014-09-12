@@ -23,7 +23,6 @@ namespace GpsTracker
             return ConfigNotificationBasis(context)
                 .SetContentText(context.Resources.GetString(Resource.String.ended).CapitalizeFirst())
                 .SetTicker(context.Resources.GetString(Resource.String.ended).CapitalizeFirst())
-                .SetOngoing(true)
                 .Build();
         }
 

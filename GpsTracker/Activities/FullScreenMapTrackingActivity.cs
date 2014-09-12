@@ -76,13 +76,7 @@ namespace GpsTracker.Activities
         {
             base.LocationListenerOnLocationChanged(location);
 
-            var currentSpeed = location.Speed.MetersToKilometers();
-            var trackPoints = App.ActiveTrackManager.TrackPoints;
-            var distance = App.ActiveTrackManager.Distance;
-
-            UpdateCurrentSpeedWidget(currentSpeed);
-            UpdateTrackPointsWidget(trackPoints.Count);
-            UpdateDistanceWidget(distance.MetersToKilometers());
+            UpdateWidgets();
         }
 
         #endregion
@@ -91,6 +85,7 @@ namespace GpsTracker.Activities
 
         private void UpdateWidgets()
         {
+            var currentSpeed = App.LocationListener.Speed.MetersPerSecondToKilometersPerHour();
             var trackPoints = App.ActiveTrackManager.TrackPoints;
             var distance = App.ActiveTrackManager.Distance.MetersToKilometers();
             var duration = App.ActiveTrackManager.Duration;
@@ -98,8 +93,7 @@ namespace GpsTracker.Activities
             UpdateTrackPointsWidget(trackPoints.Count);
             UpdateDistanceWidget(distance);
             UpdateDurationWidget(duration);
-
-            UpdateCurrentSpeedWidget(0);
+            UpdateCurrentSpeedWidget(currentSpeed);
         }
 
         private void UpdateTrackPointsWidget(int trackPointsQuantity)
@@ -132,7 +126,7 @@ namespace GpsTracker.Activities
             _durationWidgetValue.Text = String.Format(GetString(Resource.String.duration_format), duration);
         }
 
-        private void UpdateCurrentSpeedWidget(float speed)
+        private void UpdateCurrentSpeedWidget(double speed)
         {
             if (_currentSpeedWidgetValue == null)
             {
