@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Android.App;
 using Android.Content;
 using Android.Gms.Maps.Model;
 using Android.OS;
@@ -11,7 +12,6 @@ namespace GpsTracker.Managers
     public class ActiveTrackManager : Object, IServiceConnection
     {
         private bool _isStarted;
-        private Context _context;
         private ActiveTrackService _activeTrackService;
         private bool _isBound;
 
@@ -41,26 +41,28 @@ namespace GpsTracker.Managers
             get { return HasActiveTrack ? _activeTrackService.ActiveTrack.TrackPoints : new List<LatLng>(); }
         }
 
-        public void Start(Context context)
+        public void Start()
         {
-            _context = context;
+            var context = Application.Context;
 
-            _context.StartService(new Intent(_context, typeof (ActiveTrackService)));
-            _context.BindService(new Intent(_context, typeof (ActiveTrackService)), this, Bind.AutoCreate);
+            context.StartService(new Intent(context, typeof (ActiveTrackService)));
+            context.BindService(new Intent(context, typeof (ActiveTrackService)), this, Bind.AutoCreate);
 
             _isStarted = true;
         }
 
         public void Stop()
         {
-            _context.StopService(new Intent(_context, typeof(ActiveTrackService)));
+            var context = Application.Context;
+
+            context.StopService(new Intent(context, typeof (ActiveTrackService)));
             _activeTrackService = null;
 
             if (_isBound)
             {
-                _context.UnbindService(this);
+                context.UnbindService(this);
             }
-          
+
             _isStarted = false;
         }
 

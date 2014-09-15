@@ -85,7 +85,8 @@ namespace GpsTracker.Activities
 
         private void UpdateWidgets()
         {
-            var currentSpeed = App.LocationListener.Speed.MetersPerSecondToKilometersPerHour();
+            var location = App.LocationListener.Location;
+            var currentSpeed = location != null ? location.Speed.MetersPerSecondToKilometersPerHour() : 0;
             var trackPoints = App.ActiveTrackManager.TrackPoints;
             var distance = App.ActiveTrackManager.Distance.MetersToKilometers();
             var duration = App.ActiveTrackManager.Duration;

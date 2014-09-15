@@ -59,10 +59,10 @@ namespace GpsTracker
 
         private bool ChangeLocation(Location location)
         {
-            if (location == null ||
-                (Location != null &&
-                 (Location.Equals(location) || !(Location.DistanceTo(location) >= Constants.MinimalDisplacement))))
+            if (location == null)
+            {
                 return false;
+            }
 
             PreviousLocation = Location;
             Location = location;
@@ -77,6 +77,7 @@ namespace GpsTracker
             locationRequest.SetPriority(LocationRequest.PriorityHighAccuracy);
             locationRequest.SetInterval(Constants.LocationUpdateInterval);
             locationRequest.SetFastestInterval(Constants.LocationUpdateFastestInterval);
+            locationRequest.SetSmallestDisplacement(Constants.MinimalDisplacement);
 
             LocationServices.FusedLocationApi.RequestLocationUpdates(App.LocationClient, locationRequest, this);
         }

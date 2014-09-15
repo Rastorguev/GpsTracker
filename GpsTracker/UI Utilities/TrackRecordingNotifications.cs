@@ -1,6 +1,7 @@
 using System;
 using Android.App;
 using Android.Content;
+using Android.Support.V4.App;
 using GpsTracker.Activities;
 
 namespace GpsTracker
@@ -26,9 +27,9 @@ namespace GpsTracker
                 .Build();
         }
 
-        private static Notification.Builder ConfigNotificationBasis(Context context)
+        private static NotificationCompat.Builder ConfigNotificationBasis(Context context)
         {
-            return new Notification.Builder(context)
+            return new NotificationCompat.Builder(context)
                 .SetContentTitle(context.Resources.GetString(Resource.String.app_name).CapitalizeFirst())
                 .SetSmallIcon(Resource.Drawable.Bear)
                 .SetContentIntent(PendingIntent.GetActivity(context, 0,
