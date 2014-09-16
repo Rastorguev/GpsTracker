@@ -59,7 +59,9 @@ namespace GpsTracker.Services
 
             var notificationManager = (NotificationManager) GetSystemService(NotificationService);
 
-            notificationManager.Notify((int)NotificationFlags.ForegroundService, TrackRecordingNotifications.GetRecordStopedNotification(this));
+            notificationManager.Notify((int) NotificationFlags.ForegroundService,
+                TrackRecordingNotifications.GetRecordStopedNotification(this));
+
             App.LocationListener.LocationChanged -= OnLocationChanged;
         }
 

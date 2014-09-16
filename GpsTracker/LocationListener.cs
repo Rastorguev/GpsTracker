@@ -15,6 +15,7 @@ namespace GpsTracker
         public Location PreviousLocation { get; private set; }
         public DateTime? LastLocationUpDateTime { get; private set; }
 
+        [Obsolete]
         public double Speed { get; private set; }
 
         public float? Bearing
