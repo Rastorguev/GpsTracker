@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Android.Gms.Maps.Model;
 using Newtonsoft.Json;
 
@@ -11,17 +12,32 @@ namespace GpsTracker.Entities
         {
             StartTime = starTime;
             TrackPoints = new List<LatLng>();
-            TrackPointsSerializable=new List<LatLngSerializable>();
         }
 
         public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public float Distance { get; set; }
         public TimeSpan Duration { get; set; }
 
         [JsonIgnore]
         public List<LatLng> TrackPoints { get; set; }
 
-        public List<LatLngSerializable> TrackPointsSerializable { get; set; }
+        public string TrackPointsSerialized { get; set; }
+
+        public void DeserializeTrackPoints()
+        {
+            var serializableTrackPoints = JsonConvert.DeserializeObject<List<LatLngSerializable>>(TrackPointsSerialized);
+
+            TrackPoints = serializableTrackPoints.Select(p => new LatLng(p.Latitude, p.Longitude)).ToList();
+        }
+
+        public void SerializeTrackPoints()
+        {
+            var trackPointsSerializable =
+                TrackPoints.Select(p => new LatLngSerializable(p.Latitude, p.Longitude)).ToList();
+
+            TrackPointsSerialized = JsonConvert.SerializeObject(trackPointsSerializable);
+        }
     }
 
     public class LatLngSerializable

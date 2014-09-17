@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Android.App;
 using Android.Content;
 using Android.Gms.Maps.Model;
 using Android.OS;
+using GpsTracker.Repositories.Concrete;
 using GpsTracker.Services;
 using Object = Java.Lang.Object;
 
@@ -54,8 +56,11 @@ namespace GpsTracker.Managers
         public void Stop()
         {
             var context = Application.Context;
+            var track = _activeTrackService.ActiveTrack;
+            track.EndTime = DateTime.Now;
 
             context.StopService(new Intent(context, typeof (ActiveTrackService)));
+
             _activeTrackService = null;
 
             if (_isBound)
