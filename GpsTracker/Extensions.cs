@@ -1,18 +1,39 @@
 using Android.Gms.Maps.Model;
 using Android.Locations;
+using GpsTracker.Entities;
 
 namespace GpsTracker
 {
     public static class Extensions
     {
-        public static LatLng ToLatLng(this Location location)
+        public static Location ToLocation(this LatLng source)
         {
-            return new LatLng(location.Latitude, location.Longitude);
+            return new Location("") {Latitude = source.Latitude, Longitude = source.Longitude};
         }
 
-        public static Location ToLocation(this LatLng latLng)
+        public static Location ToLocation(this TrackPoint source)
         {
-            return new Location("") {Latitude = latLng.Latitude, Longitude = latLng.Longitude};
+            return new Location("") { Latitude = source.Latitude, Longitude = source.Longitude };
+        }
+
+        public static TrackPoint ToTrackPoint(this Location source)
+        {
+            return new TrackPoint(source.Latitude, source.Longitude);
+        }
+
+        public static TrackPoint ToTrackPoint(this LatLng source)
+        {
+            return new TrackPoint(source.Latitude, source.Longitude);
+        }
+
+        public static LatLng ToLatLng(this Location source)
+        {
+            return new LatLng(source.Latitude, source.Longitude);
+        }
+
+        public static LatLng ToLatLng(this TrackPoint source)
+        {
+            return new LatLng(source.Latitude, source.Longitude);
         }
 
         public static float DistanceTo(this LatLng point1, LatLng point2)

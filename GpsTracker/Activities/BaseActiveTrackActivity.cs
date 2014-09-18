@@ -20,7 +20,7 @@ namespace GpsTracker.Activities
         protected ITrackDrawer TrackDrawer;
         protected const float DefaultMapZoom = Constants.DefaultMapZoom;
         protected static float Zoom = DefaultMapZoom;
-        protected static LatLng Position;
+        //protected static LatLng Position;
         protected static float Bearing;
         protected bool FirstOnCameraChangeEventOccured;
         protected LatLngBounds AutoSetMapBounds;
@@ -157,7 +157,7 @@ namespace GpsTracker.Activities
             {
                 Zoom = position.Zoom;
                 Bearing = position.Bearing;
-                Position = position.Target;
+                //Position = position.Target;
 
                 var location = App.LocationListener.Location;
 
@@ -203,15 +203,15 @@ namespace GpsTracker.Activities
             }
             else if (location != null)
             {
-                MoveCamera(location.ToLatLng(), zoom, animate);
+                MoveCamera(location, zoom, animate);
             }
         }
 
-        protected void MoveCamera(LatLng trackPoint, float zoom, bool animate = false)
+        protected void MoveCamera(Location location, float zoom, bool animate = false)
         {
             var builder = CameraPosition.InvokeBuilder();
 
-            builder.Target(trackPoint);
+            builder.Target(location.ToLatLng());
             builder.Zoom(zoom);
             builder.Bearing(Bearing);
 
@@ -232,7 +232,7 @@ namespace GpsTracker.Activities
 
             if (App.ActiveTrackManager.HasActiveTrack)
             {
-                App.ActiveTrackManager.TrackPoints.ForEach(p => builder.Include(p));
+                App.ActiveTrackManager.TrackPoints.ForEach(p => builder.Include(p.ToLatLng()));
             }
             else
             {
@@ -281,7 +281,7 @@ namespace GpsTracker.Activities
             }
             else if (App.LocationListener.Location != null)
             {
-                TrackDrawer.DrawCurrentPositionMarker(App.LocationListener.Location.ToLatLng());
+                TrackDrawer.DrawCurrentPositionMarker(App.LocationListener.Location.ToTrackPoint());
             }
         }
 

@@ -7,6 +7,7 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
 using GpsTracker.Config;
+using GpsTracker.Entities;
 
 namespace GpsTracker.Tools
 {
@@ -68,7 +69,7 @@ namespace GpsTracker.Tools
 
         #region Path Display Methods
 
-        public virtual void DrawTrack(List<LatLng> trackPoints)
+        public virtual void DrawTrack(List<TrackPoint> trackPoints)
         {
             if (trackPoints.Count > 1)
             {
@@ -105,7 +106,7 @@ namespace GpsTracker.Tools
             _polylines.Clear();
         }
 
-        public virtual void DrawCurrentPositionMarker(LatLng trackPoint)
+        public virtual void DrawCurrentPositionMarker(TrackPoint trackPoint)
         {
             if (_currentPositionMarker == null)
             {
@@ -113,13 +114,15 @@ namespace GpsTracker.Tools
             }
             else
             {
-                _currentPositionMarker.Position = trackPoint;
+                var latLng = trackPoint.ToLatLng();
+
+                _currentPositionMarker.Position = latLng;
             }
 
             SetCurrentPositionMarkerIcon();
         }
 
-        public virtual void DrawStartPositionMarker(LatLng trackPoint)
+        public virtual void DrawStartPositionMarker(TrackPoint trackPoint)
         {
             if (_startPositionMarker == null)
             {
@@ -127,7 +130,9 @@ namespace GpsTracker.Tools
             }
             else
             {
-                _startPositionMarker.Position = trackPoint;
+                var latLng = trackPoint.ToLatLng();
+
+                _startPositionMarker.Position = latLng;
             }
         }
 
@@ -171,7 +176,7 @@ namespace GpsTracker.Tools
                 });
         }
 
-        private void DrawTrackLine(List<LatLng> trackPoints)
+        private void DrawTrackLine(List<TrackPoint> trackPoints)
         {
             var segments = SplitTrackOnSegments(trackPoints);
 
@@ -187,7 +192,9 @@ namespace GpsTracker.Tools
                 var lastPolyline = _polylines.Last();
                 var newSegment = segments.Last();
 
-                lastPolyline.Points = newSegment;
+                var latLngs = newSegment.Select(p => p.ToLatLng()).ToList();
+
+                lastPolyline.Points = latLngs;
             }
 
             if (segments.Count > _polylines.Count)
@@ -196,7 +203,9 @@ namespace GpsTracker.Tools
                 {
                     if (_polylines.ElementAtOrDefault(i) != null)
                     {
-                        _polylines[i].Points = segments[i];
+                        var latLngs = segments[i].Select(p => p.ToLatLng()).ToList();
+
+                        _polylines[i].Points = latLngs;
                     }
                     else
                     {
@@ -208,11 +217,12 @@ namespace GpsTracker.Tools
             }
         }
 
-        private Marker CreateStartPositionMarker(LatLng trackPoint)
+        private Marker CreateStartPositionMarker(TrackPoint trackPoint)
         {
             var options = new MarkerOptions();
+            var latLng = trackPoint.ToLatLng();
 
-            options.SetPosition(trackPoint);
+            options.SetPosition(latLng);
             options.InvokeIcon(BitmapDescriptorFactory.FromBitmap(StartPositionMarkerIcon));
             options.Anchor(.5f, .5f);
             options.Flat(true);
@@ -221,11 +231,12 @@ namespace GpsTracker.Tools
             return marker;
         }
 
-        private Marker CreateCurrentPositionMarker(LatLng trackPoint)
+        private Marker CreateCurrentPositionMarker(TrackPoint trackPoint)
         {
             var options = new MarkerOptions();
+            var latLng = trackPoint.ToLatLng();
 
-            options.SetPosition(trackPoint);
+            options.SetPosition(latLng);
             options.InvokeIcon(BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIconStatic));
             options.Anchor(.5f, .5f);
             options.Flat(true);
@@ -235,16 +246,23 @@ namespace GpsTracker.Tools
             return marker;
         }
 
-        private Polyline CreatePolyline(List<LatLng> trackPoints)
+        private Polyline CreatePolyline(List<TrackPoint> trackPoints)
         {
             var polylineOptions = new PolylineOptions();
 
             polylineOptions.InvokeColor(GetPolylineColor());
             polylineOptions.InvokeWidth(14);
 
-            trackPoints.ForEach(p => polylineOptions.Add(p));
+            trackPoints.ForEach(p =>
+            {
+                var pp = p.ToLatLng();
+
+                polylineOptions.Add(pp);
+                //pp.Dispose();
+            });
             var polyline = _map.AddPolyline(polylineOptions);
 
+            //GC.Collect();
             return polyline;
         }
 
@@ -318,13 +336,13 @@ namespace GpsTracker.Tools
 
         #region Helpers
 
-        private static List<List<LatLng>> SplitTrackOnSegments(List<LatLng> trackPoints)
+        private static List<List<TrackPoint>> SplitTrackOnSegments(List<TrackPoint> trackPoints)
         {
             const int overlay = 1;
             var expectedSegmentsNumber =
                 Math.Ceiling(((decimal) trackPoints.Count/SegmentMaxLength));
 
-            var segments = new List<List<LatLng>>();
+            var segments = new List<List<TrackPoint>>();
             var n = 0;
 
             while (segments.Count < expectedSegmentsNumber)

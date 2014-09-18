@@ -5,6 +5,7 @@ using Android.App;
 using Android.Content;
 using Android.Gms.Maps.Model;
 using Android.OS;
+using GpsTracker.Entities;
 using GpsTracker.Repositories.Concrete;
 using GpsTracker.Services;
 using Object = Java.Lang.Object;
@@ -38,9 +39,9 @@ namespace GpsTracker.Managers
             }
         }
 
-        public List<LatLng> TrackPoints
+        public List<TrackPoint> TrackPoints
         {
-            get { return HasActiveTrack ? _activeTrackService.ActiveTrack.TrackPoints : new List<LatLng>(); }
+            get { return HasActiveTrack ? _activeTrackService.ActiveTrack.TrackPoints : new List<TrackPoint>(); }
         }
 
         public void Start()
@@ -69,6 +70,31 @@ namespace GpsTracker.Managers
             }
 
             _isStarted = false;
+
+            //var trackRepository = new TrackRepository();
+
+            //var s1 = DateTime.Now;
+            //trackRepository.Save(track);
+            //var e1 = DateTime.Now;
+            //var r1 = e1 - s1;
+            //Console.WriteLine(String.Format("!!!###!!! Save Time: {0} !!!###!!! ", r1.TotalMilliseconds));
+
+            //var s2 = DateTime.Now;
+            //var savedTracks = trackRepository.GetAll();
+            //var e2 = DateTime.Now;
+            //var r2 = e2 - s2;
+            //Console.WriteLine(String.Format("!!!###!!! Get Time: {0} !!!###!!! ", r2.TotalMilliseconds));
+
+    
+
+            //var firstTrack = savedTracks.First();
+            //var s3 = DateTime.Now;
+            //firstTrack.DeserializeTrackPoints();
+            //var e3 = DateTime.Now;
+            //var r3 = e3 - s3;
+            //Console.WriteLine(String.Format("!!!###!!! Deserialize Time: {0} !!!###!!! ", r3.TotalMilliseconds));
+
+            //var s = "";
         }
 
         public void OnServiceConnected(ComponentName name, IBinder service)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Android.App;
 using Android.Content;
@@ -20,10 +21,10 @@ namespace GpsTracker.Services
         {
             if (ActiveTrack.TrackPoints.Any())
             {
-                ActiveTrack.Distance += ActiveTrack.TrackPoints.Last().DistanceTo(trackPoint);
+                ActiveTrack.Distance += ActiveTrack.TrackPoints.Last().ToLatLng().DistanceTo(trackPoint);
             }
 
-            ActiveTrack.TrackPoints.Add(trackPoint);
+            ActiveTrack.TrackPoints.Add(trackPoint.ToTrackPoint());
         }
 
         public override IBinder OnBind(Intent intent)
@@ -40,8 +41,10 @@ namespace GpsTracker.Services
             var location = App.LocationListener.Location;
             var startPosition = location != null ? location.ToLatLng() : null;
 
-            AddTrackPoint(startPosition);
+            //GeneratedFakeTrack(60000);
 
+            AddTrackPoint(startPosition);
+            
             StartForeground((int) NotificationFlags.ForegroundService,
                 TrackRecordingNotifications.GetRecordStartedNotification(this));
 
@@ -68,6 +71,28 @@ namespace GpsTracker.Services
         public virtual void OnLocationChanged(Location location)
         {
             AddTrackPoint(location.ToLatLng());
+        }
+
+        private void GeneratedFakeTrack(int n)
+        {
+            var random = new Random();
+            var lat = 53.926193;
+            //var trackPoints = new List<LatLng>();
+            var ts = new List<TrackPoint>(n);
+            for (var i = 0; i < n; i++)
+            {
+                lat += 0.000008;
+
+                var x = (double)1 / random.Next(-100000, 100000);
+                //var p = new LatLng(lat, 27.689841 + x);
+
+
+                ts.Add(new TrackPoint(lat, 27.689841 + x));
+                //trackPoints.Add(new LatLng(lat, 27.689841 + x));
+                //p.Dispose();
+            }
+
+            ActiveTrack.TrackPoints = ts;
         }
     }
 

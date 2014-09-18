@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Android.Gms.Maps.Model;
 using Newtonsoft.Json;
 
 namespace GpsTracker.Entities
@@ -11,7 +10,7 @@ namespace GpsTracker.Entities
         public TrackData(DateTime starTime)
         {
             StartTime = starTime;
-            TrackPoints = new List<LatLng>();
+            TrackPoints = new List<TrackPoint>();
         }
 
         public DateTime StartTime { get; set; }
@@ -20,29 +19,29 @@ namespace GpsTracker.Entities
         public TimeSpan Duration { get; set; }
 
         [JsonIgnore]
-        public List<LatLng> TrackPoints { get; set; }
+        public List<TrackPoint> TrackPoints { get; set; }
 
         public string TrackPointsSerialized { get; set; }
 
         public void DeserializeTrackPoints()
         {
-            var serializableTrackPoints = JsonConvert.DeserializeObject<List<LatLngSerializable>>(TrackPointsSerialized);
+            var serializableTrackPoints = JsonConvert.DeserializeObject<List<TrackPoint>>(TrackPointsSerialized);
 
-            TrackPoints = serializableTrackPoints.Select(p => new LatLng(p.Latitude, p.Longitude)).ToList();
+            TrackPoints = serializableTrackPoints.Select(p => new TrackPoint(p.Latitude, p.Longitude)).ToList();
         }
 
         public void SerializeTrackPoints()
         {
             var trackPointsSerializable =
-                TrackPoints.Select(p => new LatLngSerializable(p.Latitude, p.Longitude)).ToList();
+                TrackPoints.Select(p => new TrackPoint(p.Latitude, p.Longitude)).ToList();
 
             TrackPointsSerialized = JsonConvert.SerializeObject(trackPointsSerializable);
         }
     }
 
-    public class LatLngSerializable
+    public class TrackPoint
     {
-        public LatLngSerializable(double latitude, double longitude)
+        public TrackPoint(double latitude, double longitude)
         {
             Latitude = latitude;
             Longitude = longitude;

@@ -8,7 +8,8 @@ using Android.Widget;
 
 namespace GpsTracker.Activities
 {
-    [Activity(Label = "@string/app_name", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait, LaunchMode = LaunchMode.SingleInstance)]
+    [Activity(Label = "@string/app_name", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait,
+        LaunchMode = LaunchMode.SingleInstance)]
     internal class MainTrackingActivity : BaseActiveTrackActivity
     {
         private Button _fullScreenButton;
@@ -86,9 +87,9 @@ namespace GpsTracker.Activities
             _stopButton.Visibility = ViewStates.Visible;
 
             var location = App.LocationListener.Location;
-            var startPosition = location != null ? location.ToLatLng() : null;
+            //var startPosition = location != null ? location.ToLatLng() : null;
 
-            if (startPosition!=null)
+            if (location != null)
             {
                 App.ActiveTrackManager.Start();
                 ShowLocationChanges();
@@ -107,7 +108,7 @@ namespace GpsTracker.Activities
 
             if (App.LocationListener.Location != null)
             {
-                MoveCamera(App.LocationListener.Location.ToLatLng(), Zoom);
+                MoveCamera(App.LocationListener.Location, Zoom);
             }
         }
     }

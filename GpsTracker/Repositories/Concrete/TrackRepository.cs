@@ -11,8 +11,8 @@ namespace GpsTracker.Repositories.Concrete
 {
     public class TrackRepository : ITrackRepository
     {
-        private static readonly string FilesDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        //private static readonly string FilesDirectory = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+        //private static readonly string FilesDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        private static readonly string FilesDirectory = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
         private static readonly string TracksDirectory = Path.Combine(FilesDirectory, "tracks");
         private static readonly object FsLocker = new object();
 
