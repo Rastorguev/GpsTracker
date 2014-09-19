@@ -8,8 +8,7 @@ using Android.Widget;
 
 namespace GpsTracker.Activities
 {
-    [Activity(Label = "@string/app_name", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait,
-        LaunchMode = LaunchMode.SingleInstance)]
+    [Activity(Label = "@string/app_name", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait)]
     internal class MainTrackingActivity : BaseActiveTrackActivity
     {
         private Button _fullScreenButton;

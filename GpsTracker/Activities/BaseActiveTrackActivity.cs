@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 using Android.App;
 using Android.Gms.Maps;
@@ -14,16 +16,14 @@ namespace GpsTracker.Activities
     internal abstract class BaseActiveTrackActivity : Activity,
         GoogleMap.IOnCameraChangeListener, GoogleMap.ICancelableCallback
     {
-        private GoogleMap _map;
-
-        protected Timer AutoreturnTimer;
-        protected ITrackDrawer TrackDrawer;
         protected const float DefaultMapZoom = Constants.DefaultMapZoom;
         protected static float Zoom = DefaultMapZoom;
-        //protected static LatLng Position;
         protected static float Bearing;
-        protected bool FirstOnCameraChangeEventOccured;
         protected LatLngBounds AutoSetMapBounds;
+        protected Timer AutoreturnTimer;
+        protected bool FirstOnCameraChangeEventOccured;
+        protected ITrackDrawer TrackDrawer;
+        private GoogleMap _map;
 
         protected GoogleMap Map
         {
@@ -223,26 +223,46 @@ namespace GpsTracker.Activities
 
         protected void FitTrackToScreen(bool animate = false)
         {
-            if (App.LocationListener.Location == null)
+            Task.Run(() =>
             {
-                return;
-            }
+                if (App.LocationListener.Location == null)
+                {
+                    return;
+                }
 
-            var builder = new LatLngBounds.Builder();
+                var builder = new LatLngBounds.Builder();
 
-            if (App.ActiveTrackManager.HasActiveTrack)
-            {
-                App.ActiveTrackManager.TrackPoints.ForEach(p => builder.Include(p.ToLatLng()));
-            }
-            else
-            {
-                builder.Include(App.LocationListener.Location.ToLatLng());
-            }
+                if (App.ActiveTrackManager.HasActiveTrack)
+                {
+                    var orderByLatitude = App.ActiveTrackManager.TrackPoints.OrderBy(p => p.Latitude);
+                    var orderByLongitude = App.ActiveTrackManager.TrackPoints.OrderBy(p => p.Longitude);
 
-            var bounds = builder.Build();
-            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
+                    var latLngs = new List<LatLng>
+                    {
+                        orderByLatitude.First().ToLatLng(),
+                        orderByLatitude.Last().ToLatLng(),
+                        orderByLongitude.First().ToLatLng(),
+                        orderByLongitude.Last().ToLatLng()
+                    };
 
-            SetCameraView(cameraUpdate, animate);
+                    latLngs.ForEach(l =>
+                    {
+                        builder.Include(l);
+                        l.Dispose();
+                    });
+                }
+                else
+                {
+                    var latLng = App.LocationListener.Location.ToLatLng();
+                    builder.Include(latLng);
+                    latLng.Dispose();
+                }
+
+                var bounds = builder.Build();
+                var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
+
+                RunOnUiThread(() => SetCameraView(cameraUpdate, animate));
+            });
         }
 
         protected void SetCameraView(CameraUpdate cameraUpdate, bool animate = false)
