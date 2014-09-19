@@ -255,14 +255,14 @@ namespace GpsTracker.Tools
 
             trackPoints.ForEach(p =>
             {
-                var pp = p.ToLatLng();
+                var latLng = p.ToLatLng();
 
-                polylineOptions.Add(pp);
-                //pp.Dispose();
+                polylineOptions.Add(latLng);
+                latLng.Dispose();
             });
+
             var polyline = _map.AddPolyline(polylineOptions);
 
-            //GC.Collect();
             return polyline;
         }
 

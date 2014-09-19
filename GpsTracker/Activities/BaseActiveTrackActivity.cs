@@ -157,7 +157,6 @@ namespace GpsTracker.Activities
             {
                 Zoom = position.Zoom;
                 Bearing = position.Bearing;
-                //Position = position.Target;
 
                 var location = App.LocationListener.Location;
 
