@@ -166,7 +166,7 @@ namespace GpsTracker.Activities
                 }
             }
 
-            if (UserConfig.FitTrackToScreen && !FirstOnCameraChangeEventOccured)
+            if (!FirstOnCameraChangeEventOccured)
             {
                 FirstOnCameraChangeEventOccured = true;
 
