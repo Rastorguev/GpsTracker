@@ -77,19 +77,15 @@ namespace GpsTracker.Services
         {
             var random = new Random();
             var lat = 53.926193;
-            //var trackPoints = new List<LatLng>();
             var ts = new List<TrackPoint>(n);
+
             for (var i = 0; i < n; i++)
             {
                 lat += 0.000008;
 
                 var x = (double)1 / random.Next(-100000, 100000);
-                //var p = new LatLng(lat, 27.689841 + x);
-
 
                 ts.Add(new TrackPoint(lat, 27.689841 + x));
-                //trackPoints.Add(new LatLng(lat, 27.689841 + x));
-                //p.Dispose();
             }
 
             ActiveTrack.TrackPoints = ts;

@@ -138,12 +138,12 @@ namespace GpsTracker.Tools
 
         private void SetCurrentPositionMarkerIcon()
         {
-            var bearing = App.LocationListener.Bearing;
+            var bearing = App.LocationListener.Bearing ?? 0;
 
-            if (bearing != null)
+            if (IsNeedToShowMovingIcon())
             {
                 _currentPositionMarker.SetIcon(BitmapDescriptorFactory.FromBitmap(CurrentPositionMarkerIconMoving));
-                _currentPositionMarker.Rotation = bearing.Value;
+                _currentPositionMarker.Rotation = bearing;
 
                 InitCurrentPositionMarkerIconReset();
             }
@@ -244,6 +244,17 @@ namespace GpsTracker.Tools
             var marker = _map.AddMarker(options);
 
             return marker;
+        }
+
+        private bool IsNeedToShowMovingIcon()
+        {
+            var lastLocationUpDateTime = App.LocationListener.LastLocationUpDateTime;
+            var bearing = App.LocationListener.Bearing;
+
+            return
+                lastLocationUpDateTime != null &&
+                lastLocationUpDateTime.Value.AddMilliseconds(CurrentPositionMarkerIconResetDelay) > DateTime.Now &&
+                bearing != null;
         }
 
         private Polyline CreatePolyline(List<TrackPoint> trackPoints)
