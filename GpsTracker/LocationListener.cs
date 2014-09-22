@@ -15,9 +15,6 @@ namespace GpsTracker
         public Location PreviousLocation { get; private set; }
         public DateTime? LastLocationUpDateTime { get; private set; }
 
-        [Obsolete]
-        public double Speed { get; private set; }
-
         public float? Bearing
         {
             get
@@ -45,10 +42,6 @@ namespace GpsTracker
             var locationChanged = ChangeLocation(location);
             if (locationChanged)
             {
-                if (IsSpeedAvailable())
-                {
-                    Speed = CalculateSpeed();
-                }
                 LastLocationUpDateTime = DateTime.Now;
 
                 TriggerLocationChanged(Location);
@@ -81,25 +74,6 @@ namespace GpsTracker
             locationRequest.SetSmallestDisplacement(Constants.MinimalDisplacement);
 
             LocationServices.FusedLocationApi.RequestLocationUpdates(App.LocationClient, locationRequest, this);
-        }
-
-        private double CalculateSpeed()
-        {
-            if (!IsSpeedAvailable())
-            {
-                return 0;
-            }
-
-            var distance = PreviousLocation.DistanceTo(Location);
-            var time = (DateTime.Now - LastLocationUpDateTime).Value.TotalSeconds;
-            var speed = distance/time;
-
-            return speed;
-        }
-
-        private bool IsSpeedAvailable()
-        {
-            return Location != null && PreviousLocation != null && LastLocationUpDateTime != null;
         }
 
         private void TriggerConnected(Location location)
