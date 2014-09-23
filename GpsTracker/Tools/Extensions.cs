@@ -2,7 +2,7 @@ using Android.Gms.Maps.Model;
 using Android.Locations;
 using GpsTracker.Entities;
 
-namespace GpsTracker
+namespace GpsTracker.Tools
 {
     public static class Extensions
     {

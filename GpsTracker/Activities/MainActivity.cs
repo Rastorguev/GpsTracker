@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.Gms.Common;
 using Android.OS;
 using Android.Widget;
+using GpsTracker.Concrete;
 
 namespace GpsTracker.Activities
 {

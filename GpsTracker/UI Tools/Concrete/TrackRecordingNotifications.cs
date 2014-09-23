@@ -3,8 +3,9 @@ using Android.App;
 using Android.Content;
 using Android.Support.V4.App;
 using GpsTracker.Activities;
+using GpsTracker.Tools;
 
-namespace GpsTracker
+namespace GpsTracker.Concrete
 {
     public class TrackRecordingNotifications
     {

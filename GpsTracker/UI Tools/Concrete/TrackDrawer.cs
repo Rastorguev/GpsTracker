@@ -6,10 +6,12 @@ using Android.App;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
+using GpsTracker.Abstract;
 using GpsTracker.Config;
 using GpsTracker.Entities;
+using GpsTracker.Tools;
 
-namespace GpsTracker.Tools
+namespace GpsTracker.Concrete
 {
     internal class TrackDrawer : ITrackDrawer
     {

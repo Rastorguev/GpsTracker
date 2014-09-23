@@ -8,6 +8,8 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
+using GpsTracker.Abstract;
+using GpsTracker.Concrete;
 using GpsTracker.Config;
 using GpsTracker.Tools;
 

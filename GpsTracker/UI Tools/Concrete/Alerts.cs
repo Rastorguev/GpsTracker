@@ -4,8 +4,9 @@ using Android.Gms.Common;
 using Android.Net;
 using Android.Provider;
 using GpsTracker.Activities;
+using GpsTracker.Tools;
 
-namespace GpsTracker
+namespace GpsTracker.Concrete
 {
     public static class Alerts
     {

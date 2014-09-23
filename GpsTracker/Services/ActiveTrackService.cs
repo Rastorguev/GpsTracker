@@ -5,7 +5,9 @@ using Android.App;
 using Android.Content;
 using Android.Locations;
 using Android.OS;
+using GpsTracker.Concrete;
 using GpsTracker.Entities;
+using GpsTracker.Tools;
 
 namespace GpsTracker.Services
 {

@@ -2,7 +2,7 @@ using Android.Content;
 using Android.Locations;
 using Android.Provider;
 
-namespace GpsTracker
+namespace GpsTracker.Tools
 {
     public static class Helpers
     {

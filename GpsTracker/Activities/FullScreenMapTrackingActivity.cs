@@ -6,6 +6,7 @@ using Android.Gms.Maps;
 using Android.Locations;
 using Android.OS;
 using Android.Widget;
+using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
 {
