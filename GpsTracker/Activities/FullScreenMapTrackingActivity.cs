@@ -88,9 +88,9 @@ namespace GpsTracker.Activities
         {
             var location = App.LocationListener.Location;
             var currentSpeed = location != null ? location.Speed.MetersPerSecondToKilometersPerHour() : 0;
-            var trackPoints = App.ActiveTrackManager.TrackPoints;
-            var distance = App.ActiveTrackManager.Distance.MetersToKilometers();
-            var duration = App.ActiveTrackManager.Duration;
+            var trackPoints = ActiveTrackManager.TrackPoints;
+            var distance = ActiveTrackManager.Distance.MetersToKilometers();
+            var duration = ActiveTrackManager.Duration;
 
             UpdateTrackPointsWidget(trackPoints.Count);
             UpdateDistanceWidget(distance);
@@ -140,7 +140,7 @@ namespace GpsTracker.Activities
 
         private void UpdateTrackInfoEventHandler(object sender, EventArgs e)
         {
-            RunOnUiThread(() => UpdateDurationWidget(App.ActiveTrackManager.Duration));
+            RunOnUiThread(() => UpdateDurationWidget(ActiveTrackManager.Duration));
         }
 
         #endregion

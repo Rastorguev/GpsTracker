@@ -3,7 +3,7 @@ using Android.App;
 using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 using Android.Runtime;
-using GpsTracker.Managers;
+using GpsTracker.Config;
 
 namespace GpsTracker
 {
@@ -12,13 +12,18 @@ namespace GpsTracker
     {
         private static Application _app;
         private static IGoogleApiClient _locationClient;
-        private static ActiveTrackManager _activeTrackManager;
+        //private static IActiveTrackManager _activeTrackManager;
         private static LocationListener _locationListener;
 
-        public static ActiveTrackManager ActiveTrackManager
+        public App(IntPtr handle, JniHandleOwnership ownerShip) : base(handle, ownerShip)
         {
-            get { return _activeTrackManager ?? (_activeTrackManager = new ActiveTrackManager()); }
+            _app = this;
         }
+
+        //public static IActiveTrackManager ActiveTrackManager
+        //{
+        //    get { return ServiceLocator.Instance.Resolve<IActiveTrackManager>(); }
+        //}
 
         public static IGoogleApiClient LocationClient
         {
@@ -36,14 +41,10 @@ namespace GpsTracker
             get { return _locationListener ?? (_locationListener = new LocationListener()); }
         }
 
-        public App(IntPtr handle, JniHandleOwnership ownerShip) : base(handle, ownerShip)
-        {
-            _app = this;
-        }
-
         public override void OnCreate()
         {
             base.OnCreate();
+            ServiceRegistrar.Startup();
         }
     }
 }

@@ -11,6 +11,7 @@ using Android.OS;
 using GpsTracker.Abstract;
 using GpsTracker.Concrete;
 using GpsTracker.Config;
+using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
@@ -26,6 +27,8 @@ namespace GpsTracker.Activities
         protected bool FirstOnCameraChangeEventOccured;
         protected ITrackDrawer TrackDrawer;
         private GoogleMap _map;
+
+        protected readonly IActiveTrackManager ActiveTrackManager = ServiceLocator.Instance.Resolve<IActiveTrackManager>();
 
         protected GoogleMap Map
         {
@@ -233,10 +236,10 @@ namespace GpsTracker.Activities
 
                 var builder = new LatLngBounds.Builder();
 
-                if (App.ActiveTrackManager.HasActiveTrack)
+                if (ActiveTrackManager.HasActiveTrack)
                 {
-                    var orderByLatitude = App.ActiveTrackManager.TrackPoints.OrderBy(p => p.Latitude);
-                    var orderByLongitude = App.ActiveTrackManager.TrackPoints.OrderBy(p => p.Longitude);
+                    var orderByLatitude = ActiveTrackManager.TrackPoints.OrderBy(p => p.Latitude);
+                    var orderByLongitude = ActiveTrackManager.TrackPoints.OrderBy(p => p.Longitude);
 
                     var latLngs = new List<LatLng>
                     {
@@ -296,9 +299,9 @@ namespace GpsTracker.Activities
 
         public void ShowLocationChanges()
         {
-            if (App.ActiveTrackManager.HasActiveTrack && App.ActiveTrackManager.TrackPoints.Any())
+            if (ActiveTrackManager.HasActiveTrack && ActiveTrackManager.TrackPoints.Any())
             {
-                TrackDrawer.DrawTrack(App.ActiveTrackManager.TrackPoints);
+                TrackDrawer.DrawTrack(ActiveTrackManager.TrackPoints);
             }
             else if (App.LocationListener.Location != null)
             {

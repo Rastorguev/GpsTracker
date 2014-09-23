@@ -12,9 +12,9 @@ namespace GpsTracker.Activities
     internal class MainTrackingActivity : BaseActiveTrackActivity
     {
         private Button _fullScreenButton;
+        private MapFragment _mapFragment;
         private Button _startButton;
         private Button _stopButton;
-        private MapFragment _mapFragment;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -56,7 +56,7 @@ namespace GpsTracker.Activities
         {
             base.OnResume();
 
-            if (App.ActiveTrackManager.HasActiveTrack)
+            if (ActiveTrackManager.HasActiveTrack)
             {
                 _startButton.Visibility = ViewStates.Gone;
                 _stopButton.Visibility = ViewStates.Visible;
@@ -90,7 +90,7 @@ namespace GpsTracker.Activities
 
             if (location != null)
             {
-                App.ActiveTrackManager.Start();
+                ActiveTrackManager.Start();
                 ShowLocationChanges();
             }
         }
@@ -100,7 +100,7 @@ namespace GpsTracker.Activities
             _startButton.Visibility = ViewStates.Visible;
             _stopButton.Visibility = ViewStates.Gone;
 
-            App.ActiveTrackManager.Stop();
+            ActiveTrackManager.Stop();
 
             TrackDrawer.RemoveTrack();
             ShowLocationChanges();

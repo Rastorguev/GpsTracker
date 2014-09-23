@@ -1,22 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Android.App;
 using Android.Content;
-using Android.Gms.Maps.Model;
 using Android.OS;
 using GpsTracker.Entities;
-using GpsTracker.Repositories.Concrete;
+using GpsTracker.Managers.Abstract;
 using GpsTracker.Services;
 using Object = Java.Lang.Object;
 
-namespace GpsTracker.Managers
+namespace GpsTracker.Managers.Concrete
 {
-    public class ActiveTrackManager : Object, IServiceConnection
+    public class ActiveTrackManager : Object, IServiceConnection, IActiveTrackManager
     {
-        private bool _isStarted;
         private ActiveTrackService _activeTrackService;
         private bool _isBound;
+        private bool _isStarted;
 
         public bool HasActiveTrack
         {
@@ -84,8 +82,6 @@ namespace GpsTracker.Managers
             //var e2 = DateTime.Now;
             //var r2 = e2 - s2;
             //Console.WriteLine(String.Format("!!!###!!! Get Time: {0} !!!###!!! ", r2.TotalMilliseconds));
-
-    
 
             //var firstTrack = savedTracks.First();
             //var s3 = DateTime.Now;
