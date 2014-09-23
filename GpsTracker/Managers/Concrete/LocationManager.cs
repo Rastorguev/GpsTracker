@@ -4,27 +4,15 @@ using Android.Gms.Location;
 using Android.Locations;
 using Android.OS;
 using GpsTracker.Config;
+using GpsTracker.Managers.Abstract;
 using ILocationListener = Android.Gms.Location.ILocationListener;
 using Object = Java.Lang.Object;
 
-namespace GpsTracker
+namespace GpsTracker.Managers.Concrete
 {
-    public class LocationListener : Object, ILocationListener, IGoogleApiClientConnectionCallbacks
+    public class LocationManager : Object, ILocationManager, 
+        ILocationListener
     {
-        public Location Location { get; private set; }
-        public Location PreviousLocation { get; private set; }
-        public DateTime? LastLocationUpDateTime { get; private set; }
-
-        public float? Bearing
-        {
-            get
-            {
-                return Location != null && PreviousLocation != null
-                    ? (float?) PreviousLocation.BearingTo(Location)
-                    : null;
-            }
-        }
-
         public void OnConnected(Bundle connectionHint)
         {
             StartListenLocationUpdates();
@@ -45,6 +33,20 @@ namespace GpsTracker
                 LastLocationUpDateTime = DateTime.Now;
 
                 TriggerLocationChanged(Location);
+            }
+        }
+
+        public Location Location { get; private set; }
+        public Location PreviousLocation { get; private set; }
+        public DateTime? LastLocationUpDateTime { get; private set; }
+
+        public float? Bearing
+        {
+            get
+            {
+                return Location != null && PreviousLocation != null
+                    ? (float?) PreviousLocation.BearingTo(Location)
+                    : null;
             }
         }
 

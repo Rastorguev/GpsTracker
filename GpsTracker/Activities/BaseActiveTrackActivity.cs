@@ -22,13 +22,17 @@ namespace GpsTracker.Activities
         protected const float DefaultMapZoom = Constants.DefaultMapZoom;
         protected static float Zoom = DefaultMapZoom;
         protected static float Bearing;
+
+        protected readonly IActiveTrackManager ActiveTrackManager =
+            ServiceLocator.Instance.Resolve<IActiveTrackManager>();
+
+        protected readonly ILocationManager LocationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
+
         protected LatLngBounds AutoSetMapBounds;
         protected Timer AutoreturnTimer;
         protected bool FirstOnCameraChangeEventOccured;
         protected ITrackDrawer TrackDrawer;
         private GoogleMap _map;
-
-        protected readonly IActiveTrackManager ActiveTrackManager = ServiceLocator.Instance.Resolve<IActiveTrackManager>();
 
         protected GoogleMap Map
         {
@@ -120,19 +124,19 @@ namespace GpsTracker.Activities
 
         protected void SubscribeOnLocationListenerEvents()
         {
-            App.LocationListener.Connected += LocationListenerOnConnected;
-            App.LocationListener.LocationChanged += LocationListenerOnLocationChanged;
+            LocationManager.Connected += LocationListenerOnConnected;
+            LocationManager.LocationChanged += LocationListenerOnLocationChanged;
         }
 
         protected void UnsubscribeFromLocationListenerEvents()
         {
-            App.LocationListener.Connected -= LocationListenerOnConnected;
-            App.LocationListener.LocationChanged -= LocationListenerOnLocationChanged;
+            LocationManager.Connected -= LocationListenerOnConnected;
+            LocationManager.LocationChanged -= LocationListenerOnLocationChanged;
         }
 
         #endregion
 
-        #region LocationListener event handlers
+        #region LocationManager event handlers
 
         public virtual void LocationListenerOnConnected(Location location)
         {
@@ -163,7 +167,7 @@ namespace GpsTracker.Activities
                 Zoom = position.Zoom;
                 Bearing = position.Bearing;
 
-                var location = App.LocationListener.Location;
+                var location = LocationManager.Location;
 
                 if (UserConfig.Autoreturn && location != null)
                 {
@@ -199,7 +203,7 @@ namespace GpsTracker.Activities
 
         protected void AdjustCamera(float zoom, bool animate = false)
         {
-            var location = App.LocationListener.Location;
+            var location = LocationManager.Location;
 
             if (UserConfig.FitTrackToScreen)
             {
@@ -229,7 +233,7 @@ namespace GpsTracker.Activities
         {
             Task.Run(() =>
             {
-                if (App.LocationListener.Location == null)
+                if (LocationManager.Location == null)
                 {
                     return;
                 }
@@ -257,7 +261,7 @@ namespace GpsTracker.Activities
                 }
                 else
                 {
-                    var latLng = App.LocationListener.Location.ToLatLng();
+                    var latLng = LocationManager.Location.ToLatLng();
                     builder.Include(latLng);
                     latLng.Dispose();
                 }
@@ -303,9 +307,9 @@ namespace GpsTracker.Activities
             {
                 TrackDrawer.DrawTrack(ActiveTrackManager.TrackPoints);
             }
-            else if (App.LocationListener.Location != null)
+            else if (LocationManager.Location != null)
             {
-                TrackDrawer.DrawCurrentPositionMarker(App.LocationListener.Location.ToTrackPoint());
+                TrackDrawer.DrawCurrentPositionMarker(LocationManager.Location.ToTrackPoint());
             }
         }
 

@@ -13,14 +13,14 @@ namespace GpsTracker.Tools
 
         public static bool IsGpsEnabled(Context context)
         {
-            var locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
-            return locationManager.IsProviderEnabled(LocationManager.GpsProvider);
+            var locationManager = (Android.Locations.LocationManager) context.GetSystemService(Context.LocationService);
+            return locationManager.IsProviderEnabled(Android.Locations.LocationManager.GpsProvider);
         }
 
         public static bool IsNetworkConnectionsEnabled(Context context)
         {
-            var locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
-            return locationManager.IsProviderEnabled(LocationManager.NetworkProvider);
+            var locationManager = (Android.Locations.LocationManager) context.GetSystemService(Context.LocationService);
+            return locationManager.IsProviderEnabled(Android.Locations.LocationManager.NetworkProvider);
         }
 
         public static bool IsAirplaneModeOn(Context context)

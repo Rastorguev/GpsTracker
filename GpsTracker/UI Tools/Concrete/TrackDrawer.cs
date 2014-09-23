@@ -9,6 +9,7 @@ using Android.Graphics;
 using GpsTracker.Abstract;
 using GpsTracker.Config;
 using GpsTracker.Entities;
+using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Concrete
@@ -23,12 +24,13 @@ namespace GpsTracker.Concrete
         private Marker _startPositionMarker;
         private readonly List<Polyline> _polylines = new List<Polyline>();
         private readonly GoogleMap _map;
-        private readonly Activity _context;
+        private readonly Activity _activity;
         private bool _disposed;
 
         private Bitmap _currentPositionMarkerIconStatic;
         private Bitmap _currentPositionMarkerIconMoving;
         private Bitmap _startPositionMarkerIcon;
+        private readonly ILocationManager _locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
 
         private Bitmap CurrentPositionMarkerIconStatic
         {
@@ -55,10 +57,10 @@ namespace GpsTracker.Concrete
 
         private readonly Timer _currentPositionMarkerIconResetTimer;
 
-        public TrackDrawer(GoogleMap map, Activity context)
+        public TrackDrawer(GoogleMap map, Activity activity)
         {
             _map = map;
-            _context = context;
+            _activity = activity;
 
             _currentPositionMarkerIconResetTimer = new Timer
             {
@@ -140,7 +142,7 @@ namespace GpsTracker.Concrete
 
         private void SetCurrentPositionMarkerIcon()
         {
-            var bearing = App.LocationListener.Bearing ?? 0;
+            var bearing = _locationManager.Bearing ?? 0;
 
             if (IsNeedToShowMovingIcon())
             {
@@ -163,7 +165,7 @@ namespace GpsTracker.Concrete
 
         private void CurrentPositionMarkerIconResetHandler(object sender, EventArgs e)
         {
-            _context.RunOnUiThread(
+            _activity.RunOnUiThread(
                 () =>
                 {
                     if (_currentPositionMarker != null)
@@ -250,8 +252,8 @@ namespace GpsTracker.Concrete
 
         private bool IsNeedToShowMovingIcon()
         {
-            var lastLocationUpDateTime = App.LocationListener.LastLocationUpDateTime;
-            var bearing = App.LocationListener.Bearing;
+            var lastLocationUpDateTime = _locationManager.LastLocationUpDateTime;
+            var bearing = _locationManager.Bearing;
 
             return
                 lastLocationUpDateTime != null &&
@@ -289,11 +291,11 @@ namespace GpsTracker.Concrete
 
         private Bitmap GetCurrentPositionMarkerIconStatic()
         {
-            var size = _context.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
+            var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
             var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
             var canvas = new Canvas(markerIcon);
-            var dot = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerDot);
-            var halo = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
+            var dot = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerDot);
+            var halo = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
 
             halo.SetBounds(0, 0, markerIcon.Width, markerIcon.Width);
             dot.SetBounds((int) (
@@ -310,11 +312,11 @@ namespace GpsTracker.Concrete
 
         private Bitmap GetCurrentPositionMarkerIconMoving()
         {
-            var size = _context.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
+            var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
             var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
             var canvas = new Canvas(markerIcon);
-            var dot = _context.Resources.GetDrawable(Resource.Drawable.Arrow);
-            var halo = _context.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
+            var dot = _activity.Resources.GetDrawable(Resource.Drawable.Arrow);
+            var halo = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
 
             halo.SetBounds(0, 0, markerIcon.Width, markerIcon.Width);
             dot.SetBounds((int) (
@@ -331,10 +333,10 @@ namespace GpsTracker.Concrete
 
         private Bitmap GetStartPositionMarkerIcon()
         {
-            var size = _context.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
+            var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
             var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
             var canvas = new Canvas(markerIcon);
-            var dot = _context.Resources.GetDrawable(Resource.Drawable.StartPositionMarkerDot);
+            var dot = _activity.Resources.GetDrawable(Resource.Drawable.StartPositionMarkerDot);
 
             dot.SetBounds((int) (
                 markerIcon.Width/MarkerDotHaloRatio),

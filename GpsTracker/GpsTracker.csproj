@@ -93,8 +93,9 @@
     <Compile Include="Config\ServiceRegistrar.cs" />
     <Compile Include="Config\UserConfig.cs" />
     <Compile Include="Managers\Abstract\IActiveTrackManager.cs" />
+    <Compile Include="Managers\Abstract\ILocationManager.cs" />
     <Compile Include="Tools\Helpers.cs" />
-    <Compile Include="LocationListener.cs" />
+    <Compile Include="Managers\Concrete\LocationManager.cs" />
     <Compile Include="Managers\Concrete\ActiveTrackManager.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Activities\FullScreenMapTrackingActivity.cs" />

@@ -9,6 +9,7 @@ namespace GpsTracker.Config
         public static void Startup()
         {
             ServiceLocator.Instance.Register<IActiveTrackManager, ActiveTrackManager>();
+            ServiceLocator.Instance.Register<ILocationManager, LocationManager>();
         }
     }
 }

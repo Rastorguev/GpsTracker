@@ -7,6 +7,7 @@ using Android.Locations;
 using Android.OS;
 using GpsTracker.Concrete;
 using GpsTracker.Entities;
+using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Services
@@ -15,7 +16,7 @@ namespace GpsTracker.Services
     public class ActiveTrackService : Service
     {
         private const float MinValuableBearing = 1;
-
+        private readonly ILocationManager _locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
         private DateTime _startTime;
 
         public TrackData ActiveTrack { get; private set; }
@@ -31,7 +32,7 @@ namespace GpsTracker.Services
 
             ActiveTrack = new TrackData(_startTime);
 
-            var location = App.LocationListener.Location;
+            var location = _locationManager.Location;
 
             //GeneratedFakeTrack(60000);
 
@@ -45,7 +46,7 @@ namespace GpsTracker.Services
 
         public override void OnCreate()
         {
-            App.LocationListener.LocationChanged += OnLocationChanged;
+            _locationManager.LocationChanged += OnLocationChanged;
         }
 
         public override void OnDestroy()
@@ -57,7 +58,7 @@ namespace GpsTracker.Services
             notificationManager.Notify((int) NotificationFlags.ForegroundService,
                 TrackRecordingNotifications.GetRecordStopedNotification(this));
 
-            App.LocationListener.LocationChanged -= OnLocationChanged;
+            _locationManager.LocationChanged -= OnLocationChanged;
         }
 
         public virtual void OnLocationChanged(Location location)
@@ -100,9 +101,9 @@ namespace GpsTracker.Services
 
         private bool NeedToAddNewTrackPoint(Location location)
         {
-            return App.LocationListener.PreviousLocation == null ||
+            return _locationManager.PreviousLocation == null ||
                    ActiveTrack.TrackPoints.Count < 2 ||
-                   Math.Abs(App.LocationListener.PreviousLocation.Bearing - location.Bearing) > MinValuableBearing;
+                   Math.Abs(_locationManager.PreviousLocation.Bearing - location.Bearing) > MinValuableBearing;
         }
 
         private void GeneratedFakeTrack(int n)
