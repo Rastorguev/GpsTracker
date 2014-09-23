@@ -205,7 +205,7 @@ namespace GpsTracker.Activities
         {
             var location = LocationManager.Location;
 
-            if (UserConfig.FitTrackToScreen)
+            if (UserConfig.FitTrackToScreen && ActiveTrackManager.HasActiveTrack)
             {
                 FitTrackToScreen(animate);
             }
