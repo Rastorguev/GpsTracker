@@ -5,7 +5,7 @@ namespace GpsTracker.Repositories.Abstract
 {
     public interface ITrackRepository
     {
-        void Save(TrackData track);
-        List<TrackData> GetAll();
+        void Save(Track track);
+        List<Track> GetAll();
     }
 }

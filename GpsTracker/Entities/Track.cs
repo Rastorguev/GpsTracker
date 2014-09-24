@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 
 namespace GpsTracker.Entities
 {
-    public class TrackData
+    public class Track
     {
-        public TrackData(DateTime starTime)
+        public Track(DateTime starTime)
         {
             StartTime = starTime;
             TrackPoints = new List<TrackPoint>();

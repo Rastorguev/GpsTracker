@@ -1,5 +1,7 @@
 using GpsTracker.Managers.Abstract;
 using GpsTracker.Managers.Concrete;
+using GpsTracker.Repositories.Abstract;
+using GpsTracker.Repositories.Concrete;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Config
@@ -10,6 +12,7 @@ namespace GpsTracker.Config
         {
             ServiceLocator.Instance.Register<IActiveTrackManager, ActiveTrackManager>();
             ServiceLocator.Instance.Register<ILocationManager, LocationManager>();
+            ServiceLocator.Instance.Register<ITrackRepository, TrackRepository>();
         }
     }
 }

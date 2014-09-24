@@ -16,7 +16,7 @@ namespace GpsTracker.Repositories.Concrete
         private static readonly string TracksDirectory = Path.Combine(FilesDirectory, "tracks");
         private static readonly object FsLocker = new object();
 
-        public void Save(TrackData track)
+        public void Save(Track track)
         {
             track.SerializeTrackPoints();
 
@@ -42,9 +42,9 @@ namespace GpsTracker.Repositories.Concrete
             }
         }
 
-        public List<TrackData> GetAll()
+        public List<Track> GetAll()
         {
-            var tracks = new List<TrackData>();
+            var tracks = new List<Track>();
             var trackStrings = new List<string>();
 
             lock (FsLocker)
@@ -78,7 +78,7 @@ namespace GpsTracker.Repositories.Concrete
             {
                 try
                 {
-                    var track = JsonConvert.DeserializeObject<TrackData>(trackString);
+                    var track = JsonConvert.DeserializeObject<Track>(trackString);
 
                     if (track != null)
                     {

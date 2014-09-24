@@ -19,7 +19,7 @@ namespace GpsTracker.Services
         private readonly ILocationManager _locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
         private DateTime _startTime;
 
-        public TrackData ActiveTrack { get; private set; }
+        public Track ActiveTrack { get; private set; }
 
         public override IBinder OnBind(Intent intent)
         {
@@ -30,7 +30,7 @@ namespace GpsTracker.Services
         {
             _startTime = DateTime.Now;
 
-            ActiveTrack = new TrackData(_startTime);
+            ActiveTrack = new Track(_startTime);
 
             var location = _locationManager.Location;
 
@@ -102,6 +102,8 @@ namespace GpsTracker.Services
         private bool NeedToAddNewTrackPoint(Location location)
         {
             return _locationManager.PreviousLocation == null ||
+                   _locationManager.PreviousLocation.HasBearing == false ||
+                   location.HasBearing == false ||
                    ActiveTrack.TrackPoints.Count < 2 ||
                    Math.Abs(_locationManager.PreviousLocation.Bearing - location.Bearing) > MinValuableBearing;
         }

@@ -108,7 +108,7 @@
     <Compile Include="Tools\ServiceLocator.cs" />
     <Compile Include="UI Tools\Abstract\ITrackDrawer.cs" />
     <Compile Include="UI Tools\Concrete\TrackDrawer.cs" />
-    <Compile Include="Entities\TrackData.cs" />
+    <Compile Include="Entities\Track.cs" />
     <Compile Include="UI Tools\Concrete\Alerts.cs" />
     <Compile Include="UI Tools\Concrete\TrackRecordingNotifications.cs" />
   </ItemGroup>
@@ -121,6 +121,7 @@
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerHalo.axml" />
     <AndroidResource Include="Resources\drawable\StartPositionMarkerDot.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerArrow.axml" />
+    <AndroidResource Include="Resources\layout\TrackListItem.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\MainLayout.axml" />
