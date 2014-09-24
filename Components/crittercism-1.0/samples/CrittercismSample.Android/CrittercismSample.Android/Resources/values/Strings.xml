@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Attach user meta data</string>
+	<string name="app_name">CrittercismSample</string>
+</resources>

@@ -63,6 +63,9 @@
     <MonoDroidExtraArgs />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Crittercism.Android">
+      <HintPath>..\Components\crittercism-1.0\lib\android\Crittercism.Android.dll</HintPath>
+    </Reference>
     <Reference Include="GooglePlayServicesLib">
       <HintPath>..\Components\googleplayservices-19.0.0\lib\android\GooglePlayServicesLib.dll</HintPath>
     </Reference>
@@ -148,6 +151,10 @@
     <AndroidResource Include="Resources\drawable\Bear.png" />
   </ItemGroup>
   <ItemGroup>
+    <XamarinComponentReference Include="crittercism">
+      <Visible>False</Visible>
+      <Version>1.0</Version>
+    </XamarinComponentReference>
     <XamarinComponentReference Include="googleplayservices">
       <Visible>False</Visible>
       <Version>19.0.0</Version>

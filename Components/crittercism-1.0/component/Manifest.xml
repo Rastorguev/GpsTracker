@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component format="1" id="crittercism">
+  <name>Crittercism</name>
+  <publisher>Crittercism, Inc.</publisher>
+  <publisher-url>http://www.crittercism.com/</publisher-url>
+  <version>1.0</version>
+  <summary>Crittercism’s mAPM solution enables enterprises to deliver better mobile apps by monitoring, prioritizing, troubleshooting, and trending app performance.</summary>
+  <samples>
+    <sample id="CrittercismSample.iOS">
+      <name>iOS Sample.</name>
+      <summary>Demonstrates Error Monitoring on iOS.</summary>
+    </sample>
+    <sample id="CrittercismSample.Android">
+      <name>Android Sample.</name>
+      <summary>Demonstrates Error Monitoring on Android</summary>
+    </sample>
+  </samples>
+</component>

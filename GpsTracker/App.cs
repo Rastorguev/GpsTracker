@@ -3,6 +3,7 @@ using Android.App;
 using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 using Android.Runtime;
+using CrittercismAndroid;
 using GpsTracker.Config;
 using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
@@ -38,7 +39,10 @@ namespace GpsTracker
         {
             base.OnCreate();
             ServiceRegistrar.Startup();
+
+            //register bug tracking tools
             RaygunClient.Attach("Veutcv+XL4iSn2ND6EgrdA==");
+            Crittercism.Init(ApplicationContext, "54229b3383fb797ba9000007");
         }
     }
 }
