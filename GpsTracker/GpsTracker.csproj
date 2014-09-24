@@ -66,6 +66,9 @@
     <Reference Include="GooglePlayServicesLib">
       <HintPath>..\Components\googleplayservices-19.0.0\lib\android\GooglePlayServicesLib.dll</HintPath>
     </Reference>
+    <Reference Include="Mindscape.Raygun4Net.Xamarin.Android">
+      <HintPath>..\Components\raygun4net-2.0.6\lib\android\Mindscape.Raygun4Net.Xamarin.Android.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json">
@@ -152,6 +155,10 @@
     <XamarinComponentReference Include="json.net">
       <Visible>False</Visible>
       <Version>4.5.11</Version>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="raygun4net">
+      <Visible>False</Visible>
+      <Version>2.0.6</Version>
     </XamarinComponentReference>
   </ItemGroup>
   <ItemGroup />

@@ -6,6 +6,7 @@ using Android.Runtime;
 using GpsTracker.Config;
 using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
+using Mindscape.Raygun4Net;
 
 namespace GpsTracker
 {
@@ -37,6 +38,7 @@ namespace GpsTracker
         {
             base.OnCreate();
             ServiceRegistrar.Startup();
+            RaygunClient.Attach("Veutcv+XL4iSn2ND6EgrdA==");
         }
     }
 }
