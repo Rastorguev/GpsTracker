@@ -6,19 +6,20 @@ using Android.App;
 using GpsTracker.Entities;
 using GpsTracker.Repositories.Abstract;
 using Newtonsoft.Json;
+using Environment = Android.OS.Environment;
 
 namespace GpsTracker.Repositories.Concrete
 {
     public class TrackRepository : ITrackRepository
     {
         //private static readonly string FilesDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        private static readonly string FilesDirectory = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+        private static readonly string FilesDirectory = Environment.ExternalStorageDirectory.AbsolutePath;
         private static readonly string TracksDirectory = Path.Combine(FilesDirectory, "tracks");
         private static readonly object FsLocker = new object();
 
         public void Save(Track track)
         {
-            track.SerializeTrackPoints();
+            track.EncodeTrackPoints();
 
             var serializedTrack = JsonConvert.SerializeObject(track);
 

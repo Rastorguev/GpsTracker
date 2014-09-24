@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using GpsTracker.Tools;
 using Newtonsoft.Json;
 
 namespace GpsTracker.Entities
@@ -21,21 +21,16 @@ namespace GpsTracker.Entities
         [JsonIgnore]
         public List<TrackPoint> TrackPoints { get; set; }
 
-        public string TrackPointsSerialized { get; set; }
+        public string TrackPointsEncoded { get; set; }
 
-        public void DeserializeTrackPoints()
+        public void DecodeTrackPoints()
         {
-            var serializableTrackPoints = JsonConvert.DeserializeObject<List<TrackPoint>>(TrackPointsSerialized);
-
-            TrackPoints = serializableTrackPoints.Select(p => new TrackPoint(p.Latitude, p.Longitude)).ToList();
+            TrackPoints = TrackPointsUtils.Decode(TrackPointsEncoded);
         }
 
-        public void SerializeTrackPoints()
+        public void EncodeTrackPoints()
         {
-            var trackPointsSerializable =
-                TrackPoints.Select(p => new TrackPoint(p.Latitude, p.Longitude)).ToList();
-
-            TrackPointsSerialized = JsonConvert.SerializeObject(trackPointsSerializable);
+            TrackPointsEncoded = TrackPointsUtils.Encode(TrackPoints);
         }
     }
 

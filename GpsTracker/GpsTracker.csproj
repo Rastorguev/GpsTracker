@@ -105,6 +105,9 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ActiveTrackService.cs" />
+    <Compile Include="Tools\TrackPointsUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tools\ServiceLocator.cs" />
     <Compile Include="UI Tools\Abstract\ITrackDrawer.cs" />
     <Compile Include="UI Tools\Concrete\TrackDrawer.cs" />
