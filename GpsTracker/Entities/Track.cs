@@ -16,7 +16,12 @@ namespace GpsTracker.Entities
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public float Distance { get; set; }
-        public TimeSpan Duration { get; set; }
+
+        [JsonIgnore]
+        public TimeSpan Duration
+        {
+            get { return EndTime - StartTime; }
+        }
 
         [JsonIgnore]
         public List<TrackPoint> TrackPoints { get; set; }

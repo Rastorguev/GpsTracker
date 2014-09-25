@@ -3,29 +3,96 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
-    <CheckBox
-        android:id="@+id/cbBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/StartTime"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="5dip"
+        android:background="@color/full_screen_map_track_widgets_container_background"
+        android:orientation="horizontal"
+        android:paddingRight="10dip"
+        android:paddingLeft="10dip"
+        android:paddingBottom="5dip">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginRight="10dip">
+            <TextView
+                android:id="@+id/StartTimeDate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="@dimen/full_screen_map_track_widget_text_name"
+                android:gravity="center_vertical|left"
+                android:textColor="@color/full_screen_map_track_widget_text_name" />
+            <TextView
+                android:id="@+id/StartTimeTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="@dimen/full_screen_map_track_widget_text_name"
+                android:gravity="center_vertical|left"
+                android:textColor="@color/full_screen_map_track_widget_text_name" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text=""
-            android:textSize="20sp" />
-        <TextView
-            android:id="@+id/EndTime"
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginRight="10dip">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Distance"
+                    android:textSize="@dimen/full_screen_map_track_widget_text_value"
+                    android:gravity="left"
+                    android:layout_marginRight="3dip"
+                    android:textColor="@color/full_screen_map_track_widget_text_value" />
+                <TextView
+                    android:text="@string/km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/full_screen_map_track_widget_text_unit"
+                    android:gravity="left"
+                    android:textColor="@color/full_screen_map_track_widget_text_unit" />
+            </LinearLayout>
+            <TextView
+                android:text="@string/distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/full_screen_map_track_widget_text_name"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textColor="@color/full_screen_map_track_widget_text_name"
+                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text=""
-            android:textSize="20sp" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginRight="10dip">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Duration"
+                android:textSize="@dimen/full_screen_map_track_widget_text_value"
+                android:gravity="left"
+                android:textColor="@color/full_screen_map_track_widget_text_value" />
+            <TextView
+                android:text="@string/duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/full_screen_map_track_widget_text_name"
+                android:gravity="left"
+                android:textColor="@color/full_screen_map_track_widget_text_name"
+                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

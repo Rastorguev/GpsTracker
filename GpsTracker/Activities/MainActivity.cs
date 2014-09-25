@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -52,11 +53,13 @@ namespace GpsTracker.Activities
     {
         private readonly LayoutInflater _inflater;
         private readonly int _viewResourceId;
+        private readonly Context _context;
 
         public TrackListAdapter(Context context, int viewResourceId, IList<Track> tracks)
             : base(context, viewResourceId, tracks)
         {
-            _inflater = (LayoutInflater) context.GetSystemService(Context.LayoutInflaterService);
+            _context = context;
+            _inflater = (LayoutInflater) _context.GetSystemService(Context.LayoutInflaterService);
             _viewResourceId = viewResourceId;
         }
 
@@ -67,9 +70,15 @@ namespace GpsTracker.Activities
 
             if (track != null)
             {
-                var startTime = (TextView) view.FindViewById(Resource.Id.StartTime);
+                var startTimeDateView = (TextView) view.FindViewById(Resource.Id.StartTimeDate);
+                var startTimeTimeView = (TextView) view.FindViewById(Resource.Id.StartTimeTime);
+                var distanceView = view.FindViewById<TextView>(Resource.Id.Distance);
+                var durationView = view.FindViewById<TextView>(Resource.Id.Duration);
 
-                startTime.Text = track.StartTime.ToString();
+                startTimeDateView.Text = track.StartTime.ToShortDateString();
+                startTimeTimeView.Text = track.StartTime.ToLongTimeString();
+                distanceView.Text = String.Format(_context.GetString(Resource.String.distance_format), track.Distance.MetersToKilometers());
+                durationView.Text = String.Format(_context.GetString(Resource.String.duration_format), track.Duration);
             }
 
             return view;

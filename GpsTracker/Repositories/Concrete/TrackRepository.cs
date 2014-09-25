@@ -23,10 +23,9 @@ namespace GpsTracker.Repositories.Concrete
 
             var serializedTrack = JsonConvert.SerializeObject(track);
 
-            var fileName = String.Format("{0} [{1} - {2}].txt",
+            var fileName = String.Format("{0} [{1}].txt",
                 GetTrackFilePrefix(),
-                track.StartTime.ToString("u"),
-                track.EndTime.ToString("u"));
+                track.StartTime.ToString("u"));
 
             var filePath = Path.Combine(TracksDirectory, fileName);
 
@@ -69,7 +68,7 @@ namespace GpsTracker.Repositories.Concrete
 
                                 trackStrings.Add(trackString);
                             }
-                            catch (Exception) {}
+                            catch (Exception) { }
                         }
                     }
                 }
@@ -86,7 +85,7 @@ namespace GpsTracker.Repositories.Concrete
                         tracks.Add(track);
                     }
                 }
-                catch (Exception) {}
+                catch (Exception) { }
             }
 
             return tracks;

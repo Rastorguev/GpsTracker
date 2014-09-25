@@ -1202,14 +1202,17 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070052
 			public const int CurrentSpeedWidget_Value = 2131165266;
 			
+			// aapt resource value: 0x7f07005f
+			public const int Distance = 2131165279;
+			
 			// aapt resource value: 0x7f070050
 			public const int DistanceWidget_Value = 2131165264;
 			
+			// aapt resource value: 0x7f070060
+			public const int Duration = 2131165280;
+			
 			// aapt resource value: 0x7f070051
 			public const int DurationWidget_Value = 2131165265;
-			
-			// aapt resource value: 0x7f07005f
-			public const int EndTime = 2131165279;
 			
 			// aapt resource value: 0x7f070056
 			public const int FullScreenButton = 2131165270;
@@ -1220,8 +1223,11 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070055
 			public const int StartButton = 2131165269;
 			
+			// aapt resource value: 0x7f07005d
+			public const int StartTimeDate = 2131165277;
+			
 			// aapt resource value: 0x7f07005e
-			public const int StartTime = 2131165278;
+			public const int StartTimeTime = 2131165278;
 			
 			// aapt resource value: 0x7f070057
 			public const int StopButton = 2131165271;
@@ -1285,9 +1291,6 @@ namespace GpsTracker
 			
 			// aapt resource value: 0x7f070026
 			public const int buy_with_google = 2131165222;
-			
-			// aapt resource value: 0x7f07005d
-			public const int cbBox = 2131165277;
 			
 			// aapt resource value: 0x7f07003f
 			public const int checkbox = 2131165247;
