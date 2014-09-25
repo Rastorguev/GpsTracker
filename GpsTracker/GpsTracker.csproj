@@ -149,6 +149,7 @@
     <AndroidResource Include="Resources\values\Dimensions.xml" />
     <AndroidResource Include="Resources\drawable\Arrow.png" />
     <AndroidResource Include="Resources\drawable\Bear.png" />
+    <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="crittercism">

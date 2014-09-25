@@ -102,7 +102,7 @@ namespace GpsTracker.Activities
         {
             if (_trackPointsQuantityWidgetValue == null)
             {
-                _trackPointsQuantityWidgetValue = FindViewById<TextView>(Resource.Id.TrackPointsQuantityWidget_Value);
+                _trackPointsQuantityWidgetValue = FindViewById<TextView>(Resource.Id.TrackPointsValue);
             }
 
             _trackPointsQuantityWidgetValue.Text = trackPointsQuantity.ToString(CultureInfo.InvariantCulture);
@@ -112,7 +112,7 @@ namespace GpsTracker.Activities
         {
             if (_distanceWidgetValue == null)
             {
-                _distanceWidgetValue = FindViewById<TextView>(Resource.Id.DistanceWidget_Value);
+                _distanceWidgetValue = FindViewById<TextView>(Resource.Id.DistanceValue);
             }
 
             _distanceWidgetValue.Text = String.Format(GetString(Resource.String.distance_format), distance);
@@ -122,7 +122,7 @@ namespace GpsTracker.Activities
         {
             if (_durationWidgetValue == null)
             {
-                _durationWidgetValue = FindViewById<TextView>(Resource.Id.DurationWidget_Value);
+                _durationWidgetValue = FindViewById<TextView>(Resource.Id.DurationValue);
             }
 
             _durationWidgetValue.Text = String.Format(GetString(Resource.String.duration_format), duration);
@@ -132,7 +132,7 @@ namespace GpsTracker.Activities
         {
             if (_currentSpeedWidgetValue == null)
             {
-                _currentSpeedWidgetValue = FindViewById<TextView>(Resource.Id.CurrentSpeedWidget_Value);
+                _currentSpeedWidgetValue = FindViewById<TextView>(Resource.Id.CurrentSpeedValue);
             }
 
             _currentSpeedWidgetValue.Text = String.Format(GetString(Resource.String.speed_format), speed);

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Common-->
+  <style name="TrackPropertyValue">
+    <item name="android:textColor">#FFFFFF</item>
+    <item name="android:textSize">24dip</item>
+  </style>
+  <style name="TrackPropertyUnit">
+    <item name="android:textColor">#BBBBBB</item>
+    <item name="android:textSize">14dip</item>
+  </style>
+  <style name="TrackPropertyDefinition">
+    <item name="android:textColor">#FFBC00</item>
+    <item name="android:textSize">18dip</item>
+  </style>
+  <!--TrackInfoWidget-->
+<style name="TrackInfoWidgetContainer">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:orientation">vertical</item>
+  </style>
+  <style name="TrackInfoWidgetContainerInner">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:orientation">horizontal</item>
+  </style>
+  <style name="TrackPropertyValue.TrackInfoWidget">
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">left</item>
+  </style>
+  <style name="TrackPropertyUnit.TrackInfoWidget">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">left</item>
+  </style>
+  <style name="TrackPropertyDefinition.TrackInfoWidget">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">left</item>
+    <item name="android:layout_marginTop">-7dip</item>
+  </style>
+</resources>

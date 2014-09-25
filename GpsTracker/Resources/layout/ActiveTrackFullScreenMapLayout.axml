@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <fragment
             android:id="@+id/Map"
             android:layout_width="match_parent"
@@ -22,121 +22,71 @@
         android:paddingRight="10dip"
         android:paddingLeft="10dip"
         android:paddingBottom="5dip">
+    <!--Points-->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            style="@style/TrackInfoWidgetContainer"
             android:layout_marginRight="10dip">
             <TextView
+                android:id="@+id/TrackPointsValue"
                 android:text="0"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/TrackPointsQuantityWidget_Value"
-                android:textSize="@dimen/full_screen_map_track_widget_text_value"
-                android:gravity="left"
-                android:textColor="@color/full_screen_map_track_widget_text_value" />
+                style="@style/TrackPropertyValue.TrackInfoWidget"
+                android:layout_width="match_parent" />
             <TextView
                 android:text="@string/points"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/full_screen_map_track_widget_text_name"
-                android:gravity="left"
-                android:textColor="@color/full_screen_map_track_widget_text_name"
-                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
         </LinearLayout>
+    <!--Distance-->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            style="@style/TrackInfoWidgetContainer"
             android:layout_marginRight="10dip">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                style="@style/TrackInfoWidgetContainerInner">
                 <TextView
+                    android:id="@+id/DistanceValue"
                     android:text="0.000"
+                    style="@style/TrackPropertyValue.TrackInfoWidget"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/DistanceWidget_Value"
-                    android:textSize="@dimen/full_screen_map_track_widget_text_value"
-                    android:gravity="left"
-                    android:layout_marginRight="3dip"
-                    android:textColor="@color/full_screen_map_track_widget_text_value" />
+                    android:layout_marginRight="3dip" />
                 <TextView
                     android:text="@string/km"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/full_screen_map_track_widget_text_unit"
-                    android:gravity="left"
-                    android:textColor="@color/full_screen_map_track_widget_text_unit" />
+                    style="@style/TrackPropertyUnit.TrackInfoWidget" />
             </LinearLayout>
             <TextView
                 android:text="@string/distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/full_screen_map_track_widget_text_name"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:textColor="@color/full_screen_map_track_widget_text_name"
-                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
         </LinearLayout>
+    <!--Duration-->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            style="@style/TrackInfoWidgetContainer"
             android:layout_marginRight="10dip">
             <TextView
+                android:id="@+id/DurationValue"
                 android:text="00:00:00"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/DurationWidget_Value"
-                android:textSize="@dimen/full_screen_map_track_widget_text_value"
-                android:gravity="left"
-                android:textColor="@color/full_screen_map_track_widget_text_value" />
+                style="@style/TrackPropertyValue.TrackInfoWidget"
+                android:layout_width="match_parent" />
             <TextView
                 android:text="@string/duration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/full_screen_map_track_widget_text_name"
-                android:gravity="left"
-                android:textColor="@color/full_screen_map_track_widget_text_name"
-                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
         </LinearLayout>
+    <!--Current Speed-->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/TrackInfoWidgetContainer"
+            android:layout_marginRight="10dip">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                style="@style/TrackInfoWidgetContainerInner">
                 <TextView
+                    android:id="@+id/CurrentSpeedValue"
                     android:text="0.0"
+                    style="@style/TrackPropertyValue.TrackInfoWidget"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/CurrentSpeedWidget_Value"
-                    android:textSize="@dimen/full_screen_map_track_widget_text_value"
-                    android:gravity="left"
-                    android:layout_marginRight="3dip"
-                    android:textColor="@color/full_screen_map_track_widget_text_value" />
+                    android:layout_marginRight="3dip" />
                 <TextView
                     android:text="@string/km_h"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/CurrentSpeedWidget_Unit"
-                    android:textSize="@dimen/full_screen_map_track_widget_text_unit"
-                    android:gravity="left"
-                    android:textColor="@color/full_screen_map_track_widget_text_unit" />
+                    style="@style/TrackPropertyUnit.TrackInfoWidget" />
             </LinearLayout>
             <TextView
                 android:text="@string/speed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/full_screen_map_track_widget_text_name"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:textColor="@color/full_screen_map_track_widget_text_name"
-                android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
+                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
