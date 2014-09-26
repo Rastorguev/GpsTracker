@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Android.Gms.Maps.Model;
 using GpsTracker.Entities;
 using Java.Lang;
 using StringBuilder = System.Text.StringBuilder;

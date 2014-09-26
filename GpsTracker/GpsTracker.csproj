@@ -94,13 +94,15 @@
   <ItemGroup>
     <Compile Include="Activities\BaseActiveTrackActivity.cs" />
     <Compile Include="Activities\MainTrackingActivity.cs" />
+    <Compile Include="Activities\ViewTrackActivity.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Config\Constants.cs" />
     <Compile Include="Config\ServiceRegistrar.cs" />
     <Compile Include="Config\UserConfig.cs" />
+    <Compile Include="GlobalStorage.cs" />
     <Compile Include="Managers\Abstract\IActiveTrackManager.cs" />
     <Compile Include="Managers\Abstract\ILocationManager.cs" />
-    <Compile Include="Tools\Helpers.cs" />
+    <Compile Include="Tools\ConnectionChecker.cs" />
     <Compile Include="Managers\Concrete\LocationManager.cs" />
     <Compile Include="Managers\Concrete\ActiveTrackManager.cs" />
     <Compile Include="Tools\Extensions.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ActiveTrackService.cs" />
+    <Compile Include="Tools\MapUtils.cs" />
     <Compile Include="Tools\TrackPointsUtils.cs">
       <SubType>Code</SubType>
     </Compile>

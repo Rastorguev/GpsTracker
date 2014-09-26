@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -55,7 +54,7 @@ namespace GpsTracker.Activities
         {
             base.OnResume();
 
-            if (!Helpers.IsLocationEnabled(this))
+            if (!ConnectionChecker.IsLocationEnabled(this))
             {
                 Alerts.ShowLocationDisabledAlert(this);
 
@@ -233,40 +232,12 @@ namespace GpsTracker.Activities
         {
             Task.Run(() =>
             {
-                if (LocationManager.Location == null)
+                if (LocationManager.Location == null || !ActiveTrackManager.HasActiveTrack)
                 {
                     return;
                 }
 
-                var builder = new LatLngBounds.Builder();
-
-                if (ActiveTrackManager.HasActiveTrack)
-                {
-                    var orderByLatitude = ActiveTrackManager.TrackPoints.OrderBy(p => p.Latitude);
-                    var orderByLongitude = ActiveTrackManager.TrackPoints.OrderBy(p => p.Longitude);
-
-                    var latLngs = new List<LatLng>
-                    {
-                        orderByLatitude.First().ToLatLng(),
-                        orderByLatitude.Last().ToLatLng(),
-                        orderByLongitude.First().ToLatLng(),
-                        orderByLongitude.Last().ToLatLng()
-                    };
-
-                    latLngs.ForEach(l =>
-                    {
-                        builder.Include(l);
-                        l.Dispose();
-                    });
-                }
-                else
-                {
-                    var latLng = LocationManager.Location.ToLatLng();
-                    builder.Include(latLng);
-                    latLng.Dispose();
-                }
-
-                var bounds = builder.Build();
+                var bounds = MapUtils.CalculateMapBounds(ActiveTrackManager.TrackPoints);
                 var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
 
                 RunOnUiThread(() => SetCameraView(cameraUpdate, animate));

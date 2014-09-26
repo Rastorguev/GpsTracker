@@ -4,7 +4,7 @@ using Android.Provider;
 
 namespace GpsTracker.Tools
 {
-    public static class Helpers
+    public static class ConnectionChecker
     {
         public static bool IsLocationEnabled(Context context)
         {
@@ -13,14 +13,14 @@ namespace GpsTracker.Tools
 
         public static bool IsGpsEnabled(Context context)
         {
-            var locationManager = (Android.Locations.LocationManager) context.GetSystemService(Context.LocationService);
-            return locationManager.IsProviderEnabled(Android.Locations.LocationManager.GpsProvider);
+            var locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
+            return locationManager.IsProviderEnabled(LocationManager.GpsProvider);
         }
 
         public static bool IsNetworkConnectionsEnabled(Context context)
         {
-            var locationManager = (Android.Locations.LocationManager) context.GetSystemService(Context.LocationService);
-            return locationManager.IsProviderEnabled(Android.Locations.LocationManager.NetworkProvider);
+            var locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
+            return locationManager.IsProviderEnabled(LocationManager.NetworkProvider);
         }
 
         public static bool IsAirplaneModeOn(Context context)

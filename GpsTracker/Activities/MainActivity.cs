@@ -20,6 +20,7 @@ namespace GpsTracker.Activities
         private readonly ITrackRepository _trackRepository = ServiceLocator.Instance.Resolve<ITrackRepository>();
         private Button _startButton;
         private ListView _tracksListView;
+        private List<Track> _savedTracks;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -27,13 +28,15 @@ namespace GpsTracker.Activities
 
             SetContentView(Resource.Layout.MainLayout);
 
-            var savedTracks = _trackRepository.GetAll();
+            _savedTracks = _trackRepository.GetAll();
 
             _tracksListView = FindViewById<ListView>(Resource.Id.TrackList);
-            _tracksListView.Adapter = new TrackListAdapter(this, Resource.Layout.TrackListItem, savedTracks);
-
             _startButton = FindViewById<Button>(Resource.Id.StartButton);
-            _startButton.Click += delegate { StartActivity(typeof (MainTrackingActivity)); };
+
+            _tracksListView.Adapter = new TrackListAdapter(this, Resource.Layout.TrackListItem, _savedTracks);
+            _tracksListView.ItemClick += OnListItemClick;
+
+            _startButton.Click += OnStartButtonClick;
         }
 
         protected override void OnStart()
@@ -47,13 +50,34 @@ namespace GpsTracker.Activities
                 Alerts.ShowGooglePlayServicesErrorAlert(this, status);
             }
         }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            _tracksListView.ItemClick -= OnListItemClick;
+            _startButton.Click -= OnStartButtonClick;
+        }
+
+        private void OnListItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            var track = _savedTracks[e.Position];
+            track.DecodeTrackPoints();
+
+            GlobalStorage.Track = track;
+            StartActivity(typeof (ViewTrackActivity));
+        }
+
+        private void OnStartButtonClick(object sender, EventArgs e)
+        {
+            StartActivity(typeof (MainTrackingActivity));
+        }
     }
 
     public class TrackListAdapter : ArrayAdapter<Track>
     {
+        private readonly Context _context;
         private readonly LayoutInflater _inflater;
         private readonly int _viewResourceId;
-        private readonly Context _context;
 
         public TrackListAdapter(Context context, int viewResourceId, IList<Track> tracks)
             : base(context, viewResourceId, tracks)
@@ -77,7 +101,8 @@ namespace GpsTracker.Activities
 
                 startTimeDateView.Text = track.StartTime.ToShortDateString();
                 startTimeTimeView.Text = track.StartTime.ToLongTimeString();
-                distanceView.Text = String.Format(_context.GetString(Resource.String.distance_format), track.Distance.MetersToKilometers());
+                distanceView.Text = String.Format(_context.GetString(Resource.String.distance_format),
+                    track.Distance.MetersToKilometers());
                 durationView.Text = String.Format(_context.GetString(Resource.String.duration_format), track.Duration);
             }
 
