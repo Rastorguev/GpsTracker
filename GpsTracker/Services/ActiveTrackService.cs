@@ -39,7 +39,7 @@ namespace GpsTracker.Services
             UpdateTrackPoints(location);
 
             StartForeground((int) NotificationFlags.ForegroundService,
-                TrackRecordingNotifications.GetRecordStartedNotification(this));
+                Notifications.GetRecordStartedNotification(this));
 
             return StartCommandResult.Sticky;
         }
@@ -56,7 +56,7 @@ namespace GpsTracker.Services
             var notificationManager = (NotificationManager) GetSystemService(NotificationService);
 
             notificationManager.Notify((int) NotificationFlags.ForegroundService,
-                TrackRecordingNotifications.GetRecordStopedNotification(this));
+                Notifications.GetRecordStopedNotification(this));
 
             _locationManager.LocationChanged -= OnLocationChanged;
         }

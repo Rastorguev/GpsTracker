@@ -7,7 +7,7 @@ using GpsTracker.Tools;
 
 namespace GpsTracker.Concrete
 {
-    public class TrackRecordingNotifications
+    public class Notifications
     {
         private static readonly Type IntentPageType = typeof (MainTrackingActivity);
 

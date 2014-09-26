@@ -30,7 +30,7 @@ namespace GpsTracker.Activities
         protected LatLngBounds AutoSetMapBounds;
         protected Timer AutoreturnTimer;
         protected bool FirstOnCameraChangeEventOccured;
-        protected ITrackDrawer TrackDrawer;
+        protected IActiveTrackDrawer ActiveTrackDrawer;
         private GoogleMap _map;
 
         protected GoogleMap Map
@@ -82,7 +82,7 @@ namespace GpsTracker.Activities
         {
             base.OnPause();
 
-            TrackDrawer.RemoveTrack();
+            ActiveTrackDrawer.RemoveTrack();
 
             UnsubscribeFromLocationListenerEvents();
             AutoreturnTimer.Elapsed -= AutoreturnHandler;
@@ -94,7 +94,7 @@ namespace GpsTracker.Activities
         {
             base.OnDestroy();
 
-            TrackDrawer.Dispose();
+            ActiveTrackDrawer.Dispose();
 
             GC.Collect(GC.MaxGeneration);
         }
@@ -109,7 +109,7 @@ namespace GpsTracker.Activities
 
         protected virtual void InitTrackDrawer()
         {
-            TrackDrawer = new TrackDrawer(Map, this);
+            ActiveTrackDrawer = new ActiveTrackDrawer(Map, this);
         }
 
         protected virtual void InitAutoreturnTimer()
@@ -276,11 +276,11 @@ namespace GpsTracker.Activities
         {
             if (ActiveTrackManager.HasActiveTrack && ActiveTrackManager.TrackPoints.Any())
             {
-                TrackDrawer.DrawTrack(ActiveTrackManager.TrackPoints);
+                ActiveTrackDrawer.DrawTrack(ActiveTrackManager.TrackPoints);
             }
             else if (LocationManager.Location != null)
             {
-                TrackDrawer.DrawCurrentPositionMarker(LocationManager.Location.ToTrackPoint());
+                ActiveTrackDrawer.DrawCurrentPositionMarker(LocationManager.Location.ToTrackPoint());
             }
         }
 

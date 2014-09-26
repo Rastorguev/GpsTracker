@@ -118,11 +118,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tools\ServiceLocator.cs" />
-    <Compile Include="UI Tools\Abstract\ITrackDrawer.cs" />
+    <Compile Include="UI Tools\Abstract\IActiveTrackDrawer.cs" />
+    <Compile Include="UI Tools\Abstract\ITrackDrawer.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UI Tools\Concrete\TrackDrawer.cs" />
+    <Compile Include="UI Tools\Concrete\ActiveTrackDrawer.cs" />
     <Compile Include="Entities\Track.cs" />
     <Compile Include="UI Tools\Concrete\Alerts.cs" />
-    <Compile Include="UI Tools\Concrete\TrackRecordingNotifications.cs" />
+    <Compile Include="UI Tools\Concrete\Notifications.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -1,5 +1,4 @@
 using System;
-using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 using Android.Locations;
 using Android.OS;
@@ -10,32 +9,9 @@ using Object = Java.Lang.Object;
 
 namespace GpsTracker.Managers.Concrete
 {
-    public class LocationManager : Object, ILocationManager, 
+    public class LocationManager : Object, ILocationManager,
         ILocationListener
     {
-        public void OnConnected(Bundle connectionHint)
-        {
-            StartListenLocationUpdates();
-
-            var location = LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient);
-
-            TriggerConnected(location);
-            OnLocationChanged(location);
-        }
-
-        public virtual void OnConnectionSuspended(int cause) {}
-
-        public void OnLocationChanged(Location location)
-        {
-            var locationChanged = ChangeLocation(location);
-            if (locationChanged)
-            {
-                LastLocationUpDateTime = DateTime.Now;
-
-                TriggerLocationChanged(Location);
-            }
-        }
-
         public Location Location { get; private set; }
         public Location PreviousLocation { get; private set; }
         public DateTime? LastLocationUpDateTime { get; private set; }
@@ -52,6 +28,29 @@ namespace GpsTracker.Managers.Concrete
 
         public event Action<Location> Connected;
         public event Action<Location> LocationChanged;
+
+        public void OnLocationChanged(Location location)
+        {
+            var locationChanged = ChangeLocation(location);
+            if (locationChanged)
+            {
+                LastLocationUpDateTime = DateTime.Now;
+
+                TriggerLocationChanged(Location);
+            }
+        }
+
+        public void OnConnected(Bundle connectionHint)
+        {
+            StartListenLocationUpdates();
+
+            var location = LocationServices.FusedLocationApi.GetLastLocation(App.LocationClient);
+
+            TriggerConnected(location);
+            OnLocationChanged(location);
+        }
+
+        public virtual void OnConnectionSuspended(int cause) {}
 
         private bool ChangeLocation(Location location)
         {

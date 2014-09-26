@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.App;
@@ -31,10 +32,6 @@ namespace GpsTracker.Activities
 
             SetView();
             InitTrackDrawer();
-
-            //TrackDrawer.DrawTrack(_track.TrackPoints);
-
-            base.OnCreate(savedInstanceState);
         }
 
         protected override void OnResume()
@@ -42,6 +39,23 @@ namespace GpsTracker.Activities
             base.OnResume();
             TrackDrawer.DrawTrack(_track.TrackPoints);
             FitTrackToScreen(_track.TrackPoints);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+
+            TrackDrawer.RemoveTrack();
+            GC.Collect();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            TrackDrawer.Dispose();
+
+            GC.Collect(GC.MaxGeneration);
         }
 
         protected virtual void InitTrackDrawer()
@@ -84,7 +98,6 @@ namespace GpsTracker.Activities
             else
             {
                 Map.MoveCamera(cameraUpdate);
-                //AutoSetMapBounds = Map.Projection.VisibleRegion.LatLngBounds;
             }
         }
     }

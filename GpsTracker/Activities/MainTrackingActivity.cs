@@ -101,7 +101,7 @@ namespace GpsTracker.Activities
 
             ActiveTrackManager.Stop();
 
-            TrackDrawer.RemoveTrack();
+            ActiveTrackDrawer.RemoveTrack();
             ShowLocationChanges();
 
             if (LocationManager.Location != null)

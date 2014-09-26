@@ -4,9 +4,10 @@ using GpsTracker.Entities;
 
 namespace GpsTracker.Abstract
 {
-    internal interface ITrackDrawer : IDisposable
+    internal interface IActiveTrackDrawer : IDisposable
     {
         void DrawTrack(List<TrackPoint> trackPoints);
+        void DrawCurrentPositionMarker(TrackPoint trackPoint);
         void RemoveTrack();
     }
 }
