@@ -15,7 +15,7 @@ namespace GpsTracker.Services
     [Service]
     public class ActiveTrackService : Service
     {
-        private const float MinValuableBearing = 1;
+        private const double MinValuableBearing = 0.5;
         private readonly ILocationManager _locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
         private DateTime _startTime;
 
