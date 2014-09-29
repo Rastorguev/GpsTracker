@@ -6,8 +6,8 @@ using Android.App;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using GpsTracker.Abstract;
-using GpsTracker.Config;
 using GpsTracker.Entities;
 using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
@@ -19,6 +19,7 @@ namespace GpsTracker.Concrete
         private const int SegmentMaxLength = 500;
         private const double MarkerDotHaloRatio = 2.9;
         private const int CurrentPositionMarkerIconResetDelay = 5000;
+        public const string PolylineColor = "#AA3E97D1";
 
         private readonly Activity _activity;
         private readonly Timer _currentPositionMarkerIconResetTimer;
@@ -258,7 +259,7 @@ namespace GpsTracker.Concrete
 
         protected virtual Color GetPolylineColor()
         {
-            var color = Color.ParseColor(Constants.ActiveTrackColor);
+            var color = Color.ParseColor(PolylineColor);
             return color;
         }
 
@@ -311,40 +312,42 @@ namespace GpsTracker.Concrete
         private Bitmap GetCurrentPositionMarkerIconMoving()
         {
             var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
-            var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
-            var canvas = new Canvas(markerIcon);
-            var dot = _activity.Resources.GetDrawable(Resource.Drawable.Arrow);
+            var bitmap = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(bitmap);
+            var arrow = _activity.Resources.GetDrawable(Resource.Drawable.Arrow);
             var halo = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
 
-            halo.SetBounds(0, 0, markerIcon.Width, markerIcon.Width);
-            dot.SetBounds((int) (
-                markerIcon.Width/MarkerDotHaloRatio),
-                (int) (markerIcon.Height/MarkerDotHaloRatio),
-                markerIcon.Width - (int) (markerIcon.Width/MarkerDotHaloRatio),
-                markerIcon.Height - (int) (markerIcon.Height/MarkerDotHaloRatio));
+            halo.SetBounds(0, 0, bitmap.Width, bitmap.Width);
+            SetIconBounds(arrow, bitmap.Width, bitmap.Height, MarkerDotHaloRatio);
 
             halo.Draw(canvas);
-            dot.Draw(canvas);
+            arrow.Draw(canvas);
 
-            return markerIcon;
+            return bitmap;
         }
 
         private Bitmap GetStartPositionMarkerIcon()
         {
             var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
-            var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
-            var canvas = new Canvas(markerIcon);
+            var bitmap = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(bitmap);
+
             var dot = _activity.Resources.GetDrawable(Resource.Drawable.StartPositionMarkerDot);
 
-            dot.SetBounds((int) (
-                markerIcon.Width/MarkerDotHaloRatio),
-                (int) (markerIcon.Height/MarkerDotHaloRatio),
-                markerIcon.Width - (int) (markerIcon.Width/MarkerDotHaloRatio),
-                markerIcon.Height - (int) (markerIcon.Height/MarkerDotHaloRatio));
+            SetIconBounds(dot, bitmap.Width, bitmap.Height, MarkerDotHaloRatio);
 
             dot.Draw(canvas);
 
-            return markerIcon;
+            return bitmap;
+        }
+
+        private void SetIconBounds(Drawable drawable, int width, int height, double ratio)
+        {
+            drawable.SetBounds((int) (
+                width/ratio),
+                (int) (height/ratio),
+                width - (int) (width/ratio),
+                height - (int) (height/ratio));
         }
 
         #region Helpers

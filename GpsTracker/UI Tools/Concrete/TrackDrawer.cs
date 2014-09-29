@@ -5,6 +5,7 @@ using Android.App;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using GpsTracker.Abstract;
 using GpsTracker.Config;
 using GpsTracker.Entities;
@@ -24,6 +25,7 @@ namespace GpsTracker.Concrete
         private Polyline _polyline;
         private Marker _startMarker;
         private Bitmap _startMarkerIcon;
+        public const string PolylineColor = "#AAFFAA40";
 
         public TrackDrawer(GoogleMap map, Activity activity)
         {
@@ -153,7 +155,7 @@ namespace GpsTracker.Concrete
 
         protected virtual Color GetPolylineColor()
         {
-            var color = Color.ParseColor(Constants.RouteColor);
+            var color = Color.ParseColor(PolylineColor);
             return color;
         }
 
@@ -173,43 +175,48 @@ namespace GpsTracker.Concrete
             }
         }
 
-        private Bitmap GetFinishMarkerIcon()
-        {
-            var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
-            var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
-            var canvas = new Canvas(markerIcon);
-            var dot = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerDot);
-            var halo = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
-
-            halo.SetBounds(0, 0, markerIcon.Width, markerIcon.Width);
-            dot.SetBounds((int) (
-                markerIcon.Width/MarkerDotHaloRatio),
-                (int) (markerIcon.Height/MarkerDotHaloRatio),
-                markerIcon.Width - (int) (markerIcon.Width/MarkerDotHaloRatio),
-                markerIcon.Height - (int) (markerIcon.Height/MarkerDotHaloRatio));
-
-            halo.Draw(canvas);
-            dot.Draw(canvas);
-
-            return markerIcon;
-        }
-
         private Bitmap GetStartMarkerIcon()
         {
             var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
-            var markerIcon = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
-            var canvas = new Canvas(markerIcon);
-            var dot = _activity.Resources.GetDrawable(Resource.Drawable.StartPositionMarkerDot);
+            var bitmap = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(bitmap);
+            var start = _activity.Resources.GetDrawable(Resource.Drawable.Start);
+            var halo = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
 
-            dot.SetBounds((int) (
-                markerIcon.Width/MarkerDotHaloRatio),
-                (int) (markerIcon.Height/MarkerDotHaloRatio),
-                markerIcon.Width - (int) (markerIcon.Width/MarkerDotHaloRatio),
-                markerIcon.Height - (int) (markerIcon.Height/MarkerDotHaloRatio));
+            halo.SetBounds(0, 0, bitmap.Width, bitmap.Width);
+            SetIconBounds(start, bitmap.Width, bitmap.Height, MarkerDotHaloRatio);
 
-            dot.Draw(canvas);
+            halo.Draw(canvas);
+            start.Draw(canvas);
 
-            return markerIcon;
+            return bitmap;
+
+        }
+
+        private Bitmap GetFinishMarkerIcon()
+        {
+            var size = _activity.Resources.GetDimensionPixelSize(Resource.Dimension.marker_size);
+            var bitmap = Bitmap.CreateBitmap(size, size, Bitmap.Config.Argb8888);
+            var canvas = new Canvas(bitmap);
+            var stop = _activity.Resources.GetDrawable(Resource.Drawable.Stop);
+            var halo = _activity.Resources.GetDrawable(Resource.Drawable.CurrentPositionMarkerHalo);
+
+            halo.SetBounds(0, 0, bitmap.Width, bitmap.Width);
+            SetIconBounds(stop, bitmap.Width, bitmap.Height, MarkerDotHaloRatio);
+
+            halo.Draw(canvas);
+            stop.Draw(canvas);
+
+            return bitmap;
+        }
+
+        private void SetIconBounds(Drawable drawable, int width, int height, double ratio)
+        {
+            drawable.SetBounds((int)(
+                width / ratio),
+                (int)(height / ratio),
+                width - (int)(width / ratio),
+                height - (int)(height / ratio));
         }
 
         #region IDisposable impementation

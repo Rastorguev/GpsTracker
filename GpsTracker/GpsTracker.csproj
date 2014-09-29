@@ -131,12 +131,13 @@
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
+    <AndroidResource Include="Resources\drawable\Start.png" />
+    <AndroidResource Include="Resources\drawable\Stop.png" />
     <AndroidResource Include="Resources\layout\ActiveTrackFullScreenMapLayout.axml" />
     <AndroidResource Include="Resources\layout\MainTrackingLayout.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerDot.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerHalo.axml" />
     <AndroidResource Include="Resources\drawable\StartPositionMarkerDot.axml" />
-    <AndroidResource Include="Resources\drawable\CurrentPositionMarkerArrow.axml" />
     <AndroidResource Include="Resources\layout\TrackListItem.axml" />
   </ItemGroup>
   <ItemGroup>
