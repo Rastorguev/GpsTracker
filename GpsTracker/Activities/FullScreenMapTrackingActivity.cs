@@ -11,14 +11,14 @@ using GpsTracker.Tools;
 namespace GpsTracker.Activities
 {
     [Activity(Label = "@string/app_name", MainLauncher = false)]
-    internal class FullScreenMapTrackingActivity : BaseActiveTrackActivity
+    internal class FullScreenMapTrackingActivity : BaseTrackingActivity
     {
-        private TextView _trackPointsQuantityWidgetValue;
-        private TextView _distanceWidgetValue;
         private TextView _currentSpeedWidgetValue;
+        private TextView _distanceWidgetValue;
         private TextView _durationWidgetValue;
-        private Timer _trackInfoUpdateTimer;
         private MapFragment _mapFragment;
+        private Timer _trackInfoUpdateTimer;
+        private TextView _trackPointsQuantityWidgetValue;
 
         #region Life Circle
 
@@ -44,7 +44,7 @@ namespace GpsTracker.Activities
             return _mapFragment.Map;
         }
 
-        protected void InitTrackInfoUpdateTimer()
+        private void InitTrackInfoUpdateTimer()
         {
             _trackInfoUpdateTimer = new Timer(1000);
         }
@@ -73,7 +73,7 @@ namespace GpsTracker.Activities
 
         #region Location Callbacks
 
-        public override void LocationListenerOnLocationChanged(Location location)
+        protected override void LocationListenerOnLocationChanged(Location location)
         {
             base.LocationListenerOnLocationChanged(location);
 

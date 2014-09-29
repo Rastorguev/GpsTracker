@@ -92,7 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\BaseActiveTrackActivity.cs" />
+    <Compile Include="Activities\BaseTrackingActivity.cs" />
     <Compile Include="Activities\MainTrackingActivity.cs" />
     <Compile Include="Activities\ViewTrackActivity.cs" />
     <Compile Include="App.cs" />

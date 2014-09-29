@@ -16,7 +16,7 @@ using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
 {
-    internal abstract class BaseActiveTrackActivity : Activity,
+    internal abstract class BaseTrackingActivity : Activity,
         GoogleMap.IOnCameraChangeListener, GoogleMap.ICancelableCallback
     {
         protected const float DefaultMapZoom = Constants.DefaultMapZoom;
@@ -71,9 +71,8 @@ namespace GpsTracker.Activities
 
             SubscribeOnLocationListenerEvents();
 
-            ShowRouteToFollow();
+            ShowRoute();
             ShowActiveTrack();
-            
 
             if (FirstOnCameraChangeEventOccured)
             {
@@ -143,14 +142,14 @@ namespace GpsTracker.Activities
 
         #region LocationManager event handlers
 
-        public virtual void LocationListenerOnConnected(Location location)
+        protected virtual void LocationListenerOnConnected(Location location)
         {
             ShowActiveTrack();
 
             AdjustCamera(DefaultMapZoom, true);
         }
 
-        public virtual void LocationListenerOnLocationChanged(Location location)
+        protected virtual void LocationListenerOnLocationChanged(Location location)
         {
             ShowActiveTrack();
 
@@ -220,7 +219,7 @@ namespace GpsTracker.Activities
             }
         }
 
-        protected void MoveCamera(Location location, float zoom, bool animate = false)
+        private void MoveCamera(Location location, float zoom, bool animate = false)
         {
             var builder = CameraPosition.InvokeBuilder();
 
@@ -234,7 +233,7 @@ namespace GpsTracker.Activities
             SetCameraView(cameraUpdate, animate);
         }
 
-        protected void FitTrackToScreen(bool animate = false)
+        private void FitTrackToScreen(bool animate = false)
         {
             Task.Run(() =>
             {
@@ -250,7 +249,7 @@ namespace GpsTracker.Activities
             });
         }
 
-        protected void SetCameraView(CameraUpdate cameraUpdate, bool animate = false)
+        private void SetCameraView(CameraUpdate cameraUpdate, bool animate = false)
         {
             if (animate)
             {
@@ -263,13 +262,13 @@ namespace GpsTracker.Activities
             }
         }
 
-        protected void InitAutoreturn()
+        private void InitAutoreturn()
         {
             AutoreturnTimer.Stop();
             AutoreturnTimer.Start();
         }
 
-        protected void AutoreturnHandler(object sender, EventArgs e)
+        private void AutoreturnHandler(object sender, EventArgs e)
         {
             RunOnUiThread(() => AdjustCamera(Zoom, true));
         }
@@ -278,7 +277,7 @@ namespace GpsTracker.Activities
 
         #region Location Display
 
-        public void ShowActiveTrack()
+        protected void ShowActiveTrack()
         {
             if (ActiveTrackManager.HasActiveTrack && ActiveTrackManager.TrackPoints.Any())
             {
@@ -290,7 +289,7 @@ namespace GpsTracker.Activities
             }
         }
 
-        public void ShowRouteToFollow()
+        protected void ShowRoute()
         {
             if (_route != null)
             {

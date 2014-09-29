@@ -8,8 +8,8 @@ using Android.Widget;
 
 namespace GpsTracker.Activities
 {
-    [Activity(Label = "@string/app_name",  ScreenOrientation = ScreenOrientation.Portrait)]
-    internal class MainTrackingActivity : BaseActiveTrackActivity
+    [Activity(Label = "@string/app_name", ScreenOrientation = ScreenOrientation.Portrait)]
+    internal class MainTrackingActivity : BaseTrackingActivity
     {
         private Button _fullScreenButton;
         private MapFragment _mapFragment;
@@ -106,7 +106,7 @@ namespace GpsTracker.Activities
 
             if (LocationManager.Location != null)
             {
-                MoveCamera(LocationManager.Location, Zoom);
+                AdjustCamera(Zoom);
             }
         }
     }
