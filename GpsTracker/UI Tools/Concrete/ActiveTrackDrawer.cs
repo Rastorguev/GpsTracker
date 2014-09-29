@@ -20,42 +20,17 @@ namespace GpsTracker.Concrete
         private const double MarkerDotHaloRatio = 2.9;
         private const int CurrentPositionMarkerIconResetDelay = 5000;
 
-        private Marker _currentPositionMarker;
-        private Marker _startPositionMarker;
-        private readonly List<Polyline> _polylines = new List<Polyline>();
-        private readonly GoogleMap _map;
         private readonly Activity _activity;
-        private bool _disposed;
-
-        private Bitmap _currentPositionMarkerIconStatic;
-        private Bitmap _currentPositionMarkerIconMoving;
-        private Bitmap _startPositionMarkerIcon;
-        private readonly ILocationManager _locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
-
-        private Bitmap CurrentPositionMarkerIconStatic
-        {
-            get
-            {
-                return _currentPositionMarkerIconStatic ??
-                       (_currentPositionMarkerIconStatic = GetCurrentPositionMarkerIconStatic());
-            }
-        }
-
-        private Bitmap CurrentPositionMarkerIconMoving
-        {
-            get
-            {
-                return _currentPositionMarkerIconMoving ??
-                       (_currentPositionMarkerIconMoving = GetCurrentPositionMarkerIconMoving());
-            }
-        }
-
-        private Bitmap StartPositionMarkerIcon
-        {
-            get { return _startPositionMarkerIcon ?? (_startPositionMarkerIcon = GetStartPositionMarkerIcon()); }
-        }
-
         private readonly Timer _currentPositionMarkerIconResetTimer;
+        private readonly ILocationManager _locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
+        private readonly GoogleMap _map;
+        private readonly List<Polyline> _polylines = new List<Polyline>();
+        private Marker _currentPositionMarker;
+        private Bitmap _currentPositionMarkerIconMoving;
+        private Bitmap _currentPositionMarkerIconStatic;
+        private bool _disposed;
+        private Marker _startPositionMarker;
+        private Bitmap _startPositionMarkerIcon;
 
         public ActiveTrackDrawer(GoogleMap map, Activity activity)
         {
@@ -283,11 +258,34 @@ namespace GpsTracker.Concrete
 
         protected virtual Color GetPolylineColor()
         {
-            var color = Color.ParseColor(Constants.PolylineColor);
+            var color = Color.ParseColor(Constants.ActiveTrackColor);
             return color;
         }
 
         #endregion
+
+        private Bitmap CurrentPositionMarkerIconStatic
+        {
+            get
+            {
+                return _currentPositionMarkerIconStatic ??
+                       (_currentPositionMarkerIconStatic = GetCurrentPositionMarkerIconStatic());
+            }
+        }
+
+        private Bitmap CurrentPositionMarkerIconMoving
+        {
+            get
+            {
+                return _currentPositionMarkerIconMoving ??
+                       (_currentPositionMarkerIconMoving = GetCurrentPositionMarkerIconMoving());
+            }
+        }
+
+        private Bitmap StartPositionMarkerIcon
+        {
+            get { return _startPositionMarkerIcon ?? (_startPositionMarkerIcon = GetStartPositionMarkerIcon()); }
+        }
 
         private Bitmap GetCurrentPositionMarkerIconStatic()
         {
@@ -388,15 +386,15 @@ namespace GpsTracker.Concrete
 
         #region IDisposable impementation
 
-        ~ActiveTrackDrawer()
-        {
-            Dispose(false);
-        }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        ~ActiveTrackDrawer()
+        {
+            Dispose(false);
         }
 
         protected virtual void Dispose(bool disposing)

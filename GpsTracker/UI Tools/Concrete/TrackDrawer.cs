@@ -8,7 +8,6 @@ using Android.Graphics;
 using GpsTracker.Abstract;
 using GpsTracker.Config;
 using GpsTracker.Entities;
-using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Concrete
@@ -16,30 +15,15 @@ namespace GpsTracker.Concrete
     internal class TrackDrawer : ITrackDrawer
     {
         private const double MarkerDotHaloRatio = 2.9;
-        private Polyline _polyline;
-        private Marker _startMarker;
+        private readonly Activity _activity;
+        private readonly GoogleMap _map;
+        private bool _disposed;
         private Marker _finishMarker;
 
-        private readonly GoogleMap _map;
-        private readonly Activity _activity;
-        private bool _disposed;
-
         private Bitmap _finishMarkerIcon;
+        private Polyline _polyline;
+        private Marker _startMarker;
         private Bitmap _startMarkerIcon;
-
-        private Bitmap StartMarkerIcon
-        {
-            get { return _startMarkerIcon ?? (_startMarkerIcon = GetStartMarkerIcon()); }
-        }
-
-        private Bitmap FinishMarkerIcon
-        {
-            get
-            {
-                return _finishMarkerIcon ??
-                       (_finishMarkerIcon = GetFinishMarkerIcon());
-            }
-        }
 
         public TrackDrawer(GoogleMap map, Activity activity)
         {
@@ -51,15 +35,37 @@ namespace GpsTracker.Concrete
 
         public void DrawTrack(List<TrackPoint> trackPoints)
         {
-            if (trackPoints.Count > 1)
-            {
-                DrawStartMarker(trackPoints.First());
-                DrawTrackLine(trackPoints);
-            }
-
             if (trackPoints.Any())
             {
+                DrawStartMarker(trackPoints.First());
+            }
+
+            if (trackPoints.Count > 1)
+            {
                 DrawFinishMarker(trackPoints.Last());
+                DrawTrackLine(trackPoints);
+            }
+        }
+
+        public void RemoveTrack()
+        {
+            if (_startMarker != null)
+            {
+                _startMarker.Remove();
+                _startMarker.Dispose();
+                _startMarker = null;
+            }
+            if (_finishMarker != null)
+            {
+                _finishMarker.Remove();
+                _finishMarker.Dispose();
+                _finishMarker = null;
+            }
+            if (_polyline != null)
+            {
+                _polyline.Remove();
+                _polyline.Dispose();
+                _polyline = null;
             }
         }
 
@@ -88,28 +94,6 @@ namespace GpsTracker.Concrete
                 var latLng = trackPoint.ToLatLng();
 
                 _finishMarker.Position = latLng;
-            }
-        }
-
-        public void RemoveTrack()
-        {
-            if (_startMarker != null)
-            {
-                _startMarker.Remove();
-                _startMarker.Dispose();
-                _startMarker = null;
-            }
-            if (_finishMarker != null)
-            {
-                _finishMarker.Remove();
-                _finishMarker.Dispose();
-                _finishMarker = null;
-            }
-            if (_polyline != null)
-            {
-                _polyline.Remove();
-                _polyline.Dispose();
-                _polyline = null;
             }
         }
 
@@ -169,11 +153,25 @@ namespace GpsTracker.Concrete
 
         protected virtual Color GetPolylineColor()
         {
-            var color = Color.ParseColor(Constants.PolylineColor);
+            var color = Color.ParseColor(Constants.RouteColor);
             return color;
         }
 
         #endregion
+
+        private Bitmap StartMarkerIcon
+        {
+            get { return _startMarkerIcon ?? (_startMarkerIcon = GetStartMarkerIcon()); }
+        }
+
+        private Bitmap FinishMarkerIcon
+        {
+            get
+            {
+                return _finishMarkerIcon ??
+                       (_finishMarkerIcon = GetFinishMarkerIcon());
+            }
+        }
 
         private Bitmap GetFinishMarkerIcon()
         {
@@ -216,15 +214,15 @@ namespace GpsTracker.Concrete
 
         #region IDisposable impementation
 
-        ~TrackDrawer()
-        {
-            Dispose(false);
-        }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        ~TrackDrawer()
+        {
+            Dispose(false);
         }
 
         protected virtual void Dispose(bool disposing)

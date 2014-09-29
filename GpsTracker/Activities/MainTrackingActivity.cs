@@ -90,7 +90,7 @@ namespace GpsTracker.Activities
             if (location != null)
             {
                 ActiveTrackManager.Start();
-                ShowLocationChanges();
+                ShowActiveTrack();
             }
         }
 
@@ -102,7 +102,7 @@ namespace GpsTracker.Activities
             ActiveTrackManager.Stop();
 
             ActiveTrackDrawer.RemoveTrack();
-            ShowLocationChanges();
+            ShowActiveTrack();
 
             if (LocationManager.Location != null)
             {

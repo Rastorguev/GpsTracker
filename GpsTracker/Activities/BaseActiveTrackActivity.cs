@@ -10,6 +10,7 @@ using Android.OS;
 using GpsTracker.Abstract;
 using GpsTracker.Concrete;
 using GpsTracker.Config;
+using GpsTracker.Entities;
 using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
@@ -26,11 +27,13 @@ namespace GpsTracker.Activities
             ServiceLocator.Instance.Resolve<IActiveTrackManager>();
 
         protected readonly ILocationManager LocationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
+        private readonly Track _route = GlobalStorage.Track;
+        protected IActiveTrackDrawer ActiveTrackDrawer;
 
         protected LatLngBounds AutoSetMapBounds;
         protected Timer AutoreturnTimer;
         protected bool FirstOnCameraChangeEventOccured;
-        protected IActiveTrackDrawer ActiveTrackDrawer;
+        protected ITrackDrawer TrackDrawer;
         private GoogleMap _map;
 
         protected GoogleMap Map
@@ -68,7 +71,9 @@ namespace GpsTracker.Activities
 
             SubscribeOnLocationListenerEvents();
 
-            ShowLocationChanges();
+            ShowRouteToFollow();
+            ShowActiveTrack();
+            
 
             if (FirstOnCameraChangeEventOccured)
             {
@@ -110,6 +115,7 @@ namespace GpsTracker.Activities
         protected virtual void InitTrackDrawer()
         {
             ActiveTrackDrawer = new ActiveTrackDrawer(Map, this);
+            TrackDrawer = new TrackDrawer(Map, this);
         }
 
         protected virtual void InitAutoreturnTimer()
@@ -139,14 +145,14 @@ namespace GpsTracker.Activities
 
         public virtual void LocationListenerOnConnected(Location location)
         {
-            ShowLocationChanges();
+            ShowActiveTrack();
 
             AdjustCamera(DefaultMapZoom, true);
         }
 
         public virtual void LocationListenerOnLocationChanged(Location location)
         {
-            ShowLocationChanges();
+            ShowActiveTrack();
 
             if (!AutoreturnTimer.Enabled && FirstOnCameraChangeEventOccured)
             {
@@ -272,7 +278,7 @@ namespace GpsTracker.Activities
 
         #region Location Display
 
-        public void ShowLocationChanges()
+        public void ShowActiveTrack()
         {
             if (ActiveTrackManager.HasActiveTrack && ActiveTrackManager.TrackPoints.Any())
             {
@@ -281,6 +287,14 @@ namespace GpsTracker.Activities
             else if (LocationManager.Location != null)
             {
                 ActiveTrackDrawer.DrawCurrentPositionMarker(LocationManager.Location.ToTrackPoint());
+            }
+        }
+
+        public void ShowRouteToFollow()
+        {
+            if (_route != null)
+            {
+                TrackDrawer.DrawTrack(_route.TrackPoints);
             }
         }
 

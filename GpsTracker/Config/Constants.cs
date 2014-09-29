@@ -6,8 +6,9 @@ namespace GpsTracker.Config
         public const int LocationUpdateInterval = 1000; //milliseconds
         public const int LocationUpdateFastestInterval = 1000; //milliseconds
         public const int DefaultMapZoom = 18;
-        public const int MinimalDisplacement = 1;//meters
+        public const int MinimalDisplacement = 1; //meters
         public const int FitTrackToScreenPadding = 70;
-        public const string PolylineColor = "#AA3E97D1";
+        public const string ActiveTrackColor = "#AA3E97D1";
+        public const string RouteColor = "#AAFFAA40";
     }
 }
