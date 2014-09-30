@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="full_screen_map_track_widgets_container_background">#AA000000</color>
-  <color name="mainTextColor">#FFFFFF</color>
-  <color name="secondaryTextColor">#BBBBBB</color>
-  <color name="accentTextColor">#FFBC00</color>
+  <color name="mainText">#FFFFFF</color>
+  <color name="secondaryText">#BBBBBB</color>
+  <color name="accentText">#FFBC00</color>
+  <color name="danger">#FF0000</color>
 </resources>
 

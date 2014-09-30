@@ -548,8 +548,8 @@ namespace GpsTracker
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f09001e
-			public const int abc_search_url_text_holo = 2131296286;
+			// aapt resource value: 0x7f09001f
+			public const int abc_search_url_text_holo = 2131296287;
 			
 			// aapt resource value: 0x7f090000
 			public const int abc_search_url_text_normal = 2131296256;
@@ -561,7 +561,7 @@ namespace GpsTracker
 			public const int abc_search_url_text_selected = 2131296257;
 			
 			// aapt resource value: 0x7f09001d
-			public const int accentTextColor = 2131296285;
+			public const int accentText = 2131296285;
 			
 			// aapt resource value: 0x7f09000c
 			public const int common_action_bar_splitter = 2131296268;
@@ -593,20 +593,23 @@ namespace GpsTracker
 			// aapt resource value: 0x7f090008
 			public const int common_signin_btn_light_text_pressed = 2131296264;
 			
-			// aapt resource value: 0x7f09001f
-			public const int common_signin_btn_text_dark = 2131296287;
-			
 			// aapt resource value: 0x7f090020
-			public const int common_signin_btn_text_light = 2131296288;
+			public const int common_signin_btn_text_dark = 2131296288;
+			
+			// aapt resource value: 0x7f090021
+			public const int common_signin_btn_text_light = 2131296289;
+			
+			// aapt resource value: 0x7f09001e
+			public const int danger = 2131296286;
 			
 			// aapt resource value: 0x7f09001a
 			public const int full_screen_map_track_widgets_container_background = 2131296282;
 			
 			// aapt resource value: 0x7f09001b
-			public const int mainTextColor = 2131296283;
+			public const int mainText = 2131296283;
 			
 			// aapt resource value: 0x7f09001c
-			public const int secondaryTextColor = 2131296284;
+			public const int secondaryText = 2131296284;
 			
 			// aapt resource value: 0x7f090012
 			public const int wallet_bright_foreground_disabled_holo_light = 2131296274;
@@ -647,11 +650,11 @@ namespace GpsTracker
 			// aapt resource value: 0x7f090019
 			public const int wallet_link_text_light = 2131296281;
 			
-			// aapt resource value: 0x7f090021
-			public const int wallet_primary_text_holo_light = 2131296289;
-			
 			// aapt resource value: 0x7f090022
-			public const int wallet_secondary_text_holo_dark = 2131296290;
+			public const int wallet_primary_text_holo_light = 2131296290;
+			
+			// aapt resource value: 0x7f090023
+			public const int wallet_secondary_text_holo_dark = 2131296291;
 			
 			static Color()
 			{
@@ -1211,6 +1214,9 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070053
 			public const int CurrentSpeedValue = 2131165267;
 			
+			// aapt resource value: 0x7f070064
+			public const int DeleteButton = 2131165284;
+			
 			// aapt resource value: 0x7f070060
 			public const int Distance = 2131165280;
 			
@@ -1769,6 +1775,9 @@ namespace GpsTracker
 			// aapt resource value: 0x7f05002b
 			public const int common_signin_button_text_long = 2131034155;
 			
+			// aapt resource value: 0x7f050040
+			public const int delete = 2131034176;
+			
 			// aapt resource value: 0x7f050031
 			public const int distance = 2131034161;
 			
@@ -1853,6 +1862,9 @@ namespace GpsTracker
 		
 		public partial class Style
 		{
+			
+			// aapt resource value: 0x7f060094
+			public const int DangerButton = 2131099796;
 			
 			// aapt resource value: 0x7f060067
 			public const int TextAppearance_AppCompat_Base_CompactMenu_Dialog = 2131099751;
@@ -2046,32 +2058,32 @@ namespace GpsTracker
 			// aapt resource value: 0x7f060003
 			public const int Theme_MediaRouter_Light = 2131099651;
 			
-			// aapt resource value: 0x7f060094
-			public const int TrackInfoWidgetContainer = 2131099796;
-			
 			// aapt resource value: 0x7f060095
-			public const int TrackInfoWidgetContainerInner = 2131099797;
-			
-			// aapt resource value: 0x7f060098
-			public const int TrackInfoWidgetDefinition = 2131099800;
-			
-			// aapt resource value: 0x7f060097
-			public const int TrackInfoWidgetUnit = 2131099799;
+			public const int TrackInfoWidgetContainer = 2131099797;
 			
 			// aapt resource value: 0x7f060096
-			public const int TrackInfoWidgetValue = 2131099798;
+			public const int TrackInfoWidgetContainerInner = 2131099798;
 			
 			// aapt resource value: 0x7f060099
-			public const int ViewTrackCell = 2131099801;
+			public const int TrackInfoWidgetDefinition = 2131099801;
+			
+			// aapt resource value: 0x7f060098
+			public const int TrackInfoWidgetUnit = 2131099800;
+			
+			// aapt resource value: 0x7f060097
+			public const int TrackInfoWidgetValue = 2131099799;
 			
 			// aapt resource value: 0x7f06009a
-			public const int ViewTrackDefinition = 2131099802;
-			
-			// aapt resource value: 0x7f06009c
-			public const int ViewTrackUnit = 2131099804;
+			public const int ViewTrackCell = 2131099802;
 			
 			// aapt resource value: 0x7f06009b
-			public const int ViewTrackValue = 2131099803;
+			public const int ViewTrackDefinition = 2131099803;
+			
+			// aapt resource value: 0x7f06009d
+			public const int ViewTrackUnit = 2131099805;
+			
+			// aapt resource value: 0x7f06009c
+			public const int ViewTrackValue = 2131099804;
 			
 			// aapt resource value: 0x7f060092
 			public const int WalletFragmentDefaultButtonTextAppearance = 2131099794;

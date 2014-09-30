@@ -9,6 +9,7 @@ using GpsTracker.Abstract;
 using GpsTracker.Concrete;
 using GpsTracker.Config;
 using GpsTracker.Entities;
+using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
@@ -24,9 +25,14 @@ namespace GpsTracker.Activities
         private TextView _durationDefinition;
         private TextView _durationValue;
 
+        private Button _deleteButton;
+
         private GoogleMap _map;
         private MapFragment _mapFragment;
         private Track _track;
+
+        private readonly ITrackHistoryManager _trackHistoryManager =
+            ServiceLocator.Instance.Resolve<ITrackHistoryManager>();
 
         protected GoogleMap Map
         {
@@ -47,6 +53,7 @@ namespace GpsTracker.Activities
             _distanceDefinition = FindViewById<TextView>(Resource.Id.DistanceDefinition);
             _distanceValue = FindViewById<TextView>(Resource.Id.DistanceValue);
             _distanceUnit = FindViewById<TextView>(Resource.Id.DistanceUnit);
+            _deleteButton = FindViewById<Button>(Resource.Id.DeleteButton);
 
             var duration = _track.Duration;
             var distance = UnitsPersonalizer.GetDistanceValue(_track.Distance);
@@ -57,6 +64,9 @@ namespace GpsTracker.Activities
             _distanceDefinition.Text = Resources.GetString(Resource.String.distance).CapitalizeFirst();
             _distanceValue.Text = String.Format(GetString(Resource.String.distance_format), distance);
             _distanceUnit.Text = UnitsPersonalizer.GetDistanceUnit();
+
+            _deleteButton.Text = Resources.GetString(Resource.String.delete).CapitalizeFirst();
+            _deleteButton.Click += DeleteButtonClickHandler;
         }
 
         protected override void OnResume()
@@ -81,19 +91,20 @@ namespace GpsTracker.Activities
             TrackDrawer.Dispose();
 
             GC.Collect(GC.MaxGeneration);
+            _deleteButton.Click += DeleteButtonClickHandler;
         }
 
-        protected virtual void InitTrackDrawer()
+        private void InitTrackDrawer()
         {
             TrackDrawer = new TrackDrawer(Map, this);
         }
 
-        protected void SetView()
+        private void SetView()
         {
             SetContentView(Resource.Layout.ViewTrackLayout);
         }
 
-        protected GoogleMap GetMap()
+        private GoogleMap GetMap()
         {
             if (_mapFragment == null)
             {
@@ -103,7 +114,7 @@ namespace GpsTracker.Activities
             return _mapFragment.Map;
         }
 
-        protected void FitTrackToScreen(List<TrackPoint> trackPoints, bool animate = false)
+        private void FitTrackToScreen(List<TrackPoint> trackPoints, bool animate = false)
         {
             Task.Run(() =>
             {
@@ -114,7 +125,7 @@ namespace GpsTracker.Activities
             });
         }
 
-        protected void SetCameraView(CameraUpdate cameraUpdate, bool animate = false)
+        private void SetCameraView(CameraUpdate cameraUpdate, bool animate = false)
         {
             if (animate)
             {
@@ -124,6 +135,12 @@ namespace GpsTracker.Activities
             {
                 Map.MoveCamera(cameraUpdate);
             }
+        }
+
+        private void DeleteButtonClickHandler(object sender, EventArgs e)
+        {
+            _trackHistoryManager.DeleteTrack(_track);
+            StartActivity(typeof (MainActivity));
         }
     }
 }

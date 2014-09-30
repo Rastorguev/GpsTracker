@@ -9,7 +9,7 @@ using Android.Views;
 using Android.Widget;
 using GpsTracker.Concrete;
 using GpsTracker.Entities;
-using GpsTracker.Repositories.Abstract;
+using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
@@ -17,7 +17,9 @@ namespace GpsTracker.Activities
     [Activity(Label = "@string/app_name", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     internal class MainActivity : Activity
     {
-        private readonly ITrackRepository _trackRepository = ServiceLocator.Instance.Resolve<ITrackRepository>();
+        private readonly ITrackHistoryManager _trackHistoryManager =
+            ServiceLocator.Instance.Resolve<ITrackHistoryManager>();
+
         private List<Track> _savedTracks;
         private Button _startButton;
         private ListView _tracksListView;
@@ -28,12 +30,9 @@ namespace GpsTracker.Activities
 
             SetContentView(Resource.Layout.MainLayout);
 
-            _savedTracks = _trackRepository.GetAll();
-
             _tracksListView = FindViewById<ListView>(Resource.Id.TrackList);
             _startButton = FindViewById<Button>(Resource.Id.StartButton);
 
-            _tracksListView.Adapter = new TrackListAdapter(this, Resource.Layout.TrackListItem, _savedTracks);
             _tracksListView.ItemClick += OnListItemClick;
 
             _startButton.Click += OnStartButtonClick;
@@ -42,6 +41,9 @@ namespace GpsTracker.Activities
         protected override void OnStart()
         {
             base.OnStart();
+
+            _savedTracks = _trackHistoryManager.GetSavedTracks();
+            _tracksListView.Adapter = new TrackListAdapter(this, Resource.Layout.TrackListItem, _savedTracks);
 
             var status = GooglePlayServicesUtil.IsGooglePlayServicesAvailable(this);
 

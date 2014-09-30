@@ -23,11 +23,7 @@ namespace GpsTracker.Repositories.Concrete
 
             var serializedTrack = JsonConvert.SerializeObject(track);
 
-            var fileName = String.Format("{0} [{1}].txt",
-                GetTrackFilePrefix(),
-                track.StartTime.ToString("u"));
-
-            var filePath = Path.Combine(TracksDirectory, fileName);
+            var filePath = GetFilePath(track);
 
             lock (FsLocker)
             {
@@ -68,7 +64,7 @@ namespace GpsTracker.Repositories.Concrete
 
                                 trackStrings.Add(trackString);
                             }
-                            catch (Exception) { }
+                            catch (Exception) {}
                         }
                     }
                 }
@@ -85,10 +81,36 @@ namespace GpsTracker.Repositories.Concrete
                         tracks.Add(track);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception) {}
             }
 
             return tracks;
+        }
+
+        public void Delete(Track track)
+        {
+            lock (FsLocker)
+            {
+                var filePath = GetFilePath(track);
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
+        }
+
+        private string GetFilePath(Track track)
+        {
+            var fileName = GetFileName(track);
+            return Path.Combine(TracksDirectory, fileName);
+        }
+
+        private string GetFileName(Track track)
+        {
+            return String.Format("{0} [{1}].txt",
+                GetTrackFilePrefix(),
+                track.StartTime.ToString("u"));
         }
 
         private string GetTrackFilePrefix()

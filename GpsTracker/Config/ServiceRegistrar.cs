@@ -12,6 +12,7 @@ namespace GpsTracker.Config
         {
             ServiceLocator.Instance.Register<IActiveTrackManager, ActiveTrackManager>();
             ServiceLocator.Instance.Register<ILocationManager, LocationManager>();
+            ServiceLocator.Instance.Register<ITrackHistoryManager, TrackHistoryManager>();
             ServiceLocator.Instance.Register<ITrackRepository, TrackRepository>();
         }
     }

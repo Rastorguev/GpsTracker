@@ -26,7 +26,7 @@
                 android:layout_weight="1"
                 android:textSize="@dimen/full_screen_map_track_widget_text_name"
                 android:gravity="center_vertical|left"
-                android:textColor="@color/accentTextColor" />
+                android:textColor="@color/accentText" />
             <TextView
                 android:id="@+id/StartTimeTime"
                 android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_weight="1"
                 android:textSize="@dimen/full_screen_map_track_widget_text_name"
                 android:gravity="center_vertical|left"
-                android:textColor="@color/accentTextColor" />
+                android:textColor="@color/accentText" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,14 +53,14 @@
                     android:textSize="@dimen/full_screen_map_track_widget_text_value"
                     android:gravity="left"
                     android:layout_marginRight="3dip"
-                    android:textColor="@color/mainTextColor" />
+                    android:textColor="@color/mainText" />
                 <TextView
                     android:text="@string/km"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/full_screen_map_track_widget_text_unit"
                     android:gravity="left"
-                    android:textColor="@color/secondaryTextColor" />
+                    android:textColor="@color/secondaryText" />
             </LinearLayout>
             <TextView
                 android:text="@string/distance"
@@ -69,7 +69,7 @@
                 android:textSize="@dimen/full_screen_map_track_widget_text_name"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:textColor="@color/accentTextColor"
+                android:textColor="@color/accentText"
                 android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
         </LinearLayout>
         <LinearLayout
@@ -84,14 +84,14 @@
                 android:id="@+id/Duration"
                 android:textSize="@dimen/full_screen_map_track_widget_text_value"
                 android:gravity="left"
-                android:textColor="@color/mainTextColor" />
+                android:textColor="@color/mainText" />
             <TextView
                 android:text="@string/duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/full_screen_map_track_widget_text_name"
                 android:gravity="left"
-                android:textColor="@color/accentTextColor"
+                android:textColor="@color/accentText"
                 android:layout_marginTop="@dimen/full_screen_map_track_widget_text_margin_top" />
         </LinearLayout>
     </LinearLayout>

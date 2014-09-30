@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!--Common-->
+  <style name="DangerButton">
+  <item name="android:background">@color/danger</item>
+  </style>
   <!--TrackInfoWidget-->
 <style name="TrackInfoWidgetContainer">
     <item name="android:layout_width">wrap_content</item>
@@ -13,21 +17,21 @@
   </style>
   <style name="TrackInfoWidgetValue">
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:textColor">@color/mainTextColor</item>
+    <item name="android:textColor">@color/mainText</item>
     <item name="android:textSize">@dimen/fontSizeLarge</item>
     <item name="android:gravity">left</item>
   </style>
   <style name="TrackInfoWidgetUnit">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:textColor">@color/secondaryTextColor</item>
+    <item name="android:textColor">@color/secondaryText</item>
     <item name="android:textSize">@dimen/fontSizeSmall</item>
     <item name="android:gravity">left</item>
   </style>
   <style name="TrackInfoWidgetDefinition">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:textColor">@color/accentTextColor</item>
+    <item name="android:textColor">@color/accentText</item>
     <item name="android:textSize">@dimen/fontSizeMedium</item>
     <item name="android:gravity">left</item>
     <item name="android:layout_marginTop">-7dip</item>
@@ -38,17 +42,17 @@
     <item name="android:layout_height">wrap_content</item>
   </style>
   <style name="ViewTrackDefinition" parent="@style/ViewTrackCell">
-    <item name="android:textColor">@color/accentTextColor</item>
+    <item name="android:textColor">@color/accentText</item>
     <item name="android:textSize">@dimen/fontSizeLarge</item>
     <item name="android:layout_marginRight">10dip</item>
   </style>
   <style name="ViewTrackValue"  parent="@style/ViewTrackCell">
-    <item name="android:textColor">@color/mainTextColor</item>
+    <item name="android:textColor">@color/mainText</item>
     <item name="android:textSize">@dimen/fontSizeLarge</item>
     <item name="android:layout_marginRight">5dip</item>
   </style>
   <style name="ViewTrackUnit"  parent="@style/ViewTrackCell">
-    <item name="android:textColor">@color/secondaryTextColor</item>
+    <item name="android:textColor">@color/secondaryText</item>
     <item name="android:textSize">@dimen/fontSizeMedium</item>
   </style>
 </resources>

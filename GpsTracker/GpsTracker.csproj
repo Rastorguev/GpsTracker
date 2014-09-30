@@ -102,6 +102,8 @@
     <Compile Include="GlobalStorage.cs" />
     <Compile Include="Managers\Abstract\IActiveTrackManager.cs" />
     <Compile Include="Managers\Abstract\ILocationManager.cs" />
+    <Compile Include="Managers\Abstract\ITrackHistoryManager.cs" />
+    <Compile Include="Managers\Concrete\TrackHistoryManager.cs" />
     <Compile Include="Tools\ConnectionChecker.cs" />
     <Compile Include="Managers\Concrete\LocationManager.cs" />
     <Compile Include="Managers\Concrete\ActiveTrackManager.cs" />

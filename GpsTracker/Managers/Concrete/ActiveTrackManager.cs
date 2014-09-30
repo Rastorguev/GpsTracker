@@ -5,7 +5,6 @@ using Android.Content;
 using Android.OS;
 using GpsTracker.Entities;
 using GpsTracker.Managers.Abstract;
-using GpsTracker.Repositories.Abstract;
 using GpsTracker.Services;
 using GpsTracker.Tools;
 using Object = Java.Lang.Object;
@@ -14,7 +13,9 @@ namespace GpsTracker.Managers.Concrete
 {
     public class ActiveTrackManager : Object, IServiceConnection, IActiveTrackManager
     {
-        private readonly ITrackRepository _trackRepository = ServiceLocator.Instance.Resolve<ITrackRepository>();
+        private readonly ITrackHistoryManager _trackHistoryManager =
+            ServiceLocator.Instance.Resolve<ITrackHistoryManager>();
+
         private ActiveTrackService _activeTrackService;
         private bool _isBound;
         private bool _isStarted;
@@ -71,7 +72,7 @@ namespace GpsTracker.Managers.Concrete
 
             _isStarted = false;
 
-            _trackRepository.Save(track);
+            _trackHistoryManager.SaveTrack(track);
 
             //var s1 = DateTime.Now;
             //_trackRepository.Save(track);
