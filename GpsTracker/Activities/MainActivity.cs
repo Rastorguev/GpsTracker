@@ -23,6 +23,7 @@ namespace GpsTracker.Activities
         private List<Track> _savedTracks;
         private Button _startButton;
         private ListView _tracksListView;
+        private ProgressDialog _progressDialog;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -36,21 +37,17 @@ namespace GpsTracker.Activities
             _tracksListView.ItemClick += OnListItemClick;
 
             _startButton.Click += OnStartButtonClick;
+            _progressDialog = Utils.CreateProgressDialog(this);
         }
 
         protected override void OnStart()
         {
             base.OnStart();
 
+            _progressDialog.Show();
             _savedTracks = _trackHistoryManager.GetSavedTracks();
             _tracksListView.Adapter = new TrackListAdapter(this, Resource.Layout.TrackListItem, _savedTracks);
-
-            var status = GooglePlayServicesUtil.IsGooglePlayServicesAvailable(this);
-
-            if (status != ConnectionResult.Success)
-            {
-                Alerts.ShowGooglePlayServicesErrorAlert(this, status);
-            }
+            _progressDialog.Hide();
         }
 
         protected override void OnDestroy()

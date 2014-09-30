@@ -19,4 +19,5 @@
   <string name="recording">recording</string>
   <string name="ended">ended</string>
   <string name="delete">delete</string>
+  <string name="progressDialogMessage">Working...</string>
 </resources>

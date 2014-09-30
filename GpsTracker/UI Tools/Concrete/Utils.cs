@@ -1,5 +1,6 @@
 using Android.App;
 using Android.Content;
+using Android.Content.Res;
 using Android.Gms.Common;
 using Android.Net;
 using Android.Provider;
@@ -8,7 +9,7 @@ using GpsTracker.Tools;
 
 namespace GpsTracker.Concrete
 {
-    public static class Alerts
+    public static class Utils
     {
         public static void ShowLocationDisabledAlert(Context context)
         {
@@ -41,6 +42,17 @@ namespace GpsTracker.Concrete
 
             alert.SetCancelable(false);
             alert.Show();
+        }
+
+        public static ProgressDialog CreateProgressDialog(Context context)
+        {
+            var progressDialog = new ProgressDialog(context);
+
+            progressDialog.SetCancelable(false);
+            progressDialog.SetProgressStyle(ProgressDialogStyle.Spinner);
+            progressDialog.SetMessage(Application.Context.Resources.GetString(Resource.String.progressDialogMessage));
+
+            return progressDialog;
         }
 
         private static void RedirectToGooglePlayServicesDownloadLink(Context context)

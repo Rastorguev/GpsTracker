@@ -128,7 +128,7 @@
     <Compile Include="UI Tools\Concrete\TrackDrawer.cs" />
     <Compile Include="UI Tools\Concrete\ActiveTrackDrawer.cs" />
     <Compile Include="Entities\Track.cs" />
-    <Compile Include="UI Tools\Concrete\Alerts.cs" />
+    <Compile Include="UI Tools\Concrete\Utils.cs" />
     <Compile Include="UI Tools\Concrete\Notifications.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +162,7 @@
     <AndroidResource Include="Resources\drawable\Arrow.png" />
     <AndroidResource Include="Resources\drawable\Bear.png" />
     <AndroidResource Include="Resources\values\Styles.xml" />
+    <AndroidResource Include="Resources\drawable\Preloader.gif" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="crittercism">

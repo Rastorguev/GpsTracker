@@ -1187,13 +1187,16 @@ namespace GpsTracker
 			public const int powered_by_google_light = 2130837642;
 			
 			// aapt resource value: 0x7f02008b
-			public const int Start = 2130837643;
+			public const int Preloader = 2130837643;
 			
 			// aapt resource value: 0x7f02008c
-			public const int StartPositionMarkerDot = 2130837644;
+			public const int Start = 2130837644;
 			
 			// aapt resource value: 0x7f02008d
-			public const int Stop = 2130837645;
+			public const int StartPositionMarkerDot = 2130837645;
+			
+			// aapt resource value: 0x7f02008e
+			public const int Stop = 2130837646;
 			
 			static Drawable()
 			{
@@ -1834,6 +1837,9 @@ namespace GpsTracker
 			
 			// aapt resource value: 0x7f050030
 			public const int points = 2131034160;
+			
+			// aapt resource value: 0x7f050041
+			public const int progressDialogMessage = 2131034177;
 			
 			// aapt resource value: 0x7f05003e
 			public const int recording = 2131034174;

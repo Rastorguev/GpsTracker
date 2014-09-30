@@ -59,7 +59,7 @@ namespace GpsTracker.Activities
 
             if (!ConnectionChecker.IsLocationEnabled(this))
             {
-                Alerts.ShowLocationDisabledAlert(this);
+                Utils.ShowLocationDisabledAlert(this);
 
                 return;
             }
