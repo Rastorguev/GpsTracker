@@ -46,15 +46,7 @@ namespace GpsTracker.Tools
             return distance;
         }
 
-        public static float MetersToKilometers(this float meters)
-        {
-            return meters/1000;
-        }
-
-        public static double MetersPerSecondToKilometersPerHour(this float speed)
-        {
-            return speed*3.6;
-        }
+       
 
         public static string CapitalizeFirst(this string s)
         {

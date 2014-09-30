@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!--Common-->
-  <style name="TrackPropertyValue">
-    <item name="android:textColor">#FFFFFF</item>
-    <item name="android:textSize">24dip</item>
-  </style>
-  <style name="TrackPropertyUnit">
-    <item name="android:textColor">#BBBBBB</item>
-    <item name="android:textSize">14dip</item>
-  </style>
-  <style name="TrackPropertyDefinition">
-    <item name="android:textColor">#FFBC00</item>
-    <item name="android:textSize">18dip</item>
-  </style>
   <!--TrackInfoWidget-->
 <style name="TrackInfoWidgetContainer">
     <item name="android:layout_width">wrap_content</item>
@@ -24,19 +11,44 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:orientation">horizontal</item>
   </style>
-  <style name="TrackPropertyValue.TrackInfoWidget">
+  <style name="TrackInfoWidgetValue">
     <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">@color/mainTextColor</item>
+    <item name="android:textSize">@dimen/fontSizeLarge</item>
     <item name="android:gravity">left</item>
   </style>
-  <style name="TrackPropertyUnit.TrackInfoWidget">
+  <style name="TrackInfoWidgetUnit">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">@color/secondaryTextColor</item>
+    <item name="android:textSize">@dimen/fontSizeSmall</item>
     <item name="android:gravity">left</item>
   </style>
-  <style name="TrackPropertyDefinition.TrackInfoWidget">
+  <style name="TrackInfoWidgetDefinition">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">@color/accentTextColor</item>
+    <item name="android:textSize">@dimen/fontSizeMedium</item>
     <item name="android:gravity">left</item>
     <item name="android:layout_marginTop">-7dip</item>
+  </style>
+  <!--ViewTrack-->
+  <style name="ViewTrackCell">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+  <style name="ViewTrackDefinition" parent="@style/ViewTrackCell">
+    <item name="android:textColor">@color/accentTextColor</item>
+    <item name="android:textSize">@dimen/fontSizeLarge</item>
+    <item name="android:layout_marginRight">10dip</item>
+  </style>
+  <style name="ViewTrackValue"  parent="@style/ViewTrackCell">
+    <item name="android:textColor">@color/mainTextColor</item>
+    <item name="android:textSize">@dimen/fontSizeLarge</item>
+    <item name="android:layout_marginRight">5dip</item>
+  </style>
+  <style name="ViewTrackUnit"  parent="@style/ViewTrackCell">
+    <item name="android:textColor">@color/secondaryTextColor</item>
+    <item name="android:textSize">@dimen/fontSizeMedium</item>
   </style>
 </resources>

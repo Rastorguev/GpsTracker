@@ -29,11 +29,11 @@
             <TextView
                 android:id="@+id/TrackPointsValue"
                 android:text="0"
-                style="@style/TrackPropertyValue.TrackInfoWidget"
+                style="@style/TrackInfoWidgetValue"
                 android:layout_width="match_parent" />
             <TextView
                 android:text="@string/points"
-                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
+                style="@style/TrackInfoWidgetDefinition" />
         </LinearLayout>
     <!--Distance-->
         <LinearLayout
@@ -44,16 +44,16 @@
                 <TextView
                     android:id="@+id/DistanceValue"
                     android:text="0.000"
-                    style="@style/TrackPropertyValue.TrackInfoWidget"
+                    style="@style/TrackInfoWidgetValue"
                     android:layout_width="wrap_content"
                     android:layout_marginRight="3dip" />
                 <TextView
-                    android:text="@string/km"
-                    style="@style/TrackPropertyUnit.TrackInfoWidget" />
+                    android:id="@+id/DistanceUnit"
+                    style="@style/TrackInfoWidgetUnit" />
             </LinearLayout>
             <TextView
                 android:text="@string/distance"
-                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
+                style="@style/TrackInfoWidgetDefinition" />
         </LinearLayout>
     <!--Duration-->
         <LinearLayout
@@ -62,11 +62,11 @@
             <TextView
                 android:id="@+id/DurationValue"
                 android:text="00:00:00"
-                style="@style/TrackPropertyValue.TrackInfoWidget"
+                style="@style/TrackInfoWidgetValue"
                 android:layout_width="match_parent" />
             <TextView
                 android:text="@string/duration"
-                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
+                style="@style/TrackInfoWidgetDefinition" />
         </LinearLayout>
     <!--Current Speed-->
         <LinearLayout
@@ -77,16 +77,16 @@
                 <TextView
                     android:id="@+id/CurrentSpeedValue"
                     android:text="0.0"
-                    style="@style/TrackPropertyValue.TrackInfoWidget"
+                    style="@style/TrackInfoWidgetValue"
                     android:layout_width="wrap_content"
                     android:layout_marginRight="3dip" />
                 <TextView
-                    android:text="@string/km_h"
-                    style="@style/TrackPropertyUnit.TrackInfoWidget" />
+                    android:id="@+id/CurrentSpeedUnit"
+                    style="@style/TrackInfoWidgetUnit" />
             </LinearLayout>
             <TextView
                 android:text="@string/speed"
-                style="@style/TrackPropertyDefinition.TrackInfoWidget" />
+                style="@style/TrackInfoWidgetDefinition" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

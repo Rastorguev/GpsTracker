@@ -118,6 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tools\ServiceLocator.cs" />
+    <Compile Include="Tools\UnitsPersonalizer.cs" />
     <Compile Include="UI Tools\Abstract\IActiveTrackDrawer.cs" />
     <Compile Include="UI Tools\Abstract\ITrackDrawer.cs">
       <SubType>Code</SubType>
@@ -133,12 +134,13 @@
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\drawable\Start.png" />
     <AndroidResource Include="Resources\drawable\Stop.png" />
-    <AndroidResource Include="Resources\layout\ActiveTrackFullScreenMapLayout.axml" />
+    <AndroidResource Include="Resources\layout\FullScreenMapTrackingLayout.axml" />
     <AndroidResource Include="Resources\layout\MainTrackingLayout.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerDot.axml" />
     <AndroidResource Include="Resources\drawable\CurrentPositionMarkerHalo.axml" />
     <AndroidResource Include="Resources\drawable\StartPositionMarkerDot.axml" />
     <AndroidResource Include="Resources\layout\TrackListItem.axml" />
+    <AndroidResource Include="Resources\layout\ViewTrackLayout.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\MainLayout.axml" />

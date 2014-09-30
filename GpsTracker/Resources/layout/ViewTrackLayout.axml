@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+        <fragment
+            android:id="@+id/Map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.MapFragment" />
+    </LinearLayout>
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dip">
+        <TableRow>
+            <TextView
+                android:id="@+id/DurationDefinition"
+                style="@style/ViewTrackDefinition" />
+            <LinearLayout
+                style="@style/ViewTrackCell">
+                <TextView
+                    android:id="@+id/DurationValue"
+                    style="@style/ViewTrackValue" />
+            </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/DistanceDefinition"
+                style="@style/ViewTrackDefinition" />
+            <LinearLayout
+                style="@style/ViewTrackCell">
+                <TextView
+                    android:id="@+id/DistanceValue"
+                    style="@style/ViewTrackValue" />
+                <TextView
+                    android:id="@+id/DistanceUnit"
+                    android:text="km"
+                    style="@style/ViewTrackUnit" />
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

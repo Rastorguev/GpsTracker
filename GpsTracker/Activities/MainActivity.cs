@@ -18,9 +18,9 @@ namespace GpsTracker.Activities
     internal class MainActivity : Activity
     {
         private readonly ITrackRepository _trackRepository = ServiceLocator.Instance.Resolve<ITrackRepository>();
+        private List<Track> _savedTracks;
         private Button _startButton;
         private ListView _tracksListView;
-        private List<Track> _savedTracks;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -102,7 +102,7 @@ namespace GpsTracker.Activities
                 startTimeDateView.Text = track.StartTime.ToShortDateString();
                 startTimeTimeView.Text = track.StartTime.ToLongTimeString();
                 distanceView.Text = String.Format(_context.GetString(Resource.String.distance_format),
-                    track.Distance.MetersToKilometers());
+                    UnitsPersonalizer.GetDistanceValue(track.Distance));
                 durationView.Text = String.Format(_context.GetString(Resource.String.duration_format), track.Duration);
             }
 

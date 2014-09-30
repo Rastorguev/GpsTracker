@@ -13,12 +13,14 @@ namespace GpsTracker.Activities
     [Activity(Label = "@string/app_name", MainLauncher = false)]
     internal class FullScreenMapTrackingActivity : BaseTrackingActivity
     {
-        private TextView _currentSpeedWidgetValue;
-        private TextView _distanceWidgetValue;
-        private TextView _durationWidgetValue;
+        private TextView _trackPointsValue;
+        private TextView _currentSpeedValue;
+        private TextView _currentSpeedUnit;
+        private TextView _distanceValue;
+        private TextView _distanceUnit;
+        private TextView _durationValue;
         private MapFragment _mapFragment;
         private Timer _trackInfoUpdateTimer;
-        private TextView _trackPointsQuantityWidgetValue;
 
         #region Life Circle
 
@@ -31,7 +33,7 @@ namespace GpsTracker.Activities
 
         protected override void SetView()
         {
-            SetContentView(Resource.Layout.ActiveTrackFullScreenMapLayout);
+            SetContentView(Resource.Layout.FullScreenMapTrackingLayout);
         }
 
         protected override GoogleMap GetMap()
@@ -87,55 +89,72 @@ namespace GpsTracker.Activities
         private void UpdateWidgets()
         {
             var location = LocationManager.Location;
-            var currentSpeed = location != null ? location.Speed.MetersPerSecondToKilometersPerHour() : 0;
+            var currentSpeed = location != null ? UnitsPersonalizer.GetSpeedValue(location.Speed) : 0;
             var trackPoints = ActiveTrackManager.TrackPoints;
-            var distance = ActiveTrackManager.Distance.MetersToKilometers();
+            var distance = UnitsPersonalizer.GetDistanceValue(ActiveTrackManager.Distance);
             var duration = ActiveTrackManager.Duration;
 
+            SetUnits();
             UpdateTrackPointsWidget(trackPoints.Count);
             UpdateDistanceWidget(distance);
             UpdateDurationWidget(duration);
             UpdateCurrentSpeedWidget(currentSpeed);
         }
 
-        private void UpdateTrackPointsWidget(int trackPointsQuantity)
+        private void SetUnits()
         {
-            if (_trackPointsQuantityWidgetValue == null)
+            if (_currentSpeedUnit == null)
             {
-                _trackPointsQuantityWidgetValue = FindViewById<TextView>(Resource.Id.TrackPointsValue);
+                _currentSpeedUnit = FindViewById<TextView>(Resource.Id.CurrentSpeedUnit);
             }
 
-            _trackPointsQuantityWidgetValue.Text = trackPointsQuantity.ToString(CultureInfo.InvariantCulture);
+            if (_distanceUnit == null)
+            {
+                _distanceUnit = FindViewById<TextView>(Resource.Id.DistanceUnit);
+            }
+
+            _currentSpeedUnit.Text = UnitsPersonalizer.GetSpeedUnit();
+            _distanceUnit.Text = UnitsPersonalizer.GetDistanceUnit();
+        }
+
+        private void UpdateTrackPointsWidget(int trackPointsQuantity)
+        {
+            if (_trackPointsValue == null)
+            {
+                _trackPointsValue = FindViewById<TextView>(Resource.Id.TrackPointsValue);
+            }
+
+            _trackPointsValue.Text = trackPointsQuantity.ToString(CultureInfo.InvariantCulture);
         }
 
         private void UpdateDistanceWidget(float distance)
         {
-            if (_distanceWidgetValue == null)
+            if (_distanceValue == null)
             {
-                _distanceWidgetValue = FindViewById<TextView>(Resource.Id.DistanceValue);
+                _distanceValue = FindViewById<TextView>(Resource.Id.DistanceValue);
             }
 
-            _distanceWidgetValue.Text = String.Format(GetString(Resource.String.distance_format), distance);
+            _distanceValue.Text = String.Format(GetString(Resource.String.distance_format), distance);
         }
 
         private void UpdateDurationWidget(TimeSpan duration)
         {
-            if (_durationWidgetValue == null)
+            if (_durationValue == null)
             {
-                _durationWidgetValue = FindViewById<TextView>(Resource.Id.DurationValue);
+                _durationValue = FindViewById<TextView>(Resource.Id.DurationValue);
             }
 
-            _durationWidgetValue.Text = String.Format(GetString(Resource.String.duration_format), duration);
+            _durationValue.Text = String.Format(GetString(Resource.String.duration_format), duration);
         }
 
         private void UpdateCurrentSpeedWidget(double speed)
         {
-            if (_currentSpeedWidgetValue == null)
+            if (_currentSpeedValue == null)
             {
-                _currentSpeedWidgetValue = FindViewById<TextView>(Resource.Id.CurrentSpeedValue);
+                _currentSpeedValue = FindViewById<TextView>(Resource.Id.CurrentSpeedValue);
             }
 
-            _currentSpeedWidgetValue.Text = String.Format(GetString(Resource.String.speed_format), speed);
+            _currentSpeedValue.Text = String.Format(GetString(Resource.String.speed_format), speed);
         }
 
         private void UpdateTrackInfoEventHandler(object sender, EventArgs e)

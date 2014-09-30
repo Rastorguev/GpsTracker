@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Gms.Maps;
 using Android.OS;
+using Android.Widget;
 using GpsTracker.Abstract;
 using GpsTracker.Concrete;
 using GpsTracker.Config;
@@ -16,6 +17,13 @@ namespace GpsTracker.Activities
     internal class ViewTrackActivity : Activity
     {
         protected ITrackDrawer TrackDrawer;
+        private TextView _distanceDefinition;
+        private TextView _distanceUnit;
+        private TextView _distanceValue;
+
+        private TextView _durationDefinition;
+        private TextView _durationValue;
+
         private GoogleMap _map;
         private MapFragment _mapFragment;
         private Track _track;
@@ -32,6 +40,23 @@ namespace GpsTracker.Activities
 
             SetView();
             InitTrackDrawer();
+
+            _durationDefinition = FindViewById<TextView>(Resource.Id.DurationDefinition);
+            _durationValue = FindViewById<TextView>(Resource.Id.DurationValue);
+
+            _distanceDefinition = FindViewById<TextView>(Resource.Id.DistanceDefinition);
+            _distanceValue = FindViewById<TextView>(Resource.Id.DistanceValue);
+            _distanceUnit = FindViewById<TextView>(Resource.Id.DistanceUnit);
+
+            var duration = _track.Duration;
+            var distance = UnitsPersonalizer.GetDistanceValue(_track.Distance);
+
+            _durationDefinition.Text = Resources.GetString(Resource.String.duration).CapitalizeFirst();
+            _durationValue.Text = String.Format(GetString(Resource.String.duration_format), duration);
+
+            _distanceDefinition.Text = Resources.GetString(Resource.String.distance).CapitalizeFirst();
+            _distanceValue.Text = String.Format(GetString(Resource.String.distance_format), distance);
+            _distanceUnit.Text = UnitsPersonalizer.GetDistanceUnit();
         }
 
         protected override void OnResume()
@@ -65,7 +90,7 @@ namespace GpsTracker.Activities
 
         protected void SetView()
         {
-            SetContentView(Resource.Layout.ActiveTrackFullScreenMapLayout);
+            SetContentView(Resource.Layout.ViewTrackLayout);
         }
 
         protected GoogleMap GetMap()
