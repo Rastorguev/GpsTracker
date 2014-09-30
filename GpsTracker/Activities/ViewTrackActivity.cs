@@ -25,6 +25,10 @@ namespace GpsTracker.Activities
         private TextView _durationDefinition;
         private TextView _durationValue;
 
+        private TextView _avgSpeedDefinition;
+        private TextView _avgSpeedValue;
+        private TextView _avgSpeedUnit;
+
         private Button _deleteButton;
 
         private GoogleMap _map;
@@ -53,17 +57,27 @@ namespace GpsTracker.Activities
             _distanceDefinition = FindViewById<TextView>(Resource.Id.DistanceDefinition);
             _distanceValue = FindViewById<TextView>(Resource.Id.DistanceValue);
             _distanceUnit = FindViewById<TextView>(Resource.Id.DistanceUnit);
+
+            _avgSpeedDefinition = FindViewById<TextView>(Resource.Id.AvgSpeedDefinition);
+            _avgSpeedValue = FindViewById<TextView>(Resource.Id.AvgSpeedValue);
+            _avgSpeedUnit = FindViewById<TextView>(Resource.Id.AvgSpeedUnit);
+
             _deleteButton = FindViewById<Button>(Resource.Id.DeleteButton);
 
             var duration = _track.Duration;
             var distance = UnitsPersonalizer.GetDistanceValue(_track.Distance);
+            var avgSpeed = UnitsPersonalizer.GetSpeedValue(_track.AvgSpeed);
 
             _durationDefinition.Text = Resources.GetString(Resource.String.duration).CapitalizeFirst();
-            _durationValue.Text = String.Format(GetString(Resource.String.duration_format), duration);
+            _durationValue.Text = String.Format(GetString(Resource.String.durationFormat), duration);
 
             _distanceDefinition.Text = Resources.GetString(Resource.String.distance).CapitalizeFirst();
-            _distanceValue.Text = String.Format(GetString(Resource.String.distance_format), distance);
+            _distanceValue.Text = String.Format(GetString(Resource.String.distanceFormat), distance);
             _distanceUnit.Text = UnitsPersonalizer.GetDistanceUnit();
+
+            _avgSpeedDefinition.Text = Resources.GetString(Resource.String.avgSpeed).CapitalizeFirst();
+            _avgSpeedValue.Text = String.Format(GetString(Resource.String.speedFormat), avgSpeed);
+            _avgSpeedUnit.Text = UnitsPersonalizer.GetSpeedUnit();
 
             _deleteButton.Text = Resources.GetString(Resource.String.delete).CapitalizeFirst();
             _deleteButton.Click += DeleteButtonClickHandler;

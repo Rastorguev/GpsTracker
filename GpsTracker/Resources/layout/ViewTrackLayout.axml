@@ -39,7 +39,20 @@
                     style="@style/ViewTrackValue" />
                 <TextView
                     android:id="@+id/DistanceUnit"
-                    android:text="km"
+                    style="@style/ViewTrackUnit" />
+            </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/AvgSpeedDefinition"
+                style="@style/ViewTrackDefinition" />
+            <LinearLayout
+                style="@style/ViewTrackCell">
+                <TextView
+                    android:id="@+id/AvgSpeedValue"
+                    style="@style/ViewTrackValue" />
+                <TextView
+                    android:id="@+id/AvgSpeedUnit"
                     style="@style/ViewTrackUnit" />
             </LinearLayout>
         </TableRow>

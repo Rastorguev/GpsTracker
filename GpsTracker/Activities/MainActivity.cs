@@ -100,9 +100,9 @@ namespace GpsTracker.Activities
 
                 startTimeDateView.Text = track.StartTime.ToShortDateString();
                 startTimeTimeView.Text = track.StartTime.ToLongTimeString();
-                distanceView.Text = String.Format(_context.GetString(Resource.String.distance_format),
+                distanceView.Text = String.Format(_context.GetString(Resource.String.distanceFormat),
                     UnitsPersonalizer.GetDistanceValue(track.Distance));
-                durationView.Text = String.Format(_context.GetString(Resource.String.duration_format), track.Duration);
+                durationView.Text = String.Format(_context.GetString(Resource.String.durationFormat), track.Duration);
             }
 
             return view;

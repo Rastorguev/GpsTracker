@@ -134,7 +134,7 @@ namespace GpsTracker.Activities
                 _distanceValue = FindViewById<TextView>(Resource.Id.DistanceValue);
             }
 
-            _distanceValue.Text = String.Format(GetString(Resource.String.distance_format), distance);
+            _distanceValue.Text = String.Format(GetString(Resource.String.distanceFormat), distance);
         }
 
         private void UpdateDurationWidget(TimeSpan duration)
@@ -144,7 +144,7 @@ namespace GpsTracker.Activities
                 _durationValue = FindViewById<TextView>(Resource.Id.DurationValue);
             }
 
-            _durationValue.Text = String.Format(GetString(Resource.String.duration_format), duration);
+            _durationValue.Text = String.Format(GetString(Resource.String.durationFormat), duration);
         }
 
         private void UpdateCurrentSpeedWidget(double speed)
@@ -154,7 +154,7 @@ namespace GpsTracker.Activities
                 _currentSpeedValue = FindViewById<TextView>(Resource.Id.CurrentSpeedValue);
             }
 
-            _currentSpeedValue.Text = String.Format(GetString(Resource.String.speed_format), speed);
+            _currentSpeedValue.Text = String.Format(GetString(Resource.String.speedFormat), speed);
         }
 
         private void UpdateTrackInfoEventHandler(object sender, EventArgs e)

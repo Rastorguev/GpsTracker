@@ -15,7 +15,7 @@ namespace GpsTracker.Concrete
         {
             var alert = new AlertDialog.Builder(context);
 
-            alert.SetMessage(Resource.String.location_disabled_message);
+            alert.SetMessage(Resource.String.locationDisabledMessage);
 
             alert.SetPositiveButton(context.Resources.GetString(Resource.String.settings).CapitalizeFirst(),
                 (s, e) => context.StartActivity(new Intent(Settings.ActionLocationSourceSettings)));
@@ -30,14 +30,14 @@ namespace GpsTracker.Concrete
         public static void ShowGooglePlayServicesErrorAlert(Context context, int status)
         {
             var alertMessage = status == ConnectionResult.ServiceVersionUpdateRequired
-                ? context.Resources.GetString(Resource.String.gp_services_outdated)
-                : context.Resources.GetString(Resource.String.gp_services_not_installed);
+                ? context.Resources.GetString(Resource.String.gpServicesOutdated)
+                : context.Resources.GetString(Resource.String.gpServicesNotInstalled);
 
             var alert = new AlertDialog.Builder(context);
 
             alert.SetMessage(alertMessage);
 
-            alert.SetPositiveButton(context.Resources.GetString(Resource.String.get_latest_version).CapitalizeFirst(),
+            alert.SetPositiveButton(context.Resources.GetString(Resource.String.getLatestVersion).CapitalizeFirst(),
                 (s, e) => RedirectToGooglePlayServicesDownloadLink(context));
 
             alert.SetCancelable(false);

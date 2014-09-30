@@ -24,6 +24,12 @@ namespace GpsTracker.Entities
         }
 
         [JsonIgnore]
+        public float AvgSpeed
+        {
+            get { return (float) (Distance/Duration.TotalSeconds); }
+        }
+
+        [JsonIgnore]
         public List<TrackPoint> TrackPoints { get; set; }
 
         public string TrackPointsEncoded { get; set; }
