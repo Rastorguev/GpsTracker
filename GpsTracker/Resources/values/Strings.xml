@@ -2,7 +2,7 @@
 <resources>
   <string name="app_name">Gps Tracker</string>
   <string name="speed">speed</string>
-  <string name="avgSpeed">avg. speed</string>
+  <string name="avgSpeed">avg speed</string>
   <string name="points">points</string>
   <string name="distance">distance</string>
   <string name="duration">duration</string>

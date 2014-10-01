@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Gms.Maps;
+using Android.Gms.Maps.Model;
 using Android.OS;
 using Android.Widget;
 using GpsTracker.Abstract;
@@ -15,7 +16,7 @@ using GpsTracker.Tools;
 namespace GpsTracker.Activities
 {
     [Activity(Label = "@string/app_name")]
-    internal class ViewTrackActivity : Activity
+    internal class ViewTrackActivity : Activity, GoogleMap.IOnCameraChangeListener
     {
         protected ITrackDrawer TrackDrawer;
         private TextView _distanceDefinition;
@@ -38,6 +39,8 @@ namespace GpsTracker.Activities
         private readonly ITrackHistoryManager _trackHistoryManager =
             ServiceLocator.Instance.Resolve<ITrackHistoryManager>();
 
+        private bool _firstOnCameraChangeEventOccured;
+
         protected GoogleMap Map
         {
             get { return _map ?? (_map = GetMap()); }
@@ -49,6 +52,7 @@ namespace GpsTracker.Activities
             _track = GlobalStorage.Track;
 
             SetView();
+            InitMap();
             InitTrackDrawer();
 
             _durationDefinition = FindViewById<TextView>(Resource.Id.DurationDefinition);
@@ -87,7 +91,11 @@ namespace GpsTracker.Activities
         {
             base.OnResume();
             TrackDrawer.DrawTrack(_track.TrackPoints);
-            FitTrackToScreen(_track.TrackPoints);
+
+            if (_firstOnCameraChangeEventOccured)
+            {
+                FitTrackToScreen(_track.TrackPoints);
+            }
         }
 
         protected override void OnPause()
@@ -106,6 +114,21 @@ namespace GpsTracker.Activities
 
             GC.Collect(GC.MaxGeneration);
             _deleteButton.Click += DeleteButtonClickHandler;
+        }
+
+        public void OnCameraChange(CameraPosition position)
+        {
+            if (!_firstOnCameraChangeEventOccured)
+            {
+                _firstOnCameraChangeEventOccured = true;
+
+                FitTrackToScreen(_track.TrackPoints);
+            }
+        }
+
+        protected virtual void InitMap()
+        {
+            Map.SetOnCameraChangeListener(this);
         }
 
         private void InitTrackDrawer()

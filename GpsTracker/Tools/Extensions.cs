@@ -46,8 +46,6 @@ namespace GpsTracker.Tools
             return distance;
         }
 
-       
-
         public static string CapitalizeFirst(this string s)
         {
             if (string.IsNullOrEmpty(s))
