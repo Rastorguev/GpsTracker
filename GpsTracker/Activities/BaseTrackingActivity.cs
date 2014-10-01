@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -209,7 +210,7 @@ namespace GpsTracker.Activities
         {
             var location = LocationManager.Location;
 
-            if (UserConfig.FitTrackToScreen && ActiveTrackManager.HasActiveTrack)
+            if (UserConfig.FitTrackToScreen && (ActiveTrackManager.HasActiveTrack || _route != null))
             {
                 FitTrackToScreen(animate);
             }
@@ -237,12 +238,19 @@ namespace GpsTracker.Activities
         {
             Task.Run(() =>
             {
-                if (LocationManager.Location == null || !ActiveTrackManager.HasActiveTrack)
+                var points = new List<TrackPoint>();
+
+                if (ActiveTrackManager.HasActiveTrack)
                 {
-                    return;
+                    points.AddRange(ActiveTrackManager.TrackPoints);
                 }
 
-                var bounds = MapUtils.CalculateMapBounds(ActiveTrackManager.TrackPoints);
+                if (_route != null)
+                {
+                    points.AddRange(_route.TrackPoints);
+                }
+
+                var bounds = MapUtils.CalculateMapBounds(points);
                 var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(bounds, Constants.FitTrackToScreenPadding);
 
                 RunOnUiThread(() => SetCameraView(cameraUpdate, animate));

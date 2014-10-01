@@ -68,6 +68,7 @@ namespace GpsTracker.Activities
 
         private void OnStartButtonClick(object sender, EventArgs e)
         {
+            GlobalStorage.Track = null;
             StartActivity(typeof (MainTrackingActivity));
         }
     }

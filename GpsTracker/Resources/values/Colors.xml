@@ -4,6 +4,7 @@
   <color name="mainText">#FFFFFF</color>
   <color name="secondaryText">#BBBBBB</color>
   <color name="accentText">#FFBC00</color>
-  <color name="danger">#FF0000</color>
+  <color name="negative">#FF0000</color>
+  <color name="positive">#009688</color>
 </resources>
 

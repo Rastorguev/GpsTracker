@@ -31,6 +31,7 @@ namespace GpsTracker.Activities
         private TextView _avgSpeedUnit;
 
         private Button _deleteButton;
+        private Button _folowRouteButton;
 
         private GoogleMap _map;
         private MapFragment _mapFragment;
@@ -67,6 +68,7 @@ namespace GpsTracker.Activities
             _avgSpeedUnit = FindViewById<TextView>(Resource.Id.AvgSpeedUnit);
 
             _deleteButton = FindViewById<Button>(Resource.Id.DeleteButton);
+            _folowRouteButton = FindViewById<Button>(Resource.Id.FollowRouteButton);
 
             var duration = _track.Duration;
             var distance = UnitsPersonalizer.GetDistanceValue(_track.Distance);
@@ -85,6 +87,9 @@ namespace GpsTracker.Activities
 
             _deleteButton.Text = Resources.GetString(Resource.String.delete).CapitalizeFirst();
             _deleteButton.Click += DeleteButtonClickHandler;
+
+            _folowRouteButton.Text = Resources.GetString(Resource.String.followRoute).CapitalizeFirst();
+            _folowRouteButton.Click += FollowRouteButtonClickHandler;
         }
 
         protected override void OnResume()
@@ -178,6 +183,11 @@ namespace GpsTracker.Activities
         {
             _trackHistoryManager.DeleteTrack(_track);
             StartActivity(typeof (MainActivity));
+        }
+
+        private void FollowRouteButtonClickHandler(object sender, EventArgs e)
+        {
+            StartActivity(typeof (MainTrackingActivity));
         }
     }
 }

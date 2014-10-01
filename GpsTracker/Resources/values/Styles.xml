@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Common-->
-  <style name="DangerButton">
-  <item name="android:background">@color/danger</item>
+  <style name="NegativeButton">
+  <item name="android:background">@color/negative</item>
+  </style>
+  <style name="PositiveButton">
+    <item name="android:background">@color/positive</item>
   </style>
   <!--TrackInfoWidget-->
 <style name="TrackInfoWidgetContainer">
