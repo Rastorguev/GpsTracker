@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using GpsTracker.Tools;
+//using GpsTracker.Tools;
+using GpsTracker.Entities.Tools;
 using Newtonsoft.Json;
 
 namespace GpsTracker.Entities
@@ -26,7 +27,7 @@ namespace GpsTracker.Entities
         [JsonIgnore]
         public float AvgSpeed
         {
-            get { return (float) (Distance/Duration.TotalSeconds); }
+            get { return (float)(Distance / Duration.TotalSeconds); }
         }
 
         [JsonIgnore]

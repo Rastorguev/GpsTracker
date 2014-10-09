@@ -102,23 +102,16 @@
     <Compile Include="GlobalStorage.cs" />
     <Compile Include="Managers\Abstract\IActiveTrackManager.cs" />
     <Compile Include="Managers\Abstract\ILocationManager.cs" />
-    <Compile Include="Managers\Abstract\ITrackHistoryManager.cs" />
-    <Compile Include="Managers\Concrete\TrackHistoryManager.cs" />
     <Compile Include="Tools\ConnectionChecker.cs" />
     <Compile Include="Managers\Concrete\LocationManager.cs" />
     <Compile Include="Managers\Concrete\ActiveTrackManager.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Activities\FullScreenMapTrackingActivity.cs" />
     <Compile Include="Activities\MainActivity.cs" />
-    <Compile Include="Repositories\Abstract\ITrackRepository.cs" />
-    <Compile Include="Repositories\Concrete\TrackRepository.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ActiveTrackService.cs" />
     <Compile Include="Tools\MapUtils.cs" />
-    <Compile Include="Tools\TrackPointsUtils.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Tools\ServiceLocator.cs" />
     <Compile Include="Tools\UnitsPersonalizer.cs" />
     <Compile Include="UI Tools\Abstract\IActiveTrackDrawer.cs" />
@@ -127,7 +120,6 @@
     </Compile>
     <Compile Include="UI Tools\Concrete\TrackDrawer.cs" />
     <Compile Include="UI Tools\Concrete\ActiveTrackDrawer.cs" />
-    <Compile Include="Entities\Track.cs" />
     <Compile Include="UI Tools\Concrete\Utils.cs" />
     <Compile Include="UI Tools\Concrete\Notifications.cs" />
   </ItemGroup>
@@ -182,7 +174,20 @@
       <Version>2.0.6</Version>
     </XamarinComponentReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GpsTracker.Bindings.Android\GpsTracker.Bindings.Android.csproj">
+      <Project>{0c8c40ce-175e-4bbc-a3f3-01e43d72fd41}</Project>
+      <Name>GpsTracker.Bindings.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GpsTracker.BL\GpsTracker.BL.csproj">
+      <Project>{4267DB7F-6410-4D8C-9189-2D1F9F646360}</Project>
+      <Name>GpsTracker.BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GpsTracker.Entities\GpsTracker.Entities.csproj">
+      <Project>{6bf11273-cfc2-40c2-b10a-561295988a6c}</Project>
+      <Name>GpsTracker.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.

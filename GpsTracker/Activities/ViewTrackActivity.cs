@@ -7,10 +7,11 @@ using Android.Gms.Maps.Model;
 using Android.OS;
 using Android.Widget;
 using GpsTracker.Abstract;
+using GpsTracker.Bindings.Android;
+using GpsTracker.BL.Managers.Abstract;
 using GpsTracker.Concrete;
 using GpsTracker.Config;
 using GpsTracker.Entities;
-using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
@@ -37,8 +38,7 @@ namespace GpsTracker.Activities
         private MapFragment _mapFragment;
         private Track _track;
 
-        private readonly ITrackHistoryManager _trackHistoryManager =
-            ServiceLocator.Instance.Resolve<ITrackHistoryManager>();
+        private readonly ITrackHistoryManager _trackHistoryManager = DependencyResolver.Resolve<ITrackHistoryManager>();
 
         private bool _firstOnCameraChangeEventOccured;
 

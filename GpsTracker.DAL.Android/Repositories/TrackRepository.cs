@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Android.App;
+using GpsTracker.DAL.Abstract.Repositories;
 using GpsTracker.Entities;
-using GpsTracker.Repositories.Abstract;
 using Newtonsoft.Json;
 using Environment = Android.OS.Environment;
 
-namespace GpsTracker.Repositories.Concrete
+namespace GpsTracker.DAL.Android.Repositories
 {
     public class TrackRepository : ITrackRepository
     {
@@ -115,7 +114,9 @@ namespace GpsTracker.Repositories.Concrete
 
         private string GetTrackFilePrefix()
         {
-            return Application.Context.Resources.GetString(Resource.String.app_name);
+
+            return "Gps Tracker";
+            //return Application.Context.Resources.GetString(Resource.String.app_name);
         }
 
         private bool IsTrackFile(string path)

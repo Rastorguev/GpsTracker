@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.OS;
+using GpsTracker.Bindings.Android;
+using GpsTracker.BL.Managers.Abstract;
 using GpsTracker.Entities;
 using GpsTracker.Managers.Abstract;
 using GpsTracker.Services;
-using GpsTracker.Tools;
 using Object = Java.Lang.Object;
 
 namespace GpsTracker.Managers.Concrete
 {
     public class ActiveTrackManager : Object, IServiceConnection, IActiveTrackManager
     {
-        private readonly ITrackHistoryManager _trackHistoryManager =
-            ServiceLocator.Instance.Resolve<ITrackHistoryManager>();
+        private readonly ITrackHistoryManager _trackHistoryManager = DependencyResolver.Resolve<ITrackHistoryManager>();
 
         private ActiveTrackService _activeTrackService;
         private bool _isBound;

@@ -5,6 +5,16 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsTracker", "GpsTracker\GpsTracker.csproj", "{4551BEA8-FAA7-4C96-9F94-A0FEE59D0C10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsTracker.BL", "GpsTracker.BL\GpsTracker.BL.csproj", "{4267DB7F-6410-4D8C-9189-2D1F9F646360}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsTracker.Entities", "GpsTracker.Entities\GpsTracker.Entities.csproj", "{6BF11273-CFC2-40C2-B10A-561295988A6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsTracker.DAL.Android", "GpsTracker.DAL.Android\GpsTracker.DAL.Android.csproj", "{7DF4F5C6-9F92-4BF6-80A4-DE174BFFCB0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsTracker.Bindings.Android", "GpsTracker.Bindings.Android\GpsTracker.Bindings.Android.csproj", "{0C8C40CE-175E-4BBC-A3F3-01E43D72FD41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpsTracker.DAL.Abstract", "GpsTracker.DAL.Abstract\GpsTracker.DAL.Abstract.csproj", "{9F6A98D1-4EE4-4910-84FD-83C90A914CC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +27,26 @@ Global
 		{4551BEA8-FAA7-4C96-9F94-A0FEE59D0C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4551BEA8-FAA7-4C96-9F94-A0FEE59D0C10}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4551BEA8-FAA7-4C96-9F94-A0FEE59D0C10}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{4267DB7F-6410-4D8C-9189-2D1F9F646360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4267DB7F-6410-4D8C-9189-2D1F9F646360}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4267DB7F-6410-4D8C-9189-2D1F9F646360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4267DB7F-6410-4D8C-9189-2D1F9F646360}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BF11273-CFC2-40C2-B10A-561295988A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BF11273-CFC2-40C2-B10A-561295988A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BF11273-CFC2-40C2-B10A-561295988A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BF11273-CFC2-40C2-B10A-561295988A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DF4F5C6-9F92-4BF6-80A4-DE174BFFCB0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DF4F5C6-9F92-4BF6-80A4-DE174BFFCB0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DF4F5C6-9F92-4BF6-80A4-DE174BFFCB0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DF4F5C6-9F92-4BF6-80A4-DE174BFFCB0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C8C40CE-175E-4BBC-A3F3-01E43D72FD41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C8C40CE-175E-4BBC-A3F3-01E43D72FD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C8C40CE-175E-4BBC-A3F3-01E43D72FD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C8C40CE-175E-4BBC-A3F3-01E43D72FD41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F6A98D1-4EE4-4910-84FD-83C90A914CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F6A98D1-4EE4-4910-84FD-83C90A914CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F6A98D1-4EE4-4910-84FD-83C90A914CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F6A98D1-4EE4-4910-84FD-83C90A914CC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

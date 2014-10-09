@@ -1,9 +1,8 @@
+using System;
 using System.Collections.Generic;
-using GpsTracker.Entities;
-using Java.Lang;
-using StringBuilder = System.Text.StringBuilder;
+using System.Text;
 
-namespace GpsTracker.Tools
+namespace GpsTracker.Entities.Tools
 {
     public static class TrackPointsUtils
     {
@@ -41,7 +40,7 @@ namespace GpsTracker.Tools
                 } while (b >= 0x1f);
                 lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
 
-                path.Add(new TrackPoint(lat*1e-5, lng*1e-5));
+                path.Add(new TrackPoint(lat * 1e-5, lng * 1e-5));
             }
 
             return path;
@@ -56,8 +55,8 @@ namespace GpsTracker.Tools
 
             foreach (var point in path)
             {
-                var lat = Math.Round(point.Latitude*1e5);
-                var lng = Math.Round(point.Longitude*1e5);
+                var lat = (long)Math.Round(point.Latitude * 1e5, 0);
+                var lng = (long)Math.Round(point.Longitude * 1e5, 0);
 
                 var dLat = lat - lastLat;
                 var dLng = lng - lastLng;
@@ -77,10 +76,10 @@ namespace GpsTracker.Tools
             v = v < 0 ? ~(v << 1) : v << 1;
             while (v >= 0x20)
             {
-                result.Append(Character.ToChars((int) ((0x20 | (v & 0x1f)) + 63)));
+                result.Append(Convert.ToChar((int)((0x20 | (v & 0x1f)) + 63)));
                 v >>= 5;
             }
-            result.Append(Character.ToChars((int) (v + 63)));
+            result.Append(Convert.ToChar((int)(v + 63)));
         }
     }
 }

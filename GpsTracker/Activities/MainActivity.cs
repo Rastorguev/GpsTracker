@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.Gms.Common;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using GpsTracker.Bindings.Android;
+using GpsTracker.BL.Managers.Abstract;
 using GpsTracker.Concrete;
 using GpsTracker.Entities;
-using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
@@ -17,8 +17,7 @@ namespace GpsTracker.Activities
     [Activity(Label = "@string/app_name", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     internal class MainActivity : Activity
     {
-        private readonly ITrackHistoryManager _trackHistoryManager =
-            ServiceLocator.Instance.Resolve<ITrackHistoryManager>();
+        private readonly ITrackHistoryManager _trackHistoryManager = DependencyResolver.Resolve<ITrackHistoryManager>();
 
         private List<Track> _savedTracks;
         private Button _startButton;

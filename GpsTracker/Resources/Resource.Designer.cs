@@ -26,6 +26,8 @@ namespace GpsTracker
 		
 		public static void UpdateIdValues()
 		{
+			global::GpsTracker.Bindings.Android.Resource.String.ApplicationName = global::GpsTracker.Resource.String.ApplicationName;
+			global::GpsTracker.Bindings.Android.Resource.String.Hello = global::GpsTracker.Resource.String.Hello;
 			global::Mindscape.Raygun4Net.Xamarin.Android.Resource.String.library_name = global::GpsTracker.Resource.String.library_name;
 		}
 		
@@ -1673,6 +1675,12 @@ namespace GpsTracker
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f05002f
+			public const int ApplicationName = 2131034159;
+			
+			// aapt resource value: 0x7f05002e
+			public const int Hello = 2131034158;
+			
 			// aapt resource value: 0x7f050007
 			public const int abc_action_bar_home_description = 2131034119;
 			
@@ -1712,14 +1720,14 @@ namespace GpsTracker
 			// aapt resource value: 0x7f050011
 			public const int abc_shareactionprovider_share_with_application = 2131034129;
 			
-			// aapt resource value: 0x7f05002e
-			public const int app_name = 2131034158;
-			
 			// aapt resource value: 0x7f050030
-			public const int avgSpeed = 2131034160;
+			public const int app_name = 2131034160;
 			
-			// aapt resource value: 0x7f05003a
-			public const int cancel = 2131034170;
+			// aapt resource value: 0x7f050032
+			public const int avgSpeed = 2131034162;
+			
+			// aapt resource value: 0x7f05003c
+			public const int cancel = 2131034172;
 			
 			// aapt resource value: 0x7f05001e
 			public const int common_google_play_services_enable_button = 2131034142;
@@ -1796,47 +1804,47 @@ namespace GpsTracker
 			// aapt resource value: 0x7f05002b
 			public const int common_signin_button_text_long = 2131034155;
 			
-			// aapt resource value: 0x7f050041
-			public const int delete = 2131034177;
-			
-			// aapt resource value: 0x7f050032
-			public const int distance = 2131034162;
-			
-			// aapt resource value: 0x7f050036
-			public const int distanceFormat = 2131034166;
-			
-			// aapt resource value: 0x7f050033
-			public const int duration = 2131034163;
-			
-			// aapt resource value: 0x7f050037
-			public const int durationFormat = 2131034167;
-			
-			// aapt resource value: 0x7f050040
-			public const int ended = 2131034176;
-			
 			// aapt resource value: 0x7f050043
-			public const int followRoute = 2131034179;
-			
-			// aapt resource value: 0x7f05003e
-			public const int getLatestVersion = 2131034174;
-			
-			// aapt resource value: 0x7f05003c
-			public const int gpServicesNotInstalled = 2131034172;
-			
-			// aapt resource value: 0x7f05003d
-			public const int gpServicesOutdated = 2131034173;
+			public const int delete = 2131034179;
 			
 			// aapt resource value: 0x7f050034
-			public const int km = 2131034164;
+			public const int distance = 2131034164;
+			
+			// aapt resource value: 0x7f050038
+			public const int distanceFormat = 2131034168;
 			
 			// aapt resource value: 0x7f050035
-			public const int km_h = 2131034165;
+			public const int duration = 2131034165;
+			
+			// aapt resource value: 0x7f050039
+			public const int durationFormat = 2131034169;
+			
+			// aapt resource value: 0x7f050042
+			public const int ended = 2131034178;
+			
+			// aapt resource value: 0x7f050045
+			public const int followRoute = 2131034181;
+			
+			// aapt resource value: 0x7f050040
+			public const int getLatestVersion = 2131034176;
+			
+			// aapt resource value: 0x7f05003e
+			public const int gpServicesNotInstalled = 2131034174;
+			
+			// aapt resource value: 0x7f05003f
+			public const int gpServicesOutdated = 2131034175;
+			
+			// aapt resource value: 0x7f050036
+			public const int km = 2131034166;
+			
+			// aapt resource value: 0x7f050037
+			public const int km_h = 2131034167;
 			
 			// aapt resource value: 0x7f05002d
 			public const int library_name = 2131034157;
 			
-			// aapt resource value: 0x7f050039
-			public const int locationDisabledMessage = 2131034169;
+			// aapt resource value: 0x7f05003b
+			public const int locationDisabledMessage = 2131034171;
 			
 			// aapt resource value: 0x7f050002
 			public const int mr_media_route_button_content_description = 2131034114;
@@ -1856,23 +1864,23 @@ namespace GpsTracker
 			// aapt resource value: 0x7f050001
 			public const int mr_user_route_category_name = 2131034113;
 			
+			// aapt resource value: 0x7f050033
+			public const int points = 2131034163;
+			
+			// aapt resource value: 0x7f050044
+			public const int progressDialogMessage = 2131034180;
+			
+			// aapt resource value: 0x7f050041
+			public const int recording = 2131034177;
+			
+			// aapt resource value: 0x7f05003d
+			public const int settings = 2131034173;
+			
 			// aapt resource value: 0x7f050031
-			public const int points = 2131034161;
+			public const int speed = 2131034161;
 			
-			// aapt resource value: 0x7f050042
-			public const int progressDialogMessage = 2131034178;
-			
-			// aapt resource value: 0x7f05003f
-			public const int recording = 2131034175;
-			
-			// aapt resource value: 0x7f05003b
-			public const int settings = 2131034171;
-			
-			// aapt resource value: 0x7f05002f
-			public const int speed = 2131034159;
-			
-			// aapt resource value: 0x7f050038
-			public const int speedFormat = 2131034168;
+			// aapt resource value: 0x7f05003a
+			public const int speedFormat = 2131034170;
 			
 			// aapt resource value: 0x7f05002c
 			public const int wallet_buy_button_place_holder = 2131034156;
