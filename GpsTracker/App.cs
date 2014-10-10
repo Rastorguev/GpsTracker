@@ -4,9 +4,7 @@ using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 using Android.Runtime;
 using CrittercismAndroid;
-using GpsTracker.Config;
-using GpsTracker.Managers.Abstract;
-using GpsTracker.Tools;
+using GpsTracker.Managers;
 using Mindscape.Raygun4Net;
 
 namespace GpsTracker
@@ -26,7 +24,7 @@ namespace GpsTracker
         {
             get
             {
-                var locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
+                var locationManager = LocationManager.Instance;
 
                 return _locationClient ?? (_locationClient = new GoogleApiClientBuilder(_app)
                     .AddApi(LocationServices.Api)
@@ -38,7 +36,6 @@ namespace GpsTracker
         public override void OnCreate()
         {
             base.OnCreate();
-            ServiceRegistrar.Startup();
 
             //register bug tracking tools
             RaygunClient.Attach("Veutcv+XL4iSn2ND6EgrdA==");

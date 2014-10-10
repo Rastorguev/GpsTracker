@@ -8,7 +8,6 @@ using Android.Views;
 using Android.Widget;
 using GpsTracker.Bindings.Android;
 using GpsTracker.BL.Managers.Abstract;
-using GpsTracker.Concrete;
 using GpsTracker.Entities;
 using GpsTracker.Tools;
 

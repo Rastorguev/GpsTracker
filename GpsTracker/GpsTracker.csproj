@@ -97,14 +97,11 @@
     <Compile Include="Activities\ViewTrackActivity.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Config\Constants.cs" />
-    <Compile Include="Config\ServiceRegistrar.cs" />
     <Compile Include="Config\UserConfig.cs" />
     <Compile Include="GlobalStorage.cs" />
-    <Compile Include="Managers\Abstract\IActiveTrackManager.cs" />
-    <Compile Include="Managers\Abstract\ILocationManager.cs" />
     <Compile Include="Tools\ConnectionChecker.cs" />
-    <Compile Include="Managers\Concrete\LocationManager.cs" />
-    <Compile Include="Managers\Concrete\ActiveTrackManager.cs" />
+    <Compile Include="Managers\LocationManager.cs" />
+    <Compile Include="Managers\ActiveTrackManager.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Activities\FullScreenMapTrackingActivity.cs" />
     <Compile Include="Activities\MainActivity.cs" />
@@ -112,16 +109,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ActiveTrackService.cs" />
     <Compile Include="Tools\MapUtils.cs" />
-    <Compile Include="Tools\ServiceLocator.cs" />
     <Compile Include="Tools\UnitsPersonalizer.cs" />
-    <Compile Include="UI Tools\Abstract\IActiveTrackDrawer.cs" />
-    <Compile Include="UI Tools\Abstract\ITrackDrawer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI Tools\Concrete\TrackDrawer.cs" />
-    <Compile Include="UI Tools\Concrete\ActiveTrackDrawer.cs" />
-    <Compile Include="UI Tools\Concrete\Utils.cs" />
-    <Compile Include="UI Tools\Concrete\Notifications.cs" />
+    <Compile Include="UI Tools\TrackDrawer.cs" />
+    <Compile Include="UI Tools\ActiveTrackDrawer.cs" />
+    <Compile Include="UI Tools\Utils.cs" />
+    <Compile Include="UI Tools\Notifications.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -154,7 +146,6 @@
     <AndroidResource Include="Resources\drawable\Arrow.png" />
     <AndroidResource Include="Resources\drawable\Bear.png" />
     <AndroidResource Include="Resources\values\Styles.xml" />
-    <AndroidResource Include="Resources\drawable\Preloader.gif" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="crittercism">
@@ -187,6 +178,9 @@
       <Project>{6bf11273-cfc2-40c2-b10a-561295988a6c}</Project>
       <Name>GpsTracker.Entities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI Tools\Concrete\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

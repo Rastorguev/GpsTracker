@@ -6,10 +6,8 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.OS;
 using Android.Widget;
-using GpsTracker.Abstract;
 using GpsTracker.Bindings.Android;
 using GpsTracker.BL.Managers.Abstract;
-using GpsTracker.Concrete;
 using GpsTracker.Config;
 using GpsTracker.Entities;
 using GpsTracker.Tools;
@@ -19,7 +17,7 @@ namespace GpsTracker.Activities
     [Activity(Label = "@string/app_name")]
     internal class ViewTrackActivity : Activity, GoogleMap.IOnCameraChangeListener
     {
-        protected ITrackDrawer TrackDrawer;
+        protected TrackDrawer TrackDrawer;
         private TextView _distanceDefinition;
         private TextView _distanceUnit;
         private TextView _distanceValue;

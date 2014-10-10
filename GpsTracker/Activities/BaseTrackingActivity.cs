@@ -8,12 +8,11 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
-using GpsTracker.Abstract;
-using GpsTracker.Concrete;
 using GpsTracker.Config;
 using GpsTracker.Entities;
-using GpsTracker.Managers.Abstract;
+using GpsTracker.Managers;
 using GpsTracker.Tools;
+using LocationManager = GpsTracker.Managers.LocationManager;
 
 namespace GpsTracker.Activities
 {
@@ -24,17 +23,17 @@ namespace GpsTracker.Activities
         protected static float Zoom = DefaultMapZoom;
         protected static float Bearing;
 
-        protected readonly IActiveTrackManager ActiveTrackManager =
-            ServiceLocator.Instance.Resolve<IActiveTrackManager>();
+        protected readonly ActiveTrackManager ActiveTrackManager = ActiveTrackManager.Instance;
 
-        protected readonly ILocationManager LocationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
+        protected readonly LocationManager LocationManager = LocationManager.Instance;
         private readonly Track _route = GlobalStorage.Track;
-        protected IActiveTrackDrawer ActiveTrackDrawer;
+        protected ActiveTrackDrawer ActiveTrackDrawer;
+        protected TrackDrawer TrackDrawer;
 
         protected LatLngBounds AutoSetMapBounds;
         protected Timer AutoreturnTimer;
         protected bool FirstOnCameraChangeEventOccured;
-        protected ITrackDrawer TrackDrawer;
+
         private GoogleMap _map;
 
         protected GoogleMap Map

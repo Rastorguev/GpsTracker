@@ -5,10 +5,9 @@ using Android.App;
 using Android.Content;
 using Android.Locations;
 using Android.OS;
-using GpsTracker.Concrete;
 using GpsTracker.Entities;
-using GpsTracker.Managers.Abstract;
 using GpsTracker.Tools;
+using LocationManager = GpsTracker.Managers.LocationManager;
 
 namespace GpsTracker.Services
 {
@@ -16,7 +15,7 @@ namespace GpsTracker.Services
     public class ActiveTrackService : Service
     {
         private const double MinValuableBearing = 0.5;
-        private readonly ILocationManager _locationManager = ServiceLocator.Instance.Resolve<ILocationManager>();
+        private readonly LocationManager _locationManager = LocationManager.Instance;
         private DateTime _startTime;
 
         public Track ActiveTrack { get; private set; }
