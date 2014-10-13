@@ -90,7 +90,7 @@ namespace GpsTracker.Activities
 
         private void UpdateWidgets()
         {
-            var location = LocationManager.Location;
+            var location = LocationListener.Location;
             var currentSpeed = location != null ? UnitsPersonalizer.GetSpeedValue(location.Speed) : 0;
             var trackPoints = ActiveTrack != null ? ActiveTrack.TrackPoints : new List<TrackPoint>();
             var distance = UnitsPersonalizer.GetDistanceValue(ActiveTrack != null ? ActiveTrack.Distance : 0);

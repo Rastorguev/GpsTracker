@@ -100,7 +100,7 @@
     <Compile Include="Config\UserConfig.cs" />
     <Compile Include="GlobalStorage.cs" />
     <Compile Include="Tools\ConnectionChecker.cs" />
-    <Compile Include="Managers\LocationManager.cs" />
+    <Compile Include="LocationListener.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Activities\FullScreenMapTrackingActivity.cs" />
     <Compile Include="Activities\MainActivity.cs" />

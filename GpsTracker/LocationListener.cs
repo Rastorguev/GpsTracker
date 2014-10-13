@@ -7,20 +7,20 @@ using GpsTracker.Config;
 using ILocationListener = Android.Gms.Location.ILocationListener;
 using Object = Java.Lang.Object;
 
-namespace GpsTracker.Managers
+namespace GpsTracker
 {
-    public class LocationManager : Object, ILocationListener, IGoogleApiClientConnectionCallbacks
+    public class LocationListener : Object, ILocationListener, IGoogleApiClientConnectionCallbacks
     {
-        private static volatile LocationManager _instance;
+        private static volatile LocationListener _instance;
         private static readonly object Locker = new System.Object();
 
         public Location Location { get; private set; }
         public Location PreviousLocation { get; private set; }
         public DateTime? LastLocationUpDateTime { get; private set; }
 
-        private LocationManager() {}
+        private LocationListener() {}
 
-        public static LocationManager Instance
+        public static LocationListener Instance
         {
             get
             {
@@ -29,7 +29,7 @@ namespace GpsTracker.Managers
                     lock (Locker)
                     {
                         if (_instance == null)
-                            _instance = new LocationManager();
+                            _instance = new LocationListener();
                     }
                 }
 

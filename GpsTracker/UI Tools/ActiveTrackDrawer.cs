@@ -8,7 +8,6 @@ using Android.Gms.Maps.Model;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using GpsTracker.Entities;
-using GpsTracker.Managers;
 using GpsTracker.Tools;
 
 namespace GpsTracker
@@ -22,7 +21,7 @@ namespace GpsTracker
 
         private readonly Activity _activity;
         private readonly Timer _currentPositionMarkerIconResetTimer;
-        private readonly LocationManager _locationManager = LocationManager.Instance;
+        private readonly LocationListener _locationListener = LocationListener.Instance;
         private readonly GoogleMap _map;
         private readonly List<Polyline> _polylines = new List<Polyline>();
         private Marker _currentPositionMarker;
@@ -117,7 +116,7 @@ namespace GpsTracker
 
         private void SetCurrentPositionMarkerIcon()
         {
-            var bearing = _locationManager.Bearing ?? 0;
+            var bearing = _locationListener.Bearing ?? 0;
 
             if (IsNeedToShowMovingIcon())
             {
@@ -227,8 +226,8 @@ namespace GpsTracker
 
         private bool IsNeedToShowMovingIcon()
         {
-            var lastLocationUpDateTime = _locationManager.LastLocationUpDateTime;
-            var bearing = _locationManager.Bearing;
+            var lastLocationUpDateTime = _locationListener.LastLocationUpDateTime;
+            var bearing = _locationListener.Bearing;
 
             return
                 lastLocationUpDateTime != null &&

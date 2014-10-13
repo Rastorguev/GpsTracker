@@ -7,7 +7,6 @@ using Android.Locations;
 using Android.OS;
 using GpsTracker.Entities;
 using GpsTracker.Tools;
-using LocationManager = GpsTracker.Managers.LocationManager;
 
 namespace GpsTracker.Services
 {
@@ -15,8 +14,7 @@ namespace GpsTracker.Services
     public class ActiveTrackService : Service
     {
         private const double MinValuableBearing = 0.5;
-        private readonly LocationManager _locationManager = LocationManager.Instance;
-        private DateTime _startTime;
+        private readonly LocationListener _locationListener = LocationListener.Instance;
 
         private Track _activeTrack = GlobalStorage.ActiveTrack;
 
@@ -27,11 +25,7 @@ namespace GpsTracker.Services
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-            _startTime = DateTime.Now;
-
-            //_activeTrack = GlobalStorage.ActiveTrack = new Track(_startTime);
-
-            var location = _locationManager.Location;
+            var location = _locationListener.Location;
 
             //GeneratedFakeTrack(60000);
 
@@ -45,7 +39,7 @@ namespace GpsTracker.Services
 
         public override void OnCreate()
         {
-            _locationManager.LocationChanged += OnLocationChanged;
+            _locationListener.LocationChanged += OnLocationChanged;
         }
 
         public override void OnDestroy()
@@ -57,7 +51,7 @@ namespace GpsTracker.Services
             notificationManager.Notify((int)NotificationFlags.ForegroundService,
                 Notifications.GetRecordStopedNotification(this));
 
-            _locationManager.LocationChanged -= OnLocationChanged;
+            _locationListener.LocationChanged -= OnLocationChanged;
         }
 
         public virtual void OnLocationChanged(Location location)
@@ -103,11 +97,11 @@ namespace GpsTracker.Services
 
         private bool NeedToAddNewTrackPoint(Location location)
         {
-            return _locationManager.PreviousLocation == null ||
-                   _locationManager.PreviousLocation.HasBearing == false ||
+            return _locationListener.PreviousLocation == null ||
+                   _locationListener.PreviousLocation.HasBearing == false ||
                    location.HasBearing == false ||
                    _activeTrack.TrackPoints.Count < 2 ||
-                   Math.Abs(_locationManager.PreviousLocation.Bearing - location.Bearing) > MinValuableBearing;
+                   Math.Abs(_locationListener.PreviousLocation.Bearing - location.Bearing) > MinValuableBearing;
         }
 
         private void GeneratedFakeTrack(int n)

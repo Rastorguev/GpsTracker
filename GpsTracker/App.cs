@@ -4,7 +4,6 @@ using Android.Gms.Common.Apis;
 using Android.Gms.Location;
 using Android.Runtime;
 using CrittercismAndroid;
-using GpsTracker.Managers;
 using Mindscape.Raygun4Net;
 
 namespace GpsTracker
@@ -24,11 +23,11 @@ namespace GpsTracker
         {
             get
             {
-                var locationManager = LocationManager.Instance;
+                var locationListener = LocationListener.Instance;
 
                 return _locationClient ?? (_locationClient = new GoogleApiClientBuilder(_app)
                     .AddApi(LocationServices.Api)
-                    .AddConnectionCallbacks(locationManager)
+                    .AddConnectionCallbacks(locationListener)
                     .Build());
             }
         }

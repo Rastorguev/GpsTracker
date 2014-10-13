@@ -85,7 +85,7 @@ namespace GpsTracker.Activities
             _startButton.Visibility = ViewStates.Gone;
             _stopButton.Visibility = ViewStates.Visible;
 
-            var location = LocationManager.Location;
+            var location = LocationListener.Location;
 
             if (location != null)
             {
@@ -104,7 +104,7 @@ namespace GpsTracker.Activities
             ActiveTrackDrawer.RemoveTrack();
             ShowActiveTrack();
 
-            if (LocationManager.Location != null)
+            if (LocationListener.Location != null)
             {
                 AdjustCamera(Zoom);
             }
