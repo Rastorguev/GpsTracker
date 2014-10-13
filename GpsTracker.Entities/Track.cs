@@ -8,6 +8,8 @@ namespace GpsTracker.Entities
 {
     public class Track
     {
+        public Track() : this(DateTime.Now) { }
+
         public Track(DateTime starTime)
         {
             StartTime = starTime;
