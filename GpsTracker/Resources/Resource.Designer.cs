@@ -29,6 +29,8 @@ namespace GpsTracker
 			global::GpsTracker.Bindings.Android.Resource.String.ApplicationName = global::GpsTracker.Resource.String.ApplicationName;
 			global::GpsTracker.Bindings.Android.Resource.String.Hello = global::GpsTracker.Resource.String.Hello;
 			global::Mindscape.Raygun4Net.Xamarin.Android.Resource.String.library_name = global::GpsTracker.Resource.String.library_name;
+			global::Xamarin.InsightsCore.Resource.String.ApplicationName = global::GpsTracker.Resource.String.ApplicationName;
+			global::Xamarin.InsightsCore.Resource.String.Hello = global::GpsTracker.Resource.String.Hello;
 		}
 		
 		public partial class Animation
@@ -1672,11 +1674,11 @@ namespace GpsTracker
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f05002f
-			public const int ApplicationName = 2131034159;
-			
 			// aapt resource value: 0x7f05002e
-			public const int Hello = 2131034158;
+			public const int ApplicationName = 2131034158;
+			
+			// aapt resource value: 0x7f05002d
+			public const int Hello = 2131034157;
 			
 			// aapt resource value: 0x7f050007
 			public const int abc_action_bar_home_description = 2131034119;
@@ -1837,8 +1839,8 @@ namespace GpsTracker
 			// aapt resource value: 0x7f050037
 			public const int km_h = 2131034167;
 			
-			// aapt resource value: 0x7f05002d
-			public const int library_name = 2131034157;
+			// aapt resource value: 0x7f05002f
+			public const int library_name = 2131034159;
 			
 			// aapt resource value: 0x7f05003b
 			public const int locationDisabledMessage = 2131034171;
