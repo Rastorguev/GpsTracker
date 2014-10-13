@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Timers;
 using Android.App;
@@ -6,6 +7,7 @@ using Android.Gms.Maps;
 using Android.Locations;
 using Android.OS;
 using Android.Widget;
+using GpsTracker.Entities;
 using GpsTracker.Tools;
 
 namespace GpsTracker.Activities
@@ -90,9 +92,9 @@ namespace GpsTracker.Activities
         {
             var location = LocationManager.Location;
             var currentSpeed = location != null ? UnitsPersonalizer.GetSpeedValue(location.Speed) : 0;
-            var trackPoints = ActiveTrackManager.TrackPoints;
-            var distance = UnitsPersonalizer.GetDistanceValue(ActiveTrackManager.Distance);
-            var duration = ActiveTrackManager.Duration;
+            var trackPoints = ActiveTrack != null ? ActiveTrack.TrackPoints : new List<TrackPoint>();
+            var distance = UnitsPersonalizer.GetDistanceValue(ActiveTrack != null ? ActiveTrack.Distance : 0);
+            var duration = ActiveTrack != null ? ActiveTrack.Duration : new TimeSpan(0);
 
             SetUnits();
             UpdateTrackPointsWidget(trackPoints.Count);
@@ -159,7 +161,8 @@ namespace GpsTracker.Activities
 
         private void UpdateTrackInfoEventHandler(object sender, EventArgs e)
         {
-            RunOnUiThread(() => UpdateDurationWidget(ActiveTrackManager.Duration));
+            var duration = ActiveTrack != null ? ActiveTrack.Duration : new TimeSpan(0);
+            RunOnUiThread(() => UpdateDurationWidget(duration));
         }
 
         #endregion

@@ -48,7 +48,7 @@ namespace GpsTracker.Activities
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            _track = GlobalStorage.Track;
+            _track = GlobalStorage.Route;
 
             SetView();
             InitMap();

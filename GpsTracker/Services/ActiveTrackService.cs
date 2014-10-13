@@ -18,7 +18,7 @@ namespace GpsTracker.Services
         private readonly LocationManager _locationManager = LocationManager.Instance;
         private DateTime _startTime;
 
-        public Track ActiveTrack { get; private set; }
+        private Track _activeTrack = GlobalStorage.ActiveTrack;
 
         public override IBinder OnBind(Intent intent)
         {
@@ -29,7 +29,7 @@ namespace GpsTracker.Services
         {
             _startTime = DateTime.Now;
 
-            ActiveTrack = new Track(_startTime);
+            //_activeTrack = GlobalStorage.ActiveTrack = new Track(_startTime);
 
             var location = _locationManager.Location;
 
@@ -37,7 +37,7 @@ namespace GpsTracker.Services
 
             UpdateTrackPoints(location);
 
-            StartForeground((int) NotificationFlags.ForegroundService,
+            StartForeground((int)NotificationFlags.ForegroundService,
                 Notifications.GetRecordStartedNotification(this));
 
             return StartCommandResult.Sticky;
@@ -50,11 +50,11 @@ namespace GpsTracker.Services
 
         public override void OnDestroy()
         {
-            ActiveTrack = null;
+            //_activeTrack = GlobalStorage.ActiveTrack = null;
 
-            var notificationManager = (NotificationManager) GetSystemService(NotificationService);
+            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
 
-            notificationManager.Notify((int) NotificationFlags.ForegroundService,
+            notificationManager.Notify((int)NotificationFlags.ForegroundService,
                 Notifications.GetRecordStopedNotification(this));
 
             _locationManager.LocationChanged -= OnLocationChanged;
@@ -67,35 +67,38 @@ namespace GpsTracker.Services
 
         private void UpdateTrackPoints(Location location)
         {
-            if (NeedToAddNewTrackPoint(location))
+            if (_activeTrack != null)
             {
-                AddNewTrackPoint(location);
-            }
-            else
-            {
-                UpdateLastTrackPoint(location);
+                if (NeedToAddNewTrackPoint(location))
+                {
+                    AddNewTrackPoint(location);
+                }
+                else
+                {
+                    UpdateLastTrackPoint(location);
+                }
             }
         }
 
         private void AddNewTrackPoint(Location location)
         {
-            if (ActiveTrack.TrackPoints.Any())
+            if (_activeTrack.TrackPoints.Any())
             {
-                ActiveTrack.Distance += ActiveTrack.TrackPoints.Last().ToLatLng().DistanceTo(location.ToLatLng());
+                _activeTrack.Distance += _activeTrack.TrackPoints.Last().ToLatLng().DistanceTo(location.ToLatLng());
             }
 
-            ActiveTrack.TrackPoints.Add(location.ToTrackPoint());
+            _activeTrack.TrackPoints.Add(location.ToTrackPoint());
         }
 
         private void UpdateLastTrackPoint(Location location)
         {
-            var lastTrackPoint = ActiveTrack.TrackPoints[ActiveTrack.TrackPoints.Count - 1];
-            var lastButOneTrackPoint = ActiveTrack.TrackPoints[ActiveTrack.TrackPoints.Count - 2];
+            var lastTrackPoint = _activeTrack.TrackPoints[_activeTrack.TrackPoints.Count - 1];
+            var lastButOneTrackPoint = _activeTrack.TrackPoints[_activeTrack.TrackPoints.Count - 2];
 
-            ActiveTrack.Distance -= lastButOneTrackPoint.ToLatLng().DistanceTo(lastTrackPoint.ToLatLng());
-            ActiveTrack.Distance += lastButOneTrackPoint.ToLatLng().DistanceTo(location.ToLatLng());
+            _activeTrack.Distance -= lastButOneTrackPoint.ToLatLng().DistanceTo(lastTrackPoint.ToLatLng());
+            _activeTrack.Distance += lastButOneTrackPoint.ToLatLng().DistanceTo(location.ToLatLng());
 
-            ActiveTrack.TrackPoints[ActiveTrack.TrackPoints.Count - 1] = location.ToTrackPoint();
+            _activeTrack.TrackPoints[_activeTrack.TrackPoints.Count - 1] = location.ToTrackPoint();
         }
 
         private bool NeedToAddNewTrackPoint(Location location)
@@ -103,7 +106,7 @@ namespace GpsTracker.Services
             return _locationManager.PreviousLocation == null ||
                    _locationManager.PreviousLocation.HasBearing == false ||
                    location.HasBearing == false ||
-                   ActiveTrack.TrackPoints.Count < 2 ||
+                   _activeTrack.TrackPoints.Count < 2 ||
                    Math.Abs(_locationManager.PreviousLocation.Bearing - location.Bearing) > MinValuableBearing;
         }
 
@@ -117,12 +120,12 @@ namespace GpsTracker.Services
             {
                 lat += 0.000008;
 
-                var x = (double) 1/random.Next(-100000, 100000);
+                var x = (double)1 / random.Next(-100000, 100000);
 
                 ts.Add(new TrackPoint(lat, 27.689841 + x));
             }
 
-            ActiveTrack.TrackPoints = ts;
+            _activeTrack.TrackPoints = ts;
         }
     }
 

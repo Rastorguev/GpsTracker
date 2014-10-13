@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using Android.App;
+using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
+using GpsTracker.Bindings.Android;
+using GpsTracker.BL.Managers.Abstract;
 using GpsTracker.Config;
 using GpsTracker.Entities;
-using GpsTracker.Managers;
+using GpsTracker.Services;
 using GpsTracker.Tools;
 using LocationManager = GpsTracker.Managers.LocationManager;
 
@@ -23,10 +26,11 @@ namespace GpsTracker.Activities
         protected static float Zoom = DefaultMapZoom;
         protected static float Bearing;
 
-        protected readonly ActiveTrackManager ActiveTrackManager = ActiveTrackManager.Instance;
+        private readonly ITrackHistoryManager _trackHistoryManager = DependencyResolver.Resolve<ITrackHistoryManager>();
 
         protected readonly LocationManager LocationManager = LocationManager.Instance;
-        private readonly Track _route = GlobalStorage.Track;
+        protected readonly Track Route = GlobalStorage.Route;
+        protected Track ActiveTrack = GlobalStorage.ActiveTrack;
         protected ActiveTrackDrawer ActiveTrackDrawer;
         protected TrackDrawer TrackDrawer;
 
@@ -46,6 +50,7 @@ namespace GpsTracker.Activities
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            ActiveTrack = GlobalStorage.ActiveTrack;
 
             SetView();
             InitMap();
@@ -203,13 +208,40 @@ namespace GpsTracker.Activities
 
         #endregion
 
+        #region Active track control
+
+        public void StartTrack()
+        {
+            ActiveTrack = GlobalStorage.ActiveTrack = new Track();
+
+            //var context = Application.Context;
+
+           StartService(new Intent(this, typeof (ActiveTrackService)));
+        }
+
+        public void StopTrack()
+        {
+            //var context = Application.Context;
+            ActiveTrack.EndTime = DateTime.Now;
+
+            StopService(new Intent(this, typeof (ActiveTrackService)));
+
+            _trackHistoryManager.SaveTrack(ActiveTrack);
+
+            ActiveTrack = GlobalStorage.ActiveTrack = null;
+        }
+
+        #endregion
+
         #region Camera position methods
 
         protected void AdjustCamera(float zoom, bool animate = false)
         {
             var location = LocationManager.Location;
 
-            if (UserConfig.FitTrackToScreen && (ActiveTrackManager.HasActiveTrack || _route != null))
+            if (UserConfig.FitTrackToScreen &&
+                ((ActiveTrack != null && ActiveTrack.TrackPoints.Any()) || (Route != null && Route.TrackPoints.Any())))
+
             {
                 FitTrackToScreen(animate);
             }
@@ -239,14 +271,14 @@ namespace GpsTracker.Activities
             {
                 var points = new List<TrackPoint>();
 
-                if (ActiveTrackManager.HasActiveTrack)
+                if (ActiveTrack != null)
                 {
-                    points.AddRange(ActiveTrackManager.TrackPoints);
+                    points.AddRange(ActiveTrack.TrackPoints);
                 }
 
-                if (_route != null)
+                if (Route != null)
                 {
-                    points.AddRange(_route.TrackPoints);
+                    points.AddRange(Route.TrackPoints);
                 }
 
                 var bounds = MapUtils.CalculateMapBounds(points);
@@ -286,9 +318,9 @@ namespace GpsTracker.Activities
 
         protected void ShowActiveTrack()
         {
-            if (ActiveTrackManager.HasActiveTrack && ActiveTrackManager.TrackPoints.Any())
+            if (ActiveTrack != null && ActiveTrack.TrackPoints.Any())
             {
-                ActiveTrackDrawer.DrawTrack(ActiveTrackManager.TrackPoints);
+                ActiveTrackDrawer.DrawTrack(ActiveTrack.TrackPoints);
             }
             else if (LocationManager.Location != null)
             {
@@ -298,9 +330,9 @@ namespace GpsTracker.Activities
 
         protected void ShowRoute()
         {
-            if (_route != null)
+            if (Route != null)
             {
-                TrackDrawer.DrawTrack(_route.TrackPoints);
+                TrackDrawer.DrawTrack(Route.TrackPoints);
             }
         }
 

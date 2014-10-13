@@ -56,7 +56,7 @@ namespace GpsTracker.Activities
         {
             base.OnResume();
 
-            if (ActiveTrackManager.HasActiveTrack)
+            if (ActiveTrack!=null)
             {
                 _startButton.Visibility = ViewStates.Gone;
                 _stopButton.Visibility = ViewStates.Visible;
@@ -89,7 +89,7 @@ namespace GpsTracker.Activities
 
             if (location != null)
             {
-                ActiveTrackManager.Start();
+               StartTrack();
                 ShowActiveTrack();
             }
         }
@@ -99,7 +99,7 @@ namespace GpsTracker.Activities
             _startButton.Visibility = ViewStates.Visible;
             _stopButton.Visibility = ViewStates.Gone;
 
-            ActiveTrackManager.Stop();
+            StopTrack();
 
             ActiveTrackDrawer.RemoveTrack();
             ShowActiveTrack();

@@ -60,13 +60,13 @@ namespace GpsTracker.Activities
             var track = _savedTracks[e.Position];
             track.DecodeTrackPoints();
 
-            GlobalStorage.Track = track;
+            GlobalStorage.Route = track;
             StartActivity(typeof (ViewTrackActivity));
         }
 
         private void OnStartButtonClick(object sender, EventArgs e)
         {
-            GlobalStorage.Track = null;
+            GlobalStorage.Route = null;
             StartActivity(typeof (MainTrackingActivity));
         }
     }
