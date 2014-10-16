@@ -8,5 +8,6 @@ namespace GpsTracker.DAL.Abstract.Repositories
         void Save(Track track);
         List<Track> GetAll();
         void Delete(Track track);
+        void UploadToDropbox();
     }
 }

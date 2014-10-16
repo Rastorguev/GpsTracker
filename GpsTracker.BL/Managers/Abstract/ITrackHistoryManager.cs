@@ -8,5 +8,6 @@ namespace GpsTracker.BL.Managers.Abstract
         void SaveTrack(Track track);
         List<Track> GetSavedTracks();
         void DeleteTrack(Track track);
+        void UploadToDropbox();
     }
 }

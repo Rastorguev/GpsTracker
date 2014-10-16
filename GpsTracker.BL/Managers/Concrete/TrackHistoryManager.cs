@@ -28,5 +28,10 @@ namespace GpsTracker.BL.Managers.Concrete
         {
             _trackRepository.Delete(track);
         }
+
+        public void UploadToDropbox()
+        {
+            _trackRepository.UploadToDropbox();
+        }
     }
 }

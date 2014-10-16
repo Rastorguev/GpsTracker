@@ -1215,14 +1215,14 @@ namespace GpsTracker
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f070064
-			public const int AvgSpeedDefinition = 2131165284;
+			// aapt resource value: 0x7f070065
+			public const int AvgSpeedDefinition = 2131165285;
+			
+			// aapt resource value: 0x7f070067
+			public const int AvgSpeedUnit = 2131165287;
 			
 			// aapt resource value: 0x7f070066
-			public const int AvgSpeedUnit = 2131165286;
-			
-			// aapt resource value: 0x7f070065
-			public const int AvgSpeedValue = 2131165285;
+			public const int AvgSpeedValue = 2131165286;
 			
 			// aapt resource value: 0x7f070054
 			public const int CurrentSpeedUnit = 2131165268;
@@ -1230,14 +1230,14 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070053
 			public const int CurrentSpeedValue = 2131165267;
 			
-			// aapt resource value: 0x7f070068
-			public const int DeleteButton = 2131165288;
+			// aapt resource value: 0x7f070069
+			public const int DeleteButton = 2131165289;
 			
-			// aapt resource value: 0x7f070060
-			public const int Distance = 2131165280;
+			// aapt resource value: 0x7f070061
+			public const int Distance = 2131165281;
 			
-			// aapt resource value: 0x7f070063
-			public const int DistanceDefinition = 2131165283;
+			// aapt resource value: 0x7f070064
+			public const int DistanceDefinition = 2131165284;
 			
 			// aapt resource value: 0x7f070051
 			public const int DistanceUnit = 2131165265;
@@ -1245,35 +1245,38 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070050
 			public const int DistanceValue = 2131165264;
 			
-			// aapt resource value: 0x7f070061
-			public const int Duration = 2131165281;
-			
 			// aapt resource value: 0x7f070062
-			public const int DurationDefinition = 2131165282;
+			public const int Duration = 2131165282;
+			
+			// aapt resource value: 0x7f070063
+			public const int DurationDefinition = 2131165283;
 			
 			// aapt resource value: 0x7f070052
 			public const int DurationValue = 2131165266;
 			
-			// aapt resource value: 0x7f070067
-			public const int FollowRouteButton = 2131165287;
+			// aapt resource value: 0x7f070068
+			public const int FollowRouteButton = 2131165288;
 			
-			// aapt resource value: 0x7f070057
-			public const int FullScreenButton = 2131165271;
+			// aapt resource value: 0x7f070058
+			public const int FullScreenButton = 2131165272;
+			
+			// aapt resource value: 0x7f070056
+			public const int LinkDropboxButton = 2131165270;
 			
 			// aapt resource value: 0x7f07004e
 			public const int Map = 2131165262;
 			
-			// aapt resource value: 0x7f070056
-			public const int StartButton = 2131165270;
-			
-			// aapt resource value: 0x7f07005e
-			public const int StartTimeDate = 2131165278;
+			// aapt resource value: 0x7f070057
+			public const int StartButton = 2131165271;
 			
 			// aapt resource value: 0x7f07005f
-			public const int StartTimeTime = 2131165279;
+			public const int StartTimeDate = 2131165279;
 			
-			// aapt resource value: 0x7f070058
-			public const int StopButton = 2131165272;
+			// aapt resource value: 0x7f070060
+			public const int StartTimeTime = 2131165280;
+			
+			// aapt resource value: 0x7f070059
+			public const int StopButton = 2131165273;
 			
 			// aapt resource value: 0x7f070055
 			public const int TrackList = 2131165269;
@@ -1404,20 +1407,20 @@ namespace GpsTracker
 			// aapt resource value: 0x7f070024
 			public const int match_parent = 2131165220;
 			
-			// aapt resource value: 0x7f07005c
-			public const int media_route_control_frame = 2131165276;
-			
 			// aapt resource value: 0x7f07005d
-			public const int media_route_disconnect_button = 2131165277;
+			public const int media_route_control_frame = 2131165277;
 			
-			// aapt resource value: 0x7f070059
-			public const int media_route_list = 2131165273;
+			// aapt resource value: 0x7f07005e
+			public const int media_route_disconnect_button = 2131165278;
 			
 			// aapt resource value: 0x7f07005a
-			public const int media_route_volume_layout = 2131165274;
+			public const int media_route_list = 2131165274;
 			
 			// aapt resource value: 0x7f07005b
-			public const int media_route_volume_slider = 2131165275;
+			public const int media_route_volume_layout = 2131165275;
+			
+			// aapt resource value: 0x7f07005c
+			public const int media_route_volume_slider = 2131165276;
 			
 			// aapt resource value: 0x7f070012
 			public const int middle = 2131165202;

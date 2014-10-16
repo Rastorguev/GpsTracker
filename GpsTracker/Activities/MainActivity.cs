@@ -6,6 +6,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using DropboxSync.Android;
 using GpsTracker.Bindings.Android;
 using GpsTracker.BL.Managers.Abstract;
 using GpsTracker.Entities;
@@ -16,12 +17,18 @@ namespace GpsTracker.Activities
     [Activity(Label = "@string/app_name", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     internal class MainActivity : Activity
     {
+        private const string DropboxSyncKey = "wwnmyaoj0v0608p";
+        private const string DropboxSyncSecret = "gom3h89jeb2cuax";
+        private const int LinkToDropboxRequest = 1111;
         private readonly ITrackHistoryManager _trackHistoryManager = DependencyResolver.Resolve<ITrackHistoryManager>();
-
         private List<Track> _savedTracks;
-        private Button _startButton;
         private ListView _tracksListView;
         private ProgressDialog _progressDialog;
+        private Button _startButton;
+        private Button _linkDropboxButton;
+
+        private readonly DBAccountManager _accountManager = DBAccountManager.GetInstance(Application.Context,
+            DropboxSyncKey, DropboxSyncSecret);
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -31,10 +38,13 @@ namespace GpsTracker.Activities
 
             _tracksListView = FindViewById<ListView>(Resource.Id.TrackList);
             _startButton = FindViewById<Button>(Resource.Id.StartButton);
+            _linkDropboxButton = FindViewById<Button>(Resource.Id.LinkDropboxButton);
 
             _tracksListView.ItemClick += OnListItemClick;
 
             _startButton.Click += OnStartButtonClick;
+            _linkDropboxButton.Click += OnLinkDropboxButtonClick;
+
             _progressDialog = Utils.CreateProgressDialog(this);
         }
 
@@ -46,6 +56,23 @@ namespace GpsTracker.Activities
             _savedTracks = _trackHistoryManager.GetSavedTracks();
             _tracksListView.Adapter = new TrackListAdapter(this, Resource.Layout.TrackListItem, _savedTracks);
             _progressDialog.Hide();
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            _linkDropboxButton.Visibility = _accountManager.HasLinkedAccount ? ViewStates.Gone : ViewStates.Visible;
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            if (requestCode == LinkToDropboxRequest && resultCode != Result.Canceled)
+            {
+                Toast.MakeText(this, "Dropbox Linked", ToastLength.Short).Show();
+
+                _trackHistoryManager.UploadToDropbox();
+            }
         }
 
         protected override void OnDestroy()
@@ -68,6 +95,11 @@ namespace GpsTracker.Activities
         {
             GlobalStorage.Route = null;
             StartActivity(typeof (MainTrackingActivity));
+        }
+
+        private void OnLinkDropboxButtonClick(object sender, EventArgs e)
+        {
+            _accountManager.StartLink(this, LinkToDropboxRequest);
         }
     }
 
